@@ -107,6 +107,7 @@ const SignInForm: React.FC<Props> = ({ authService }) => {
           {({ isValid, isSubmitting }) => (
             <Form className={classes.form}>
               <label
+                htmlFor="username"
                 style={{
                   display: "block",
                   marginBottom: "-10px",
@@ -133,6 +134,7 @@ const SignInForm: React.FC<Props> = ({ authService }) => {
                 )}
               </Field>
               <label
+                htmlFor="password"
                 style={{
                   display: "block",
                   marginBottom: "-10px",

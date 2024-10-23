@@ -131,11 +131,13 @@ const TransactionDetail: React.FC<TransactionProps> = ({
                 data-test="transaction-sender-avatar"
                 className={classes.avatarLarge}
                 src={transaction.senderAvatar}
+                alt=""
               />
               <Avatar
                 data-test="transaction-receiver-avatar"
                 className={classes.avatarLarge}
                 src={transaction.receiverAvatar}
+                alt=""
               />
             </AvatarGroup>
             {/* eat up space to right of AvatarGroup: */}
@@ -180,6 +182,7 @@ const TransactionDetail: React.FC<TransactionProps> = ({
                 disabled={currentUserLikesTransaction(currentUser, transaction)}
                 onClick={() => transactionLike(transaction.id)}
                 data-test={`transaction-like-button-${transaction.id}`}
+                aria-label="Like this transaction"
                 size="large"
               >
                 <LikeIcon />
