@@ -53,7 +53,7 @@ describe("Contacts API", function () {
       });
     });
 
-    it("error when invalid contactUserId", function () {
+    it("errors when invalid contactUserId", function () {
       cy.request({
         method: "POST",
         url: `${apiContacts}`,

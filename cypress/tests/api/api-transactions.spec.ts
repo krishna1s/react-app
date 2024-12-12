@@ -152,7 +152,7 @@ describe("Transactions API", function () {
       });
     });
 
-    it("error when invalid field sent", function () {
+    it("errors when an invalid field sent", function () {
       cy.request({
         method: "PATCH",
         url: `${apiTransactions}/${ctx.transactionId}`,
