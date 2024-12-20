@@ -21,12 +21,16 @@ describe("Bank Accounts", function () {
         CreateBankAccount: "gqlCreateBankAccountMutation",
         DeleteBankAccount: "gqlDeleteBankAccountMutation",
       };
-    
+
       const { body } = req;
-    
+
       const operationName = body?.operationName;
-      
-      if (body.hasOwnProperty("operationName") && operationName && operationAliases[operationName]) {
+
+      if (
+        body.hasOwnProperty("operationName") &&
+        operationName &&
+        operationAliases[operationName]
+      ) {
         req.alias = operationAliases[operationName];
       }
     });
