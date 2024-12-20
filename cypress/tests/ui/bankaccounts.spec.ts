@@ -16,21 +16,20 @@ describe("Bank Accounts", function () {
     cy.intercept("GET", "/notifications").as("getNotifications");
 
     cy.intercept("POST", apiGraphQL, (req) => {
-      const operationAliases: Record<string, string> = {
-        ListBankAccount: "gqlListBankAccountQuery",
-        CreateBankAccount: "gqlCreateBankAccountMutation",
-        DeleteBankAccount: "gqlDeleteBankAccountMutation",
-      };
-    
       const { body } = req;
-    
-      const operationName = body?.operationName;
-      
-      if (body.hasOwnProperty("operationName") && operationName && operationAliases[operationName]) {
-        req.alias = operationAliases[operationName];
+
+      if (body.hasOwnProperty("operationName") && body.operationName === "ListBankAccount") {
+        req.alias = "gqlListBankAccountQuery";
+      }
+
+      if (body.hasOwnProperty("operationName") && body.operationName === "CreateBankAccount") {
+        req.alias = "gqlCreateBankAccountMutation";
+      }
+
+      if (body.hasOwnProperty("operationName") && body.operationName === "DeleteBankAccount") {
+        req.alias = "gqlDeleteBankAccountMutation";
       }
     });
-    
     cy.database("find", "users").then((user: User) => {
       ctx.user = user;
 
