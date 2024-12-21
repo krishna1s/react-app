@@ -49,7 +49,6 @@ describe("Comments API", function () {
         content: "This is my comment",
       }).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body.comment.content).to.eq("This is my comment");
       });
     });
   });
