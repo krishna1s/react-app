@@ -63,7 +63,7 @@ describe("Contacts API", function () {
         },
       }).then((response) => {
         expect(response.status).to.eq(422);
-        expect(response.body.errors.length).to.eq(1);
+        expect(response.body.errors).to.be.an("array").that.has.length(1);
       });
     });
   });
