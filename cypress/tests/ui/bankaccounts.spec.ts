@@ -128,15 +128,6 @@ describe("Bank Accounts", function () {
     cy.visualSnapshot("Bank Account Form with Errors and Submit button disabled");
   });
 
-  it.skip("soft deletes a bank account", function () {
-    cy.visit("/bankaccounts");
-    cy.getBySelLike("delete").first().click();
-
-    cy.wait("@gqlDeleteBankAccountMutation");
-    cy.getBySelLike("list-item").children().contains("Deleted");
-    cy.visualSnapshot("Soft Delete Bank Account");
-  });
-
   // TODO: [enhancement] the onboarding modal assertion can be removed after adding "onboarded" flag to user profile
   it("renders an empty bank account list state with onboarding modal", function () {
     cy.wait("@getNotifications");
