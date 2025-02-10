@@ -1,10 +1,10 @@
-name: Merge develop into flake-demo
+name: Merge master into flake-demo
 on:
   push:
     branches:
-      - develop
+      - master
 jobs:
-  merge-master-into-develop:
+  merge-master-into-flake-demo:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,24 +19,24 @@ jobs:
         run: git checkout flake-demo
       - name: Check for merge conflict
         id: check-conflict
-        run: echo "name=merge_conflict::$(git merge-tree $(git merge-base HEAD develop) develop HEAD | egrep '<<<<<<<')" >> $GITHUB_OUTPUT
-      - name: Merge develop into flake-demo
-        run: git merge develop
+        run: echo "name=merge_conflict::$(git merge-tree $(git merge-base HEAD master) master HEAD | egrep '<<<<<<<')" >> $GITHUB_OUTPUT
+      - name: Merge master into flake-demo
+        run: git merge master
         if: ${{ !steps.check-conflict.outputs.merge_conflict }}
       - name: Push
         run: git push
         if: ${{ !steps.check-conflict.outputs.merge_conflict }}
-      - name: Checkout develop
-        run: git checkout develop
+      - name: Checkout master
+        run: git checkout master
         if: ${{ steps.check-conflict.outputs.merge_conflict }}
       - name: Determine name of new branch
         id: gen-names
         run: |
           echo "name=sha::$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "name=branch_name::$(git rev-parse --short HEAD)-develop-into-flake-demo" >> $GITHUB_OUTPUT
+          echo "name=branch_name::$(git rev-parse --short HEAD)-master-into-flake-demo" >> $GITHUB_OUTPUT
         if: ${{ steps.check-conflict.outputs.merge_conflict }}
-      - name: Create a copy of develop on a new branch
-        run: git checkout -b ${{ steps.gen-names.outputs.branch_name }} develop
+      - name: Create a copy of master on a new branch
+        run: git checkout -b ${{ steps.gen-names.outputs.branch_name }} master
         if: ${{ steps.check-conflict.outputs.merge_conflict }}
       - name: Push branch to remote
         run: git push origin ${{ steps.gen-names.outputs.branch_name }}
@@ -50,8 +50,8 @@ jobs:
               repo: context.repo.repo,
               base: 'flake-demo',
               head: '${{ steps.gen-names.outputs.branch_name }}',
-              title: 'chore: merge develop (${{ steps.gen-names.outputs.sha }}) into flake-demo',
-              body: `There was a merge conflict when trying to automatically merge develop into flake-demo. Please resolve the conflict and complete the merge.
+              title: 'chore: merge master (${{ steps.gen-names.outputs.sha }}) into flake-demo',
+              body: `There was a merge conflict when trying to automatically merge master into flake-demo. Please resolve the conflict and complete the merge.
 
               DO NOT SQUASH AND MERGE
 
