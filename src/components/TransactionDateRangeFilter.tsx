@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { format as formatDate } from "date-fns";
-import { Popover, Chip, useTheme, Drawer, Button, useMediaQuery, colors } from "@mui/material";
+import { Popover, Chip, useTheme, Drawer, Button, useMediaQuery } from "@mui/material";
 import { ArrowDropDown as ArrowDropDownIcon, Cancel as CancelIcon } from "@mui/icons-material";
-import InfiniteCalendar, { Calendar, withRange } from "react-infinite-calendar";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-import "react-infinite-calendar/styles.css";
 import { TransactionDateRangePayload } from "../models";
 import { hasDateQueryFields } from "../utils/transactionUtils";
 
@@ -26,9 +26,6 @@ const Root = styled("div")(({ theme }) => ({
   },
 }));
 
-const { indigo } = colors;
-const CalendarWithRange = withRange(Calendar);
-
 export type TransactionListDateRangeFilterProps = {
   filterDateRange: Function;
   dateRangeFilters: TransactionDateRangePayload;
@@ -44,13 +41,15 @@ const TransactionListDateRangeFilter: React.FC<TransactionListDateRangeFilterPro
   const xsBreakpoint = useMediaQuery(theme.breakpoints.only("xs"));
   const queryHasDateFields = dateRangeFilters && hasDateQueryFields(dateRangeFilters);
 
-  const [dateRangeAnchorEl, setDateRangeAnchorEl] = React.useState<HTMLDivElement | null>(null);
+  const [dateRangeAnchorEl, setDateRangeAnchorEl] = useState<HTMLDivElement | null>(null);
+  const [dateRange, setDateRange] = useState<[Date, Date] | null>(null);
 
-  const onCalendarSelect = (e: { eventType: number; start: any; end: any }) => {
-    if (e.eventType === 3) {
+  const onCalendarSelect = (value: Date | [Date, Date]) => {
+    if (Array.isArray(value)) {
+      setDateRange(value);
       filterDateRange({
-        dateRangeStart: new Date(e.start.setUTCHours(0, 0, 0, 0)).toISOString(),
-        dateRangeEnd: new Date(e.end.setUTCHours(23, 59, 59, 999)).toISOString(),
+        dateRangeStart: value[0].toISOString(),
+        dateRangeEnd: value[1].toISOString(),
       });
       setDateRangeAnchorEl(null);
     }
@@ -67,9 +66,7 @@ const TransactionListDateRangeFilter: React.FC<TransactionListDateRangeFilterPro
   const dateRangeOpen = Boolean(dateRangeAnchorEl);
   const dateRangeId = dateRangeOpen ? "date-range-popover" : undefined;
 
-  const formatButtonDate = (date: string) => {
-    return formatDate(new Date(date), "MMM, d yyyy");
-  };
+  const formatButtonDate = (date: string) => formatDate(new Date(date), "MMM d, yyyy");
 
   const dateRangeLabel = (dateRangeFields: TransactionDateRangePayload) => {
     const { dateRangeStart, dateRangeEnd } = dateRangeFields;
@@ -83,7 +80,6 @@ const TransactionListDateRangeFilter: React.FC<TransactionListDateRangeFilterPro
           color="primary"
           variant="outlined"
           onClick={handleDateRangeClick}
-          data-test="transaction-list-filter-date-range-button"
           label={"Date: ALL"}
           deleteIcon={<ArrowDropDownIcon />}
           onDelete={handleDateRangeClick}
@@ -94,12 +90,9 @@ const TransactionListDateRangeFilter: React.FC<TransactionListDateRangeFilterPro
           color="primary"
           variant="outlined"
           onClick={handleDateRangeClick}
-          data-test="transaction-list-filter-date-range-button"
           label={`Date: ${dateRangeLabel(dateRangeFilters)}`}
-          deleteIcon={<CancelIcon data-test="transaction-list-filter-date-clear-button" />}
-          onDelete={() => {
-            resetDateRange();
-          }}
+          deleteIcon={<CancelIcon />}
+          onDelete={() => resetDateRange()}
         />
       )}
       {!xsBreakpoint && (
@@ -118,65 +111,18 @@ const TransactionListDateRangeFilter: React.FC<TransactionListDateRangeFilterPro
           }}
           className={classes.popover}
         >
-          <InfiniteCalendar
-            data-test="transaction-list-filter-date-range"
-            width={xsBreakpoint ? window.innerWidth : 350}
-            height={xsBreakpoint ? window.innerHeight : 300}
-            rowHeight={50}
-            Component={CalendarWithRange}
-            selected={false}
-            onSelect={onCalendarSelect}
-            locale={{
-              headerFormat: "MMM Do",
-            }}
-            theme={{
-              accentColor: indigo["400"],
-              headerColor: indigo["500"],
-              weekdayColor: indigo["300"],
-              selectionColor: indigo["300"],
-              floatingNav: {
-                background: indigo["400"],
-                color: "#FFF",
-                chevron: "#FFA726",
-              },
-            }}
-          />
+          <Calendar selectRange onChange={onCalendarSelect} value={dateRange} />
         </Popover>
       )}
       {xsBreakpoint && (
         <Drawer
           id={dateRangeId}
           open={dateRangeOpen}
-          ModalProps={{ onClose: handleDateRangeClose }}
+          onClose={handleDateRangeClose}
           anchor="bottom"
-          data-test="date-range-filter-drawer"
         >
-          <Button data-test="date-range-filter-drawer-close" onClick={() => handleDateRangeClose()}>
-            Close
-          </Button>
-          <InfiniteCalendar
-            data-test="transaction-list-filter-date-range"
-            width={window.innerWidth}
-            height={window.innerHeight - 185}
-            rowHeight={50}
-            Component={CalendarWithRange}
-            selected={false}
-            onSelect={onCalendarSelect}
-            locale={{
-              headerFormat: "MMM Do",
-            }}
-            theme={{
-              accentColor: indigo["400"],
-              headerColor: indigo["500"],
-              weekdayColor: indigo["300"],
-              selectionColor: indigo["300"],
-              floatingNav: {
-                background: indigo["400"],
-                color: "#FFF",
-                chevron: "#FFA726",
-              },
-            }}
-          />
+          <Button onClick={handleDateRangeClose}>Close</Button>
+          <Calendar selectRange onChange={onCalendarSelect} value={dateRange} />
         </Drawer>
       )}
     </Root>
