@@ -106,6 +106,16 @@ const SignInForm: React.FC<Props> = ({ authService }) => {
         >
           {({ isValid, isSubmitting }) => (
             <Form className={classes.form}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "-10px",
+                  marginTop: "20px",
+                  fontSize: "1.4em",
+                }}
+              >
+                Username
+              </label>
               <Field name="username">
                 {({ field, meta: { error, value, initialValue, touched } }: FieldProps) => (
                   <TextField
@@ -113,7 +123,6 @@ const SignInForm: React.FC<Props> = ({ authService }) => {
                     margin="normal"
                     fullWidth
                     id="username"
-                    label="Username"
                     type="text"
                     autoFocus
                     data-test="signin-username"
@@ -123,13 +132,22 @@ const SignInForm: React.FC<Props> = ({ authService }) => {
                   />
                 )}
               </Field>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "-10px",
+                  marginTop: "20px",
+                  fontSize: "1.4em",
+                }}
+              >
+                Password
+              </label>
               <Field name="password">
                 {({ field, meta: { error, value, initialValue, touched } }: FieldProps) => (
                   <TextField
                     variant="outlined"
                     margin="normal"
                     fullWidth
-                    label="Password"
                     type="password"
                     id="password"
                     data-test="signin-password"
