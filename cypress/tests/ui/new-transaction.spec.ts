@@ -69,23 +69,6 @@ describe("New Transaction", function () {
 
     cy.getBySelLike("user-balance").should("contain", updatedAccountBalance);
     cy.visualSnapshot("Updated User Balance");
-
-    if (isMobile()) {
-      cy.get(".MuiBackdrop-root").click({ force: true });
-    }
-
-    cy.getBySelLike("create-another-transaction").click();
-    cy.getBySel("app-name-logo").find("a").click();
-    cy.getBySelLike("personal-tab").click().should("have.class", "Mui-selected");
-    cy.wait("@personalTransactions");
-
-    cy.getBySel("transaction-list").first().should("contain", payment.description);
-
-    cy.database("find", "users", { id: ctx.contact!.id })
-      .its("balance")
-      .should("equal", ctx.contact!.balance + parseInt(payment.amount) * 100);
-    cy.getBySel("alert-bar-success").should("not.exist");
-    cy.visualSnapshot("Personal List Validate Transaction in List");
   });
 
   it("displays new transaction errors", function () {

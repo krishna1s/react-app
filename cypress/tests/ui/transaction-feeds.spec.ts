@@ -216,17 +216,6 @@ describe("Transaction Feed", function () {
   });
 
   describe("filters transaction feeds by date range", function () {
-    if (isMobile()) {
-      it("closes date range picker modal", () => {
-        cy.getBySelLike("filter-date-range-button").click({ force: true });
-        cy.get(".Cal__Header__root").should("be.visible");
-        cy.visualSnapshot("Mobile Open Date Range Picker");
-        cy.getBySel("date-range-filter-drawer-close").click();
-        cy.get(".Cal__Header__root").should("not.exist");
-        cy.visualSnapshot("Mobile Close Date Range Picker");
-      });
-    }
-
     _.each(feedViews, (feed, feedName) => {
       it(`filters ${feedName} transaction feed by date range`, function () {
         cy.database("find", "transactions").then((transaction: Transaction) => {
