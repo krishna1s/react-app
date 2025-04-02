@@ -22,7 +22,7 @@ const BankAccountListItem: React.FC<BankAccountListItemProps> = ({
         </Grid>
         {!bankAccount.isDeleted && (
           <Grid item>
-            <Button
+            {/* <Button
               variant="contained"
               color="secondary"
               size="large"
@@ -32,7 +32,7 @@ const BankAccountListItem: React.FC<BankAccountListItemProps> = ({
               }}
             >
               Delete
-            </Button>
+            </Button> */}
           </Grid>
         )}
       </Grid>
