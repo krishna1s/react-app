@@ -1,12 +1,12 @@
 version: 2.1
 orbs:
-  cypress: cypress-io/cypress@3.3.1
-  codecov: codecov/codecov@1.2.3 #
-
+  cypress: cypress-io/cypress@4.0.0
+  codecov: codecov/codecov@5.3.0
+  
 executors:
   with-chrome-and-firefox:
     docker:
-      - image: "cypress/browsers:node-20.12.0-chrome-123.0.6312.86-1-ff-124.0.2-edge-123.0.2420.65-1"
+      - image: "cypress/browsers:node-22.15.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1"
     resource_class: large
     environment:
       CYPRESS_coverage: false
@@ -19,9 +19,12 @@ commands:
     steps:
       - store_artifacts:
           path: coverage
+      - run:
+          name: Install gpg (needed for codecov)
+          command: apt-get update && apt-get install -y gpg
       - run: npx nyc report --reporter=text || true
       - codecov/upload:
-          file: coverage/coverage-final.json
+          files: coverage/coverage-final.json
   persist_ws:
     steps:
       - persist_to_workspace:
