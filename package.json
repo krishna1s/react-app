@@ -92,7 +92,7 @@
     "@types/yup": "0.29.13",
     "@vitejs/plugin-react": "^4.0.2",
     "bcryptjs": "2.4.3",
-    "concurrently": "7.1.0",
+    "concurrently": "9.1.2",
     "connect-history-api-fallback": "1.6.0",
     "cors": "2.8.5",
     "cross-env": "7.0.3",
