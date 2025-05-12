@@ -95,6 +95,9 @@ if (process.env.VITE_GOOGLE) {
   app.use(checkGoogleJwt);
 }
 
+app.get("/", (req, res) => {
+  res.send("Cypress Realworld App - backend");
+});
 app.use("/graphql", gqlPlaygroundRoutes);
 app.use(
   "/graphql",
