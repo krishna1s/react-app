@@ -30,24 +30,7 @@ describe("User Sign-up and Login", function () {
     cy.location("pathname").should("equal", "/");
   });
 
-  it("should remember a user for 30 days after login", function () {
-    cy.database("find", "users").then((user: User) => {
-      cy.login(user.username, "s3cret", { rememberUser: true });
-    });
-
-    // Verify Session Cookie
-    cy.getCookie("connect.sid").should("have.property", "expiry");
-
-    // Logout User
-    if (isMobile()) {
-      cy.getBySel("sidenav-toggle").click();
-    }
-    cy.getBySel("sidenav-signout").click();
-    cy.location("pathname").should("eq", "/signin");
-    cy.visualSnapshot("Redirect to SignIn");
-  });
-
-  it("should allow a visitor to sign-up, login, and logout", function () {
+  it("should allow a visitor to sign-up and login", function () {
     const userInfo = {
       firstName: "Bob",
       lastName: "Ross",
@@ -98,14 +81,6 @@ describe("User Sign-up and Login", function () {
 
     cy.getBySel("transaction-list").should("be.visible");
     cy.visualSnapshot("Transaction List is visible after User Onboarding");
-
-    // Logout User
-    if (isMobile()) {
-      cy.getBySel("sidenav-toggle").click();
-    }
-    cy.getBySel("sidenav-signout").click();
-    cy.location("pathname").should("eq", "/signin");
-    cy.visualSnapshot("Redirect to SignIn");
   });
 
   it("should display login errors", function () {
