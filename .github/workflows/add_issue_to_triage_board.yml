@@ -1,12 +1,46 @@
-name: 'Add issue/PR to Triage Board'
+name: Merge develop into flake-demo
+
 on:
-  issues:
-    types:
-      - opened
-  pull_request_target:
-    types:
-      - opened
+  push:
+    branches:
+      - develop
+
 jobs:
-  add-to-triage-project-board:
-    uses: cypress-io/cypress/.github/workflows/triage_add_to_project.yml@develop
-    secrets: inherit
+  merge-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set committer info
+        run: |
+          git config --local user.email "example@example.com"
+          git config --local user.name "Your Name"
+      
+      - name: Checkout flake-demo branch
+        run: git checkout flake-demo
+
+      - name: Check for merge conflict
+        id: check-conflict
+        run: |
+          conflict_output=$(git merge-tree $(git merge-base HEAD develop) develop HEAD | grep '<<<<<<<' || echo "no-conflict")
+          if [ "$conflict_output" != "no-conflict" ]; then
+            echo "merge_conflict=true" >> $GITHUB_ENV
+          else
+            echo "merge_conflict=false" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Merge develop into flake-demo
+        run: git merge develop
+        if: ${{ env.merge_conflict == 'false' }}
+
+      - name: Push
+        run: git push
+        if: ${{ env.merge_conflict == 'false' }}
+
+      - name: Notify of merge conflicts
+        run: echo "Merge conflicts detected!"
+        if: ${{ env.merge_conflict == 'true' }}
