@@ -73,7 +73,8 @@ describe("Transaction Feed", function () {
         cy.visualSnapshot("Mobile Home Link Side Navigation Not Visible");
 
         cy.getBySel("sidenav-toggle").click();
-        cy.getBySel("sidenav-home").click().should("not.exist");
+        cy.getBySel("sidenav-home").click();
+        cy.getBySel("sidenav-home").should("not.exist");
         cy.visualSnapshot("Mobile Toggle Side Navigation Not Visible");
       } else {
         cy.getBySel("sidenav-home").should("be.visible");
@@ -174,8 +175,8 @@ describe("Transaction Feed", function () {
 
     _.each(feedViews, (feed, feedName) => {
       it(`paginates ${feedName} transaction feed`, function () {
+        cy.getBySelLike(feed.tab).click();
         cy.getBySelLike(feed.tab)
-          .click()
           .should("have.class", "Mui-selected")
           .contains(feed.tabLabel, { matchCase: false })
           .should("have.css", { "text-transform": "uppercase" });
@@ -233,7 +234,8 @@ describe("Transaction Feed", function () {
           const dateRangeStart = startOfDay(new Date(transaction.createdAt));
           const dateRangeEnd = endOfDayUTC(addDays(dateRangeStart, 1));
 
-          cy.getBySelLike(feed.tab).click().should("have.class", "Mui-selected");
+          cy.getBySelLike(feed.tab).click();
+          cy.getBySelLike(feed.tab).should("have.class", "Mui-selected");
 
           cy.wait(`@${feed.routeAlias}`).its("response.body.results").as("unfilteredResults");
 
@@ -252,8 +254,8 @@ describe("Transaction Feed", function () {
                     start: startOfDayUTC(dateRangeStart),
                     end: dateRangeEnd,
                   }),
-                  `transaction created date (${createdAtDate.toISOString()}) 
-                  is within ${dateRangeStart.toISOString()} 
+                  `transaction created date (${createdAtDate.toISOString()})
+                  is within ${dateRangeStart.toISOString()}
                   and ${dateRangeEnd.toISOString()}`
                 ).to.equal(true);
               });
@@ -305,7 +307,8 @@ describe("Transaction Feed", function () {
 
     _.each(feedViews, (feed, feedName) => {
       it(`filters ${feedName} transaction feed by amount range`, function () {
-        cy.getBySelLike(feed.tab).click({ force: true }).should("have.class", "Mui-selected");
+        cy.getBySelLike(feed.tab).click({ force: true });
+        cy.getBySelLike(feed.tab).should("have.class", "Mui-selected");
 
         cy.wait(`@${feed.routeAlias}`).its("response.body.results").as("unfilteredResults");
 

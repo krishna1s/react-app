@@ -76,7 +76,8 @@ describe("New Transaction", function () {
 
     cy.getBySelLike("create-another-transaction").click();
     cy.getBySel("app-name-logo").find("a").click();
-    cy.getBySelLike("personal-tab").click().should("have.class", "Mui-selected");
+    cy.getBySelLike("personal-tab").click();
+    cy.getBySelLike("personal-tab").should("have.class", "Mui-selected");
     cy.wait("@personalTransactions");
 
     cy.getBySel("transaction-list").first().should("contain", payment.description);
@@ -111,7 +112,8 @@ describe("New Transaction", function () {
     cy.visualSnapshot("Transaction Request Submitted Notification");
 
     cy.getBySelLike("return-to-transactions").click();
-    cy.getBySelLike("personal-tab").click().should("have.class", "Mui-selected");
+    cy.getBySelLike("personal-tab").click();
+    cy.getBySelLike("personal-tab").should("have.class", "Mui-selected");
 
     cy.getBySelLike("transaction-item").should("contain", request.description);
     cy.visualSnapshot("Transaction Item Description in List");
@@ -123,12 +125,16 @@ describe("New Transaction", function () {
 
     cy.getBySelLike("user-list-item").contains(ctx.contact!.firstName).click({ force: true });
 
-    cy.getBySelLike("amount-input").type("43").find("input").clear().blur();
+    cy.getBySelLike("amount-input").type("43");
+    cy.getBySelLike("amount-input").find("input").clear();
+    cy.getBySelLike("amount-input").find("input").blur();
     cy.get("#transaction-create-amount-input-helper-text")
       .should("be.visible")
       .and("contain", "Please enter a valid amount");
 
-    cy.getBySelLike("description-input").type("Fun").find("input").clear().blur();
+    cy.getBySelLike("description-input").type("Fun");
+    cy.getBySelLike("description-input").find("input").clear();
+    cy.getBySelLike("description-input").find("input").blur();
     cy.get("#transaction-create-description-input-helper-text")
       .should("be.visible")
       .and("contain", "Please enter a note");
