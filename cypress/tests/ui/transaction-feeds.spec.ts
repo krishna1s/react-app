@@ -186,11 +186,6 @@ describe("Transaction Feed", function () {
           .its("response.body.results")
           .should("have.length", Cypress.env("paginationPageSize"));
 
-        // Temporary fix: https://github.com/cypress-io/cypress-realworld-app/issues/338
-        if (isMobile()) {
-          cy.wait(10);
-        }
-
         cy.log("📃 Scroll to next page");
         cy.getBySel("transaction-list").children().scrollTo("bottom");
 
@@ -252,8 +247,8 @@ describe("Transaction Feed", function () {
                     start: startOfDayUTC(dateRangeStart),
                     end: dateRangeEnd,
                   }),
-                  `transaction created date (${createdAtDate.toISOString()}) 
-                  is within ${dateRangeStart.toISOString()} 
+                  `transaction created date (${createdAtDate.toISOString()})
+                  is within ${dateRangeStart.toISOString()}
                   and ${dateRangeEnd.toISOString()}`
                 ).to.equal(true);
               });
