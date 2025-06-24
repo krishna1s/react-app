@@ -202,4 +202,18 @@ describe("Users API", function () {
       });
     });
   });
+  
+  context("POST /logout", function () {
+    it("logs out the authenticated user", function () {
+      // First, log in the user
+      cy.loginByApi(ctx.authenticatedUser!.username).then(() => {
+        // Then, log out the user using the custom command
+        cy.logoutByApi().then((response) => {
+          // Keep the assertions for status code and message
+          expect(response.status).to.eq(200);
+          expect(response.body).to.have.property("message", "User logged out successfully");
+        });
+      });
+    });
+  });
 });
