@@ -49,7 +49,6 @@ const AppGoogle: React.FC = () => {
 
   // @ts-ignore
   if (window.Cypress) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       const { user, token } = JSON.parse(localStorage.getItem("googleCypress")!);
       authService.send("GOOGLE", {
@@ -58,7 +57,6 @@ const AppGoogle: React.FC = () => {
       });
     }, []);
   } else {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useGoogleLogin({
       clientId: process.env.VITE_GOOGLE_CLIENTID!,
       onSuccess: (res) => {

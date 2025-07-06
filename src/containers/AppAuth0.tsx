@@ -42,7 +42,6 @@ const AppAuth0: React.FC = () => {
 
   const [, , bankAccountsService] = useMachine(bankAccountsMachine);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     (async function waitForToken() {
       const token = await getAccessTokenSilently();

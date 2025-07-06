@@ -92,7 +92,6 @@ const MainLayout: React.FC<Props> = ({ children, notificationsService, authServi
     if (!desktopDrawerOpen && aboveSmallBreakpoint) {
       openDesktopDrawer({ aboveSmallBreakpoint });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aboveSmallBreakpoint, desktopDrawerOpen]);
 
   return (

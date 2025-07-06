@@ -46,7 +46,6 @@ const AppOkta: React.FC = () => {
 
   // @ts-ignore
   if (window.Cypress && process.env.VITE_OKTA_PROGRAMMATIC) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       const okta = JSON.parse(localStorage.getItem("oktaCypress")!);
       authService.send("OKTA", {
@@ -55,7 +54,6 @@ const AppOkta: React.FC = () => {
       });
     }, []);
   } else {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       if (oktaAuthState.isAuthenticated) {
         oktaAuthService.getUser().then((user: any) => {
