@@ -23,6 +23,7 @@ module.exports = defineConfig({
   retries: {
     runMode: 2,
   },
+  video: true,
   env: {
     apiUrl: "http://localhost:3001",
     mobileViewportWidthBreakpoint: 414,
