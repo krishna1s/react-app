@@ -46,7 +46,7 @@ export interface Transaction {
  * Equivalent to Cypress cy.getBySel()
  */
 export const getByTestId = (page: Page, testId: string): Locator => {
-  return page.locator(`[data-testid="${testId}"]`);
+  return page.locator(`[data-test="${testId}"]`);
 };
 
 /**
