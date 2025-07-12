@@ -34,16 +34,18 @@ describe("Comments API", function () {
 
   context("GET /comments/:transactionId", function () {
     it("gets a list of comments for a transaction", function () {
-      cy.request("GET", `${apiComments}/${ctx.transactionId}`).then((response) => {
+      const transactionId = ctx.transactionId!;
+      cy.request("GET", `${apiComments}/${transactionId}`).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body.comments.length).to.eq(1);
+        expect(response.body.comments).to.be.an("array").that.has.length(1);
       });
     });
   });
 
   context("POST /comments/:transactionId", function () {
     it("creates a new comment for a transaction", function () {
-      cy.request("POST", `${apiComments}/${ctx.transactionId}`, {
+      const transactionId = ctx.transactionId!;
+      cy.request("POST", `${apiComments}/${transactionId}`, {
         content: "This is my comment",
       }).then((response) => {
         expect(response.status).to.eq(200);

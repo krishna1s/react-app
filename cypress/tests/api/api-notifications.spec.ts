@@ -90,7 +90,7 @@ describe("Notifications API", function () {
       });
     });
 
-    it("error when invalid field sent", function () {
+    it("errors when invalid field sent", function () {
       cy.request({
         method: "PATCH",
         url: `${apiNotifications}/${ctx.notificationId}`,

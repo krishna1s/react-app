@@ -37,14 +37,14 @@ describe("Users API", function () {
   });
 
   context("GET /users/:userId", function () {
-    it("get a user", function () {
+    it("gets a user", function () {
       cy.request("GET", `${apiUsers}/${ctx.authenticatedUser!.id}`).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body.user).to.have.property("firstName");
       });
     });
 
-    it("error when invalid userId", function () {
+    it("errors when invalid userId", function () {
       cy.request({
         method: "GET",
         url: `${apiUsers}/1234`,
@@ -57,7 +57,7 @@ describe("Users API", function () {
   });
 
   context("GET /users/profile/:username", function () {
-    it("get a user profile by username", function () {
+    it("gets a user profile by username", function () {
       const { username, firstName, lastName, avatar } = ctx.authenticatedUser!;
       cy.request("GET", `${apiUsers}/profile/${username}`).then((response) => {
         expect(response.status).to.eq(200);
@@ -72,7 +72,7 @@ describe("Users API", function () {
   });
 
   context("GET /users/search", function () {
-    it("get users by email", function () {
+    it("gets users by email", function () {
       const { email, firstName } = ctx.searchUser!;
       cy.request({
         method: "GET",
@@ -86,7 +86,7 @@ describe("Users API", function () {
       });
     });
 
-    it("get users by phone number", function () {
+    it("gets users by phone number", function () {
       const { phoneNumber, firstName } = ctx.searchUser!;
 
       cy.request({
@@ -101,7 +101,7 @@ describe("Users API", function () {
       });
     });
 
-    it("get users by username", function () {
+    it("gets users by username", function () {
       const { username, firstName } = ctx.searchUser!;
 
       cy.request({
@@ -135,7 +135,26 @@ describe("Users API", function () {
       });
     });
 
-    it("error when invalid field sent", function () {
+    it("creates a new user with an account balance in cents", function () {
+      const firstName = faker.name.firstName();
+
+      cy.request("POST", `${apiUsers}`, {
+        firstName,
+        lastName: faker.name.lastName(),
+        username: faker.internet.userName(),
+        password: faker.internet.password(),
+        email: faker.internet.email(),
+        phoneNumber: faker.phone.phoneNumber(),
+        avatar: faker.internet.avatar(),
+        balance: 100_00,
+      }).then((response) => {
+        expect(response.status).to.eq(201);
+        expect(response.body.user).to.contain({ firstName });
+        expect(response.body.user.balance).to.equal(100_00);
+      });
+    });
+
+    it("errors when an invalid field sent", function () {
       cy.request({
         method: "POST",
         url: `${apiUsers}`,
@@ -161,7 +180,7 @@ describe("Users API", function () {
       });
     });
 
-    it("error when invalid field sent", function () {
+    it("errors when an invalid field sent", function () {
       cy.request({
         method: "PATCH",
         url: `${apiUsers}/${ctx.authenticatedUser!.id}`,
@@ -177,7 +196,7 @@ describe("Users API", function () {
   });
 
   context("POST /login", function () {
-    it("login as user", function () {
+    it("logs in as a user", function () {
       cy.loginByApi(ctx.authenticatedUser!.username).then((response) => {
         expect(response.status).to.eq(200);
       });

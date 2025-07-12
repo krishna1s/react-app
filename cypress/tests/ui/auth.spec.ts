@@ -111,11 +111,14 @@ describe("User Sign-up and Login", function () {
   it("should display login errors", function () {
     cy.visit("/");
 
-    cy.getBySel("signin-username").type("User").find("input").clear().blur();
+    cy.getBySel("signin-username").type("User");
+    cy.getBySel("signin-username").find("input").clear();
+    cy.getBySel("signin-username").find("input").blur();
     cy.get("#username-helper-text").should("be.visible").and("contain", "Username is required");
     cy.visualSnapshot("Display Username is Required Error");
 
-    cy.getBySel("signin-password").type("abc").find("input").blur();
+    cy.getBySel("signin-password").type("abc");
+    cy.getBySel("signin-password").find("input").blur();
     cy.get("#password-helper-text")
       .should("be.visible")
       .and("contain", "Password must contain at least 4 characters");
@@ -130,19 +133,28 @@ describe("User Sign-up and Login", function () {
 
     cy.visit("/signup");
 
-    cy.getBySel("signup-first-name").type("First").find("input").clear().blur();
+    cy.getBySel("signup-first-name").type("First");
+    cy.getBySel("signup-first-name").find("input").clear();
+    cy.getBySel("signup-first-name").find("input").blur();
     cy.get("#firstName-helper-text").should("be.visible").and("contain", "First Name is required");
 
-    cy.getBySel("signup-last-name").type("Last").find("input").clear().blur();
+    cy.getBySel("signup-last-name").type("Last");
+    cy.getBySel("signup-last-name").find("input").clear();
+    cy.getBySel("signup-last-name").find("input").blur();
     cy.get("#lastName-helper-text").should("be.visible").and("contain", "Last Name is required");
 
-    cy.getBySel("signup-username").type("User").find("input").clear().blur();
+    cy.getBySel("signup-username").type("User");
+    cy.getBySel("signup-username").find("input").clear();
+    cy.getBySel("signup-username").find("input").blur();
     cy.get("#username-helper-text").should("be.visible").and("contain", "Username is required");
 
-    cy.getBySel("signup-password").type("password").find("input").clear().blur();
+    cy.getBySel("signup-password").type("password");
+    cy.getBySel("signup-password").find("input").clear();
+    cy.getBySel("signup-password").find("input").blur();
     cy.get("#password-helper-text").should("be.visible").and("contain", "Enter your password");
 
-    cy.getBySel("signup-confirmPassword").type("DIFFERENT PASSWORD").find("input").blur();
+    cy.getBySel("signup-confirmPassword").type("DIFFERENT PASSWORD");
+    cy.getBySel("signup-confirmPassword").find("input").blur();
     cy.get("#confirmPassword-helper-text")
       .should("be.visible")
       .and("contain", "Password does not match");

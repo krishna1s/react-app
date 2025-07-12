@@ -5,11 +5,18 @@ import dotenv from "dotenv";
 import Promise from "bluebird";
 import codeCoverageTask from "@cypress/code-coverage/task";
 import { defineConfig } from "cypress";
+import { mergeConfig, loadEnv } from "vite";
 
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-const awsConfig = require(path.join(__dirname, "./aws-exports-es5.js"));
+let awsConfig = {
+  default: undefined,
+};
+
+try {
+  awsConfig = require(path.join(__dirname, "./aws-exports-es5.js"));
+} catch (e) {}
 
 module.exports = defineConfig({
   projectId: "7s5okt",
@@ -55,6 +62,24 @@ module.exports = defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
+      viteConfig: () => {
+        const viteConfig = require("./vite.config.ts");
+        const conf = {
+          define: {
+            "process.env": loadEnv("development", process.cwd(), "VITE"),
+          },
+          server: {
+            /**
+             * start the CT dev server on a different port than the full RWA
+             * so users can switch between CT and E2E testing without having to
+             * stop/start the RWA dev server.
+             */
+            port: 3002,
+          },
+        };
+        const resolvedViteConfig = mergeConfig(viteConfig, conf);
+        return resolvedViteConfig;
+      },
     },
     specPattern: "src/**/*.cy.{js,jsx,ts,tsx}",
     supportFile: "cypress/support/component.ts",
@@ -70,6 +95,7 @@ module.exports = defineConfig({
     viewportHeight: 1000,
     viewportWidth: 1280,
     experimentalRunAllSpecs: true,
+    experimentalStudio: true,
     setupNodeEvents(on, config) {
       const testDataApiEndpoint = `${config.env.apiUrl}/testData`;
 

@@ -1,12 +1,12 @@
 version: 2.1
 orbs:
-  cypress: cypress-io/cypress@3.3.0
-  codecov: codecov/codecov@1.2.3 #
+  cypress: cypress-io/cypress@4.0.0
+  codecov: codecov/codecov@5.3.0
 
 executors:
   with-chrome-and-firefox:
     docker:
-      - image: "cypress/browsers:node-18.16.0-chrome-114.0.5735.133-1-ff-114.0.2-edge-114.0.1823.51-1"
+      - image: "cypress/browsers:22.16.0"
     resource_class: large
     environment:
       CYPRESS_coverage: false
@@ -19,9 +19,12 @@ commands:
     steps:
       - store_artifacts:
           path: coverage
+      - run:
+          name: Install gpg (needed for codecov)
+          command: apt-get update && apt-get install -y gpg
       - run: npx nyc report --reporter=text || true
       - codecov/upload:
-          file: coverage/coverage-final.json
+          files: coverage/coverage-final.json
   persist_ws:
     steps:
       - persist_to_workspace:
@@ -103,7 +106,7 @@ commands:
           steps:
             - cypress/run-tests:
                 start-command: yarn start:ci
-                cypress-command: yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>> --config '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
+                cypress-command: yarn wait-on http://localhost:3001 && yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>> --config '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
       - when:
           condition:
             and:
@@ -117,7 +120,7 @@ commands:
                 steps:
                   - cypress/run-tests:
                       start-command: yarn start:ci
-                      cypress-command: yarn percy exec -- yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>>
+                      cypress-command: yarn wait-on http://localhost:3001 && yarn percy exec -- yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>>
             - when:
                 condition:
                   and:
@@ -125,7 +128,7 @@ commands:
                 steps:
                   - cypress/run-tests:
                       start-command: yarn start:ci
-                      cypress-command: yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>>
+                      cypress-command: yarn wait-on http://localhost:3001 && yarn cypress run --ci-build-id=<<parameters.ciBuildId>> --group="<<parameters.group>>" --record --parallel --spec=<<parameters.specPattern>> --browser=<<parameters.browser>>
       - report-coverage
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Jobs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
