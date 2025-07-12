@@ -36,29 +36,46 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // Simple setup verification tests that don't require the web server
     {
-      name: 'chromium',
+      name: 'setup',
+      testMatch: /.*setup-verification\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
+      name: 'chromium',
+      testIgnore: /.*setup-verification\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
+    },
+
+    {
       name: 'firefox',
+      testIgnore: /.*setup-verification\.spec\.ts/,
       use: { ...devices['Desktop Firefox'] },
+      dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
+      testIgnore: /.*setup-verification\.spec\.ts/,
       use: { ...devices['Desktop Safari'] },
+      dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
+      testIgnore: /.*setup-verification\.spec\.ts/,
       use: { ...devices['Pixel 5'] },
+      dependencies: ['setup'],
     },
     {
       name: 'Mobile Safari',
+      testIgnore: /.*setup-verification\.spec\.ts/,
       use: { ...devices['iPhone 12'] },
+      dependencies: ['setup'],
     },
 
     /* Test against branded browsers. */
