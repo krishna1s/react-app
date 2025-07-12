@@ -153,14 +153,14 @@ This application now includes comprehensive Playwright end-to-end tests that pro
 
 ### Playwright Test Coverage
 
-| Test Suite | Location | Coverage |
-| ---------- | -------- | -------- |
-| Authentication | [playwright/tests/auth.spec.ts](./playwright/tests/auth.spec.ts) | Signup, signin, logout, form validation |
-| Transactions | [playwright/tests/transactions.spec.ts](./playwright/tests/transactions.spec.ts) | Create/view transactions, filtering, comments |
-| Bank Accounts | [playwright/tests/bank-accounts.spec.ts](./playwright/tests/bank-accounts.spec.ts) | Add/edit/delete accounts, validation |
-| Notifications | [playwright/tests/notifications.spec.ts](./playwright/tests/notifications.spec.ts) | View/dismiss notifications, filtering |
-| User Settings | [playwright/tests/user-settings.spec.ts](./playwright/tests/user-settings.spec.ts) | Profile updates, password change, privacy |
-| E2E Journeys | [playwright/tests/e2e-journey.spec.ts](./playwright/tests/e2e-journey.spec.ts) | Complete user workflows, mobile testing |
+| Test Suite     | Location                                                                           | Coverage                                      |
+| -------------- | ---------------------------------------------------------------------------------- | --------------------------------------------- |
+| Authentication | [playwright/tests/auth.spec.ts](./playwright/tests/auth.spec.ts)                   | Signup, signin, logout, form validation       |
+| Transactions   | [playwright/tests/transactions.spec.ts](./playwright/tests/transactions.spec.ts)   | Create/view transactions, filtering, comments |
+| Bank Accounts  | [playwright/tests/bank-accounts.spec.ts](./playwright/tests/bank-accounts.spec.ts) | Add/edit/delete accounts, validation          |
+| Notifications  | [playwright/tests/notifications.spec.ts](./playwright/tests/notifications.spec.ts) | View/dismiss notifications, filtering         |
+| User Settings  | [playwright/tests/user-settings.spec.ts](./playwright/tests/user-settings.spec.ts) | Profile updates, password change, privacy     |
+| E2E Journeys   | [playwright/tests/e2e-journey.spec.ts](./playwright/tests/e2e-journey.spec.ts)     | Complete user workflows, mobile testing       |
 
 ### Running Playwright Tests
 
@@ -173,7 +173,7 @@ npm run playwright:test
 
 # Run tests in specific browser
 npm run playwright:test:chromium
-npm run playwright:test:firefox  
+npm run playwright:test:firefox
 npm run playwright:test:webkit
 
 # Run mobile tests
@@ -191,7 +191,7 @@ npm run playwright:report
 Playwright tests are automatically executed on every pull request via GitHub Actions:
 
 - ✅ Cross-browser testing (Chromium, Firefox, WebKit)
-- 📱 Mobile device testing (Mobile Chrome, Mobile Safari)  
+- 📱 Mobile device testing (Mobile Chrome, Mobile Safari)
 - 📊 Automatic test reports and artifacts
 - 💬 PR comments with test results
 - 🔄 Retry on failure with detailed debugging info
@@ -212,29 +212,29 @@ For detailed information, see [playwright/README.md](./playwright/README.md).
 
 ## Additional NPM Scripts
 
-| Script                  | Description                                                                                                                                                                       |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| dev                     | Starts backend in watch mode and frontend                                                                                                                                         |
-| dev:coverage            | Starts backend in watch mode and frontend with instrumented code coverage enabled                                                                                                 |
-| dev:auth0               | Starts backend in watch mode and frontend; [Uses Auth0 for Authentication](#auth0) > [Read Guide](http://on.cypress.io/auth0)                                                     |
-| dev:okta                | Starts backend in watch mode and frontend; [Uses Okta for Authentication](#okta) > [Read Guide](http://on.cypress.io/okta)                                                        |
-| dev:cognito             | Starts backend in watch mode and frontend; [Uses Cognito for Authentication](#amazon-cognito) > [Read Guide](http://on.cypress.io/amazon-cognito)                                 |
-| dev:google              | Starts backend in watch mode and frontend; [Uses Google for Authentication](#google) > [Read Guide](https://docs.cypress.io/guides/testing-strategies/google-authentication.html) |
-| start                   | Starts backend and frontend                                                                                                                                                       |
-| types                   | Validates types                                                                                                                                                                   |
-| db:seed                 | Generates fresh database seeds for json files in /data                                                                                                                            |
-| start:empty             | Starts backend, frontend and Cypress with empty database seed                                                                                                                     |
-| tsnode                  | Customized ts-node command to get around react-scripts restrictions                                                                                                               |
-| list:dev:users          | Provides id and username for users in the dev database                                                                                                                            |
-| playwright:install      | Installs Playwright browsers                                                                                                                                                      |
-| playwright:test         | Runs Playwright E2E tests across all browsers                                                                                                                                     |
-| playwright:test:ui      | Runs Playwright tests in interactive UI mode                                                                                                                                      |
-| playwright:test:headed  | Runs Playwright tests in headed mode (browser visible)                                                                                                                            |
-| playwright:test:chromium| Runs Playwright tests in Chromium only                                                                                                                                            |
-| playwright:test:firefox | Runs Playwright tests in Firefox only                                                                                                                                             |
-| playwright:test:webkit  | Runs Playwright tests in WebKit only                                                                                                                                              |
-| playwright:test:mobile  | Runs Playwright tests on mobile devices                                                                                                                                           |
-| playwright:report       | Opens Playwright HTML test report                                                                                                                                                 |
+| Script                   | Description                                                                                                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| dev                      | Starts backend in watch mode and frontend                                                                                                                                         |
+| dev:coverage             | Starts backend in watch mode and frontend with instrumented code coverage enabled                                                                                                 |
+| dev:auth0                | Starts backend in watch mode and frontend; [Uses Auth0 for Authentication](#auth0) > [Read Guide](http://on.cypress.io/auth0)                                                     |
+| dev:okta                 | Starts backend in watch mode and frontend; [Uses Okta for Authentication](#okta) > [Read Guide](http://on.cypress.io/okta)                                                        |
+| dev:cognito              | Starts backend in watch mode and frontend; [Uses Cognito for Authentication](#amazon-cognito) > [Read Guide](http://on.cypress.io/amazon-cognito)                                 |
+| dev:google               | Starts backend in watch mode and frontend; [Uses Google for Authentication](#google) > [Read Guide](https://docs.cypress.io/guides/testing-strategies/google-authentication.html) |
+| start                    | Starts backend and frontend                                                                                                                                                       |
+| types                    | Validates types                                                                                                                                                                   |
+| db:seed                  | Generates fresh database seeds for json files in /data                                                                                                                            |
+| start:empty              | Starts backend, frontend and Cypress with empty database seed                                                                                                                     |
+| tsnode                   | Customized ts-node command to get around react-scripts restrictions                                                                                                               |
+| list:dev:users           | Provides id and username for users in the dev database                                                                                                                            |
+| playwright:install       | Installs Playwright browsers                                                                                                                                                      |
+| playwright:test          | Runs Playwright E2E tests across all browsers                                                                                                                                     |
+| playwright:test:ui       | Runs Playwright tests in interactive UI mode                                                                                                                                      |
+| playwright:test:headed   | Runs Playwright tests in headed mode (browser visible)                                                                                                                            |
+| playwright:test:chromium | Runs Playwright tests in Chromium only                                                                                                                                            |
+| playwright:test:firefox  | Runs Playwright tests in Firefox only                                                                                                                                             |
+| playwright:test:webkit   | Runs Playwright tests in WebKit only                                                                                                                                              |
+| playwright:test:mobile   | Runs Playwright tests on mobile devices                                                                                                                                           |
+| playwright:report        | Opens Playwright HTML test report                                                                                                                                                 |
 
 For a complete list of scripts see [package.json](./package.json)
 

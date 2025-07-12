@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 
 export interface User {
   id: string;
@@ -53,28 +53,28 @@ export const getByTestId = (page: Page, testId: string): Locator => {
  * Login helper function
  */
 export const login = async (
-  page: Page, 
-  username: string, 
-  password: string, 
+  page: Page,
+  username: string,
+  password: string,
   options: { rememberUser?: boolean } = {}
 ): Promise<void> => {
   // Navigate to signin page
-  await page.goto('/signin');
-  
+  await page.goto("/signin");
+
   // Fill in credentials
-  await getByTestId(page, 'signin-username').fill(username);
-  await getByTestId(page, 'signin-password').fill(password);
-  
+  await getByTestId(page, "signin-username").fill(username);
+  await getByTestId(page, "signin-password").fill(password);
+
   // Check remember me if requested
   if (options.rememberUser) {
-    await getByTestId(page, 'signin-remember-me').check();
+    await getByTestId(page, "signin-remember-me").check();
   }
-  
+
   // Submit form
-  await getByTestId(page, 'signin-submit').click();
-  
+  await getByTestId(page, "signin-submit").click();
+
   // Wait for navigation to complete
-  await page.waitForURL('/');
+  await page.waitForURL("/");
 };
 
 /**
@@ -82,10 +82,10 @@ export const login = async (
  */
 export const logout = async (page: Page, isMobile = false): Promise<void> => {
   if (isMobile) {
-    await getByTestId(page, 'sidenav-toggle').click();
+    await getByTestId(page, "sidenav-toggle").click();
   }
-  await getByTestId(page, 'sidenav-signout').click();
-  await page.waitForURL('/signin');
+  await getByTestId(page, "sidenav-signout").click();
+  await page.waitForURL("/signin");
 };
 
 /**
@@ -94,12 +94,11 @@ export const logout = async (page: Page, isMobile = false): Promise<void> => {
 export const waitForResponse = async (
   page: Page,
   url: string | RegExp,
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET'
+  method: "GET" | "POST" | "PUT" | "DELETE" = "GET"
 ): Promise<any> => {
-  return page.waitForResponse(response => {
-    const urlMatches = typeof url === 'string' 
-      ? response.url().includes(url)
-      : url.test(response.url());
+  return page.waitForResponse((response) => {
+    const urlMatches =
+      typeof url === "string" ? response.url().includes(url) : url.test(response.url());
     return urlMatches && response.request().method() === method;
   });
 };
@@ -109,27 +108,27 @@ export const waitForResponse = async (
  */
 export const setupApiIntercepts = async (page: Page): Promise<void> => {
   // Mock database seed
-  await page.route('**/testData/seed', async route => {
+  await page.route("**/testData/seed", async (route) => {
     await route.fulfill({
       status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ success: true })
+      contentType: "application/json",
+      body: JSON.stringify({ success: true }),
     });
   });
-  
+
   // Mock user creation
-  await page.route('**/users', async route => {
-    if (route.request().method() === 'POST') {
+  await page.route("**/users", async (route) => {
+    if (route.request().method() === "POST") {
       await route.fulfill({
         status: 201,
-        contentType: 'application/json',
-        body: JSON.stringify({ 
+        contentType: "application/json",
+        body: JSON.stringify({
           user: {
-            id: 'mock-user-id',
-            username: 'testuser',
-            email: 'test@example.com'
-          }
-        })
+            id: "mock-user-id",
+            username: "testuser",
+            email: "test@example.com",
+          },
+        }),
       });
     } else {
       await route.continue();
@@ -142,11 +141,11 @@ export const setupApiIntercepts = async (page: Page): Promise<void> => {
  */
 export const createTestUser = (): Partial<User> => ({
   username: `testuser_${Date.now()}`,
-  password: 's3cret',
+  password: "s3cret",
   email: `test_${Date.now()}@example.com`,
-  firstName: 'Test',
-  lastName: 'User',
-  balance: 1000
+  firstName: "Test",
+  lastName: "User",
+  balance: 1000,
 });
 
 /**
@@ -170,15 +169,15 @@ export const signUp = async (
     confirmPassword: string;
   }
 ): Promise<void> => {
-  await page.goto('/signup');
-  
-  await getByTestId(page, 'signup-first-name').fill(userData.firstName);
-  await getByTestId(page, 'signup-last-name').fill(userData.lastName);
-  await getByTestId(page, 'signup-username').fill(userData.username);
-  await getByTestId(page, 'signup-password').fill(userData.password);
-  await getByTestId(page, 'signup-confirmPassword').fill(userData.confirmPassword);
-  
-  await getByTestId(page, 'signup-submit').click();
+  await page.goto("/signup");
+
+  await getByTestId(page, "signup-first-name").fill(userData.firstName);
+  await getByTestId(page, "signup-last-name").fill(userData.lastName);
+  await getByTestId(page, "signup-username").fill(userData.username);
+  await getByTestId(page, "signup-password").fill(userData.password);
+  await getByTestId(page, "signup-confirmPassword").fill(userData.confirmPassword);
+
+  await getByTestId(page, "signup-submit").click();
 };
 
 /**
@@ -186,5 +185,5 @@ export const signUp = async (
  */
 export const navigateToPage = async (page: Page, path: string): Promise<void> => {
   await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState("networkidle");
 };

@@ -1,7 +1,6 @@
 import { Amplify } from "aws-amplify";
 import { fetchAuthSession, signIn } from "aws-amplify/auth";
 
-
 Amplify.configure(Cypress.env("awsConfig"));
 
 const fetchJwts = async (username: string, password: string) => {
@@ -35,7 +34,6 @@ Cypress.Commands.add("loginByCognitoApi", (username: string, password: string) =
 
     const keyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
     const keyPrefixWithUsername = `${keyPrefix}.${accessTokenSub}`;
-
 
     const ls = window.localStorage;
     ls.setItem(`${keyPrefixWithUsername}.idToken`, idToken);
