@@ -1,0 +1,1129 @@
+{
+  "application": {
+    "name": "Cypress Real World App",
+    "description": "A payment application demonstrating real-world usage of Cypress testing methods",
+    "version": "1.0.0",
+    "baseUrl": "http://localhost:3000",
+    "personas": [
+      {
+        "role": "default",
+        "username": "Heath93",
+        "password": "s3cret"
+      }
+    ]
+  },
+  "testSuites": [
+    {
+      "id": "Authentication",
+      "title": "Authentication Scenarios",
+      "scenarios": [
+        {
+          "id": "AUTH_001",
+          "title": "User Sign Up - Valid Registration",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["registration", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-first-name']",
+              "value": "John",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-first-name']", "value": "John" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signin" }
+              ]
+            }
+          ],
+          "expectedResult": "User account is created successfully and redirected to Sign In page",
+          "testData": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123"
+          }
+        },
+        {
+          "id": "AUTH_002",
+          "title": "User Sign Up - Missing First Name",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["registration", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=First Name is required" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating that the first name is required",
+          "testData": {
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123"
+          }
+        },
+        {
+          "id": "AUTH_003",
+          "title": "User Sign Up - Password Mismatch",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["registration", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-first-name']",
+              "value": "John",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-first-name']", "value": "John" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password456",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Password does not match" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating that the passwords do not match",
+          "testData": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123",
+            "confirmPassword": "password456"
+          }
+        },
+        {
+          "id": "AUTH_004",
+          "title": "User Sign In - Valid Credentials",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["login", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User has an account",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-username']",
+              "value": "Heath93",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signin-username']", "value": "Heath93" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-password']",
+              "value": "s3cret",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signin-password']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signin-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/" },
+                { "type": "elementVisible", "selector": "[data-test='sidenav-username']" }
+              ]
+            }
+          ],
+          "expectedResult": "User is logged in successfully and redirected to the dashboard",
+          "testData": {
+            "username": "Heath93",
+            "password": "s3cret"
+          }
+        },
+        {
+          "id": "AUTH_005",
+          "title": "User Sign In - Invalid Credentials",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["login", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-username']",
+              "value": "wronguser",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signin-username']", "value": "wronguser" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-password']",
+              "value": "wrongpass",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signin-password']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signin-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='signin-error']" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating invalid credentials",
+          "testData": {
+            "username": "wronguser",
+            "password": "wrongpass"
+          }
+        },
+        {
+          "id": "AUTH_006",
+          "title": "User Password Recovery - Valid Email",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["password-recovery", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Password recovery feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Password recovery feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        },
+        {
+          "id": "AUTH_007",
+          "title": "User Password Recovery - Invalid Email",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["password-recovery", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Password recovery feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Password recovery feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        },
+        {
+          "id": "AUTH_008",
+          "title": "User Sign Out",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["logout", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User is on the dashboard"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='sidenav-toggle']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='sidenav']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='sidenav-signout']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signin" }
+              ]
+            }
+          ],
+          "expectedResult": "User is logged out successfully and redirected to Sign In page",
+          "testData": {}
+        }
+      ]
+    },
+    {
+      "id": "Transactions",
+      "title": "Transaction Scenarios",
+      "scenarios": [
+        {
+          "id": "TRANS_001",
+          "title": "User Initiates a Transfer - Valid Details",
+          "category": "Transactions",
+          "priority": "High",
+          "tags": ["transfer", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has sufficient balance",
+            "Navigate to Transfer page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-new-transaction']",
+              "expected": [
+                { "type": "urlEquals", "value": "/transaction/new" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-list-search-input']",
+              "value": "Devon",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-testid^='user-list-item-']",
+              "expected": [
+                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-list-item-next']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-amount-input']",
+              "value": "100",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-amount-input']", "value": "100" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-description-input']",
+              "value": "Test payment",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-description-input']", "value": "Test payment" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Pay Devon" }
+              ]
+            },
+            {
+              "step": 8,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "urlMatches", "value": "/transaction/.*/complete" },
+                { "type": "elementVisible", "selector": "text=Paid" }
+              ]
+            }
+          ],
+          "expectedResult": "Transfer is completed successfully and user is redirected to completion page",
+          "testData": {
+            "amount": "100",
+            "recipient": "Devon",
+            "description": "Test payment"
+          }
+        },
+        {
+          "id": "TRANS_002",
+          "title": "User Initiates a Transfer - Invalid Amount",
+          "category": "Transactions",
+          "priority": "High",
+          "tags": ["transfer", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Transfer page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-new-transaction']",
+              "expected": [
+                { "type": "urlEquals", "value": "/transaction/new" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-list-search-input']",
+              "value": "Devon",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-testid^='user-list-item-']",
+              "expected": [
+                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-list-item-next']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-amount-input']",
+              "value": "invalid",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-amount-input']", "value": "invalid" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-description-input']",
+              "value": "Test payment",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-description-input']", "value": "Test payment" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Please enter a valid amount" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating invalid amount format",
+          "testData": {
+            "amount": "invalid",
+            "recipient": "Devon",
+            "description": "Test payment"
+          }
+        },
+        {
+          "id": "TRANS_003",
+          "title": "User Views Transaction History",
+          "category": "Transactions",
+          "priority": "Medium",
+          "tags": ["transaction-history", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Transaction History page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-personal-tab']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-list']" },
+                { "type": "urlEquals", "value": "/personal" }
+              ]
+            }
+          ],
+          "expectedResult": "Transaction history is displayed",
+          "testData": {}
+        },
+        {
+          "id": "TRANS_004",
+          "title": "User Downloads Transaction Report",
+          "category": "Transactions",
+          "priority": "Medium",
+          "tags": ["transaction-report", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has transaction history",
+            "Navigate to Transaction History page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Transaction report download feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Transaction report download feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BankAccounts",
+      "title": "Bank Account Scenarios",
+      "scenarios": [
+        {
+          "id": "BANK_001",
+          "title": "User Creates a New Bank Account - Valid Details",
+          "category": "BankAccounts",
+          "priority": "High",
+          "tags": ["bank-account", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Bank Accounts page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" },
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-new']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts/new" },
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-form']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-bankName-input']",
+              "value": "Test Bank",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-bankName-input']", "value": "Test Bank" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-routingNumber-input']",
+              "value": "123456789",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-routingNumber-input']", "value": "123456789" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-accountNumber-input']",
+              "value": "987654321",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-accountNumber-input']", "value": "987654321" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" },
+                { "type": "elementVisible", "selector": "text=Test Bank" }
+              ]
+            }
+          ],
+          "expectedResult": "Bank account is created successfully and user is redirected to bank accounts list",
+          "testData": {
+            "bankName": "Test Bank",
+            "routingNumber": "123456789",
+            "accountNumber": "987654321"
+          }
+        },
+        {
+          "id": "BANK_002",
+          "title": "User Creates Bank Account - Validation Errors",
+          "category": "BankAccounts",
+          "priority": "Medium",
+          "tags": ["bank-account", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Bank Account creation page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-new']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts/new" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Enter a bank name" }
+              ]
+            }
+          ],
+          "expectedResult": "Validation errors are shown for required fields",
+          "testData": {}
+        },
+        {
+          "id": "BANK_003",
+          "title": "User Deletes a Bank Account",
+          "category": "BankAccounts",
+          "priority": "Medium",
+          "tags": ["bank-account", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has existing bank accounts"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-delete']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=(Deleted)" }
+              ]
+            }
+          ],
+          "expectedResult": "Bank account is soft deleted and marked as deleted",
+          "testData": {}
+        }
+      ]
+    },
+    {
+      "id": "UserSettings",
+      "title": "User Settings Scenarios",
+      "scenarios": [
+        {
+          "id": "SETTINGS_001",
+          "title": "User Updates Profile Information - Valid Details",
+          "category": "UserSettings",
+          "priority": "High",
+          "tags": ["user-settings", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to User Settings page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-user-settings']",
+              "expected": [
+                { "type": "urlEquals", "value": "/settings" },
+                { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "expected": []
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "value": "UpdatedFirstName",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-firstName-input']", "value": "UpdatedFirstName" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-lastName-input']",
+              "expected": []
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-lastName-input']",
+              "value": "UpdatedLastName",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-lastName-input']", "value": "UpdatedLastName" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-email-input']",
+              "expected": []
+            },
+            {
+              "step": 7,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-email-input']",
+              "value": "updated@example.com",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-email-input']", "value": "updated@example.com" }
+              ]
+            },
+            {
+              "step": 8,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-phoneNumber-input']",
+              "expected": []
+            },
+            {
+              "step": 9,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-phoneNumber-input']",
+              "value": "555-123-4567",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-phoneNumber-input']", "value": "555-123-4567" }
+              ]
+            },
+            {
+              "step": 10,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-settings-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Profile updated successfully" }
+              ]
+            }
+          ],
+          "expectedResult": "User profile is updated successfully and success message is displayed",
+          "testData": {
+            "firstName": "UpdatedFirstName",
+            "lastName": "UpdatedLastName",
+            "email": "updated@example.com",
+            "phoneNumber": "555-123-4567"
+          }
+        },
+        {
+          "id": "SETTINGS_002",
+          "title": "User Settings - Validation Errors",
+          "category": "UserSettings",
+          "priority": "Medium",
+          "tags": ["user-settings", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to User Settings page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-user-settings']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "expected": []
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-email-input']",
+              "expected": []
+            },
+            {
+              "step": 4,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-settings-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Enter a first name" },
+                { "type": "elementVisible", "selector": "text=Enter an email address" }
+              ]
+            }
+          ],
+          "expectedResult": "Validation errors are shown for required fields",
+          "testData": {}
+        }
+      ]
+    },
+    {
+      "id": "Notifications",
+      "title": "Notification Scenarios",
+      "scenarios": [
+        {
+          "id": "NOTIF_001",
+          "title": "User Views Notifications",
+          "category": "Notifications",
+          "priority": "Medium",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has notifications"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "urlEquals", "value": "/notifications" },
+                { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
+              ]
+            }
+          ],
+          "expectedResult": "Notifications list is displayed",
+          "testData": {}
+        },
+        {
+          "id": "NOTIF_002",
+          "title": "User Marks Notification as Read",
+          "category": "Notifications",
+          "priority": "Medium",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has unread notifications"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test^='notification-mark-read-']",
+              "expected": [
+                { "type": "elementNotVisible", "selector": "[data-test^='notification-mark-read-']" }
+              ]
+            }
+          ],
+          "expectedResult": "Notification is marked as read and dismissed from the list",
+          "testData": {}
+        },
+        {
+          "id": "NOTIF_003",
+          "title": "User Views Empty Notifications State",
+          "category": "Notifications",
+          "priority": "Low",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has no notifications"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "urlEquals", "value": "/notifications" },
+                { "type": "elementVisible", "selector": "text=No Notifications" }
+              ]
+            }
+          ],
+          "expectedResult": "Empty notifications state is displayed with appropriate message",
+          "testData": {}
+        }
+      ]
+    }
+  ]
+}
