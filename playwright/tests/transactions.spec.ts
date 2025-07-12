@@ -11,7 +11,7 @@ test.describe("Transactions", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
   });
 
   test("should display transaction feeds on home page", async ({ page }) => {
