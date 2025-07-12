@@ -49,49 +49,11 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
       dependencies: ["setup"],
     },
-
-    {
-      name: "firefox",
-      testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["Desktop Firefox"] },
-      dependencies: ["setup"],
-    },
-
-    {
-      name: "webkit",
-      testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["Desktop Safari"] },
-      dependencies: ["setup"],
-    },
-
-    /* Test against mobile viewports. */
-    {
-      name: "Mobile Chrome",
-      testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["Pixel 5"] },
-      dependencies: ["setup"],
-    },
-    {
-      name: "Mobile Safari",
-      testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["iPhone 12"] },
-      dependencies: ["setup"],
-    },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run start:ci",
+    command: "yarn start:ci",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

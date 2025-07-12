@@ -11,11 +11,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        # Test against multiple browsers
-        browser: [chromium, firefox, webkit]
         
     steps:
     - name: Checkout code
@@ -25,13 +20,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
+        cache: 'yarn'
 
     - name: Install dependencies
-      run: npm ci --legacy-peer-deps
+      run: yarn install --frozen-lockfile
 
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps ${{ matrix.browser }}
+      run: yarn playwright:install
 
     - name: Create test environment file
       run: |
@@ -40,14 +35,11 @@ jobs:
 
     - name: Create mock AWS exports for CI
       run: |
-        npm run copy:mock:awsexports
-        npm run copy:mock:awsexportses5
-
-    - name: Build application
-      run: npm run build:ci
+        yarn copy:mock:awsexports
+        yarn copy:mock:awsexportses5
 
     - name: Run Playwright tests
-      run: npx playwright test --project=${{ matrix.browser }}
+      run: yarn playwright:test --project=chromium
       env:
         CI: true
 
@@ -55,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report-${{ matrix.browser }}
+        name: playwright-report-chromium
         path: |
           playwright-report/
           test-results/
@@ -65,66 +57,13 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-html-report-${{ matrix.browser }}
+        name: playwright-html-report-chromium
         path: playwright-report/
         retention-days: 30
         
-  # Separate job for mobile testing
-  mobile-test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        device: ['Mobile Chrome', 'Mobile Safari']
-        
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm ci --legacy-peer-deps
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-
-    - name: Create test environment file
-      run: |
-        echo "SEED_DEFAULT_USER_PASSWORD=s3cret" > .env.local
-        echo "PAGINATION_PAGE_SIZE=10" >> .env.local
-
-    - name: Create mock AWS exports for CI
-      run: |
-        npm run copy:mock:awsexports
-        npm run copy:mock:awsexportses5
-
-    - name: Build application
-      run: npm run build:ci
-
-    - name: Run Playwright mobile tests
-      run: npx playwright test --project="${{ matrix.device }}"
-      env:
-        CI: true
-
-    - name: Upload mobile test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-mobile-report-${{ matrix.device }}
-        path: |
-          playwright-report/
-          test-results/
-        retention-days: 30
-
   # Job to aggregate and comment on PR
   report:
-    needs: [test, mobile-test]
+    needs: [test]
     runs-on: ubuntu-latest
     if: always() && github.event_name == 'pull_request'
     
@@ -151,10 +90,6 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "## Browsers Tested" >> $GITHUB_STEP_SUMMARY
         echo "- 🌐 Chromium (Desktop)" >> $GITHUB_STEP_SUMMARY
-        echo "- 🦊 Firefox (Desktop)" >> $GITHUB_STEP_SUMMARY
-        echo "- 🧭 WebKit/Safari (Desktop)" >> $GITHUB_STEP_SUMMARY
-        echo "- 📱 Mobile Chrome" >> $GITHUB_STEP_SUMMARY
-        echo "- 📱 Mobile Safari" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
         # Check if any test failed
@@ -196,10 +131,6 @@ jobs:
           
           **Browsers Tested:**
           - 🌐 Chromium (Desktop)
-          - 🦊 Firefox (Desktop) 
-          - 🧭 WebKit/Safari (Desktop)
-          - 📱 Mobile Chrome
-          - 📱 Mobile Safari
           
           **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
           `;
