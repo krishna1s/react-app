@@ -94,8 +94,8 @@ test.describe("Bank Accounts", () => {
     // Wait for bank accounts to load and click edit on first account
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
 
-    const firstAccount = page.locator('[data-testid^="bankaccount-item-"]').first();
-    await firstAccount.locator('[data-testid="bankaccount-edit"]').click();
+    const firstAccount = page.locator('[data-test^="bankaccount-list-item-"]').first();
+    await firstAccount.locator('[data-test="bankaccount-edit"]').click();
 
     // Update bank name
     const bankNameInput = getByTestId(page, "bankaccount-bankName-input");
@@ -119,18 +119,18 @@ test.describe("Bank Accounts", () => {
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
 
     // Count existing accounts
-    const accountsBefore = await page.locator('[data-testid^="bankaccount-item-"]').count();
+    const accountsBefore = await page.locator('[data-test^="bankaccount-list-item-"]').count();
 
     // Click delete on first account
-    const firstAccount = page.locator('[data-testid^="bankaccount-item-"]').first();
-    await firstAccount.locator('[data-testid="bankaccount-delete"]').click();
+    const firstAccount = page.locator('[data-test^="bankaccount-list-item-"]').first();
+    await firstAccount.locator('[data-test="bankaccount-delete"]').click();
 
     // Confirm deletion in dialog
     await getByTestId(page, "confirmation-dialog-confirm").click();
 
     // Should have one less account
     await page.waitForTimeout(1000); // Wait for deletion to process
-    const accountsAfter = await page.locator('[data-testid^="bankaccount-item-"]').count();
+    const accountsAfter = await page.locator('[data-test^="bankaccount-list-item-"]').count();
     expect(accountsAfter).toBe(accountsBefore - 1);
   });
 
@@ -141,7 +141,7 @@ test.describe("Bank Accounts", () => {
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
 
     // Click on first bank account to view details
-    const firstAccount = page.locator('[data-testid^="bankaccount-item-"]').first();
+    const firstAccount = page.locator('[data-test^="bankaccount-list-item-"]').first();
     await firstAccount.click();
 
     // Should show bank account details
@@ -158,7 +158,7 @@ test.describe("Bank Accounts", () => {
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
 
     // Account numbers should be masked (showing only last 4 digits)
-    const accountNumberElements = page.locator('[data-testid^="bankaccount-account-number-"]');
+    const accountNumberElements = page.locator('[data-test^="bankaccount-account-number-"]');
     const firstAccountNumber = await accountNumberElements.first().textContent();
 
     // Should contain masked format like "****1234"
@@ -211,7 +211,7 @@ test.describe("Bank Accounts", () => {
       await searchInput.fill("Chase");
 
       // Should filter results
-      const visibleAccounts = page.locator('[data-testid^="bankaccount-item-"]:visible');
+      const visibleAccounts = page.locator('[data-test^="bankaccount-list-item-"]:visible');
       const accountTexts = await visibleAccounts.allTextContents();
 
       // All visible accounts should contain "Chase"

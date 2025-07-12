@@ -46,7 +46,15 @@ export interface Transaction {
  * Equivalent to Cypress cy.getBySel()
  */
 export const getByTestId = (page: Page, testId: string): Locator => {
-  return page.locator(`[data-test="${testId}"]`);
+  const element = page.locator(`[data-test="${testId}"]`);
+  
+  // For form fields (TextField), we need to target the actual input element
+  if (testId.includes('-username') || testId.includes('-password') || testId.includes('-first-name') || 
+      testId.includes('-last-name') || testId.includes('-confirmPassword')) {
+    return element.locator('input');
+  }
+  
+  return element;
 };
 
 /**

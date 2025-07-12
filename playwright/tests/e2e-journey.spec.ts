@@ -73,7 +73,7 @@ test.describe("End-to-End User Journey", () => {
     // Select recipient
     await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
-    await page.locator('[data-testid^="user-list-item-"]').first().click();
+    await page.locator('[data-test^="user-list-item-"]').first().click();
     await getByTestId(page, "user-list-item-next").click();
 
     // Enter transaction details

@@ -25,13 +25,13 @@ export default defineConfig({
     baseURL: "http://localhost:3000",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    trace: "off",
 
     /* Take screenshot on failure */
-    screenshot: "only-on-failure",
+    screenshot: "off",
 
     /* Record video on failure */
-    video: "retain-on-failure",
+    video: "off",
   },
 
   /* Configure projects for major browsers */
@@ -40,13 +40,23 @@ export default defineConfig({
     {
       name: "setup",
       testMatch: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          executablePath: "/usr/bin/chromium-browser",
+        },
+      },
     },
 
     {
       name: "chromium",
       testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          executablePath: "/usr/bin/chromium-browser",
+        },
+      },
       dependencies: ["setup"],
     },
   ],
