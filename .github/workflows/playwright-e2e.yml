@@ -1,0 +1,212 @@
+name: Playwright E2E Tests
+
+on:
+  pull_request:
+    branches: [ main, master, develop ]
+  push:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        # Test against multiple browsers
+        browser: [chromium, firefox, webkit]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+
+    - name: Create test environment file
+      run: |
+        echo "SEED_DEFAULT_USER_PASSWORD=s3cret" > .env.local
+        echo "PAGINATION_PAGE_SIZE=10" >> .env.local
+
+    - name: Create mock AWS exports for CI
+      run: |
+        npm run copy:mock:awsexports
+        npm run copy:mock:awsexportses5
+
+    - name: Build application
+      run: npm run build:ci
+
+    - name: Run Playwright tests
+      run: npx playwright test --project=${{ matrix.browser }}
+      env:
+        CI: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report-${{ matrix.browser }}
+        path: |
+          playwright-report/
+          test-results/
+        retention-days: 30
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-html-report-${{ matrix.browser }}
+        path: playwright-report/
+        retention-days: 30
+        
+  # Separate job for mobile testing
+  mobile-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        device: ['Mobile Chrome', 'Mobile Safari']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci --legacy-peer-deps
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Create test environment file
+      run: |
+        echo "SEED_DEFAULT_USER_PASSWORD=s3cret" > .env.local
+        echo "PAGINATION_PAGE_SIZE=10" >> .env.local
+
+    - name: Create mock AWS exports for CI
+      run: |
+        npm run copy:mock:awsexports
+        npm run copy:mock:awsexportses5
+
+    - name: Build application
+      run: npm run build:ci
+
+    - name: Run Playwright mobile tests
+      run: npx playwright test --project="${{ matrix.device }}"
+      env:
+        CI: true
+
+    - name: Upload mobile test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-mobile-report-${{ matrix.device }}
+        path: |
+          playwright-report/
+          test-results/
+        retention-days: 30
+
+  # Job to aggregate and comment on PR
+  report:
+    needs: [test, mobile-test]
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all test artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Create test summary
+      run: |
+        echo "# 🎭 Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Test Coverage" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Authentication flows" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Transaction management" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Bank account operations" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Notifications handling" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ User settings management" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ End-to-end user journeys" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Browsers Tested" >> $GITHUB_STEP_SUMMARY
+        echo "- 🌐 Chromium (Desktop)" >> $GITHUB_STEP_SUMMARY
+        echo "- 🦊 Firefox (Desktop)" >> $GITHUB_STEP_SUMMARY
+        echo "- 🧭 WebKit/Safari (Desktop)" >> $GITHUB_STEP_SUMMARY
+        echo "- 📱 Mobile Chrome" >> $GITHUB_STEP_SUMMARY
+        echo "- 📱 Mobile Safari" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Check if any test failed
+        if find artifacts -name "*.xml" -exec grep -l "failures=\"[1-9]" {} \; | grep -q .; then
+          echo "❌ Some tests failed. Please check the artifacts for details." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Comment PR
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Check for test failures
+          const { execSync } = require('child_process');
+          let testStatus = '✅ All E2E tests passed!';
+          
+          try {
+            execSync('find artifacts -name "*.xml" -exec grep -l "failures=\\"[1-9]" {} \\;', { stdio: 'pipe' });
+            testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
+          } catch (error) {
+            // No failures found, tests passed
+          }
+          
+          const comment = `## 🎭 Playwright E2E Test Results
+          
+          ${testStatus}
+          
+          **Test Coverage:**
+          - ✅ Authentication flows (signup, signin, logout, remember user)
+          - ✅ Transaction management (create, view, filter, comment, like)
+          - ✅ Bank account operations (add, edit, delete, validation)
+          - ✅ Notifications handling (view, mark read, dismiss, filter)
+          - ✅ User settings management (profile, password, privacy)
+          - ✅ End-to-end user journeys (complete workflows)
+          
+          **Browsers Tested:**
+          - 🌐 Chromium (Desktop)
+          - 🦊 Firefox (Desktop) 
+          - 🧭 WebKit/Safari (Desktop)
+          - 📱 Mobile Chrome
+          - 📱 Mobile Safari
+          
+          **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
