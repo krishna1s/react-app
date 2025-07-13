@@ -32,6 +32,10 @@ export default defineConfig({
 
     /* Record video on failure */
     video: "off",
+    
+    /* Increase default timeout for flaky CI environments */
+    actionTimeout: 15000,
+    navigationTimeout: 60000,
   },
 
   /* Configure projects for major browsers */

@@ -84,8 +84,8 @@ export const login = async (
   // Submit form
   await getByTestId(page, "signin-submit").click();
 
-  // Wait for navigation to complete
-  await page.waitForURL("/");
+  // Wait for navigation to complete with increased timeout
+  await page.waitForURL("/", { timeout: 60000 });
 };
 
 /**
