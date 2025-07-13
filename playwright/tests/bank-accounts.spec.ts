@@ -9,23 +9,21 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should display bank accounts page", async ({ page }) => {
-    // Navigate to bank accounts page
+    // Navigate to bank accounts page via side navigation
     const isMobile = await isMobileViewport(page);
 
     if (isMobile) {
       await getByTestId(page, "sidenav-toggle").click();
-      await getByTestId(page, "sidenav-bankaccounts").click();
-    } else {
-      await getByTestId(page, "nav-top-bank-accounts").click();
     }
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     await expect(page).toHaveURL("/bankaccounts");
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
   });
 
   test("should create a new bank account", async ({ page }) => {
-    // Navigate to bank accounts page
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    // Navigate to bank accounts page via side navigation
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Click create bank account button
     await getByTestId(page, "bankaccount-new").click();
@@ -46,7 +44,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should validate bank account form fields", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
     await getByTestId(page, "bankaccount-new").click();
 
     // Try to submit empty form
@@ -59,7 +57,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should validate routing number format", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
     await getByTestId(page, "bankaccount-new").click();
 
     // Fill form with invalid routing number
@@ -74,7 +72,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should validate account number format", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
     await getByTestId(page, "bankaccount-new").click();
 
     // Fill form with invalid account number
@@ -89,7 +87,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should edit an existing bank account", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Wait for bank accounts to load and click edit on first account
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
@@ -113,7 +111,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should delete a bank account", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Wait for bank accounts to load
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
@@ -135,7 +133,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should show bank account details", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Wait for bank accounts to load
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
@@ -152,7 +150,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should mask sensitive account information", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Wait for bank accounts to load
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
@@ -166,7 +164,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should cancel bank account creation", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
     await getByTestId(page, "bankaccount-new").click();
 
     // Fill partial form
@@ -192,7 +190,7 @@ test.describe("Bank Accounts", () => {
       });
     });
 
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Should show empty state message
     await expect(page.locator("text=No bank accounts found")).toBeVisible();
@@ -200,7 +198,7 @@ test.describe("Bank Accounts", () => {
   });
 
   test("should search bank accounts", async ({ page }) => {
-    await getByTestId(page, "nav-top-bank-accounts").click();
+    await getByTestId(page, "sidenav-bankaccounts").click();
 
     // Wait for bank accounts to load
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();

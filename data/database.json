@@ -272,6 +272,17 @@
       "balance": 0,
       "createdAt": "2025-07-13T05:40:02.205Z",
       "modifiedAt": "2025-07-13T05:40:02.205Z"
+    },
+    {
+      "id": "ljF5EqOJy",
+      "uuid": "dd6ec52b-3186-43ef-aa01-8a2afb1f5978",
+      "firstName": "Test",
+      "lastName": "User",
+      "username": "testuser_1752391259337",
+      "password": "$2a$10$Qy3mObUxGZmUN8XING8Xlexj0uzr2/ng1pyt0ec1io8XuYF0yyRbm",
+      "balance": 0,
+      "createdAt": "2025-07-13T07:21:00.271Z",
+      "modifiedAt": "2025-07-13T07:21:00.271Z"
     }
   ],
   "contacts": [
@@ -484,6 +495,17 @@
       "isDeleted": false,
       "createdAt": "2025-07-13T05:40:03.109Z",
       "modifiedAt": "2025-07-13T05:40:03.109Z"
+    },
+    {
+      "id": "Vj1R56_AX",
+      "uuid": "8f7880dc-dc80-4c5b-87d1-5e1d12bb10ef",
+      "userId": "ljF5EqOJy",
+      "bankName": "Test Bank",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": false,
+      "createdAt": "2025-07-13T07:21:01.144Z",
+      "modifiedAt": "2025-07-13T07:21:01.144Z"
     }
   ],
   "transactions": [
