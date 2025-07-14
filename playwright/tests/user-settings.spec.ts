@@ -14,16 +14,7 @@ test.describe("User Settings", () => {
     // Navigate to user settings page
     const isMobile = await isMobileViewport(page);
 
-    if (isMobile) {
-      await getByTestId(page, "sidenav-toggle").click();
-      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-settings").click();
-    } else {
-      // For desktop, use sidebar navigation as there's no topbar user settings link
-      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-settings").click();
-    }
-
+    // The user is already on /user/settings after beforeEach
     await expect(page).toHaveURL("/user/settings");
     await expect(getByTestId(page, "user-settings-form")).toBeVisible();
   });
@@ -170,13 +161,7 @@ test.describe("User Settings", () => {
     const isMobile = await isMobileViewport(page);
 
     if (isMobile) {
-      // Open mobile navigation
-      await getByTestId(page, "sidenav-toggle").click();
-
-      // Click settings from mobile menu
-      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-settings").click();
-
+      // Already on /user/settings after beforeEach
       await expect(page).toHaveURL("/user/settings");
 
       // Should adapt layout for mobile
