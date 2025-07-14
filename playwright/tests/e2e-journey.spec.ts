@@ -73,7 +73,7 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Select recipient
-    await getByTestId(page, "user-list-search-input").locator('input').fill("Devon");
+    await page.locator('#user-list-search-input').fill("Devon");
     await page.waitForTimeout(1000);
     await page.locator('[data-test^="user-list-item-"]').first().click();
     // Clicking on user automatically advances to step 2 - no need for separate next button
@@ -198,9 +198,8 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Verify form elements work in all browsers
-    const searchInput = getByTestId(page, "user-list-search-input").locator('input');
-    await searchInput.fill("Devon");
-    await expect(searchInput).toHaveValue("Devon");
+    await page.locator('#user-list-search-input').fill("Devon");
+    await expect(page.locator('#user-list-search-input')).toHaveValue("Devon");
 
     // Test that CSS animations/transitions work
     if (browserName === "webkit") {
