@@ -58,7 +58,7 @@ jobs:
         set +e  # Don't exit immediately on command failure so we can capture output
         
         # Run tests and capture both output and exit code
-        yarn playwright:test --project=chromium e2e-journey.spec.ts > test_output.log 2>&1
+        yarn playwright:test --project=chromium auth.spec.ts > test_output.log 2>&1
         TEST_EXIT_CODE=$?
         
         # Display the test output
