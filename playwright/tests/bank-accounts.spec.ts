@@ -5,6 +5,7 @@ test.describe("Bank Accounts", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
+    await page.goto("/");
     await login(page, "Heath93", "s3cret");
   });
 
