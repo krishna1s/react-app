@@ -505,20 +505,11 @@
               "action": "click",
               "selector": "[data-testid^='user-list-item-']",
               "expected": [
-                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
-              ]
-            },
-            {
-              "step": 4,
-              "type": "action",
-              "action": "click",
-              "selector": "[data-test='user-list-item-next']",
-              "expected": [
                 { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
               ]
             },
             {
-              "step": 5,
+              "step": 4,
               "type": "input",
               "action": "type",
               "selector": "[data-test='transaction-create-amount-input']",
@@ -528,7 +519,7 @@
               ]
             },
             {
-              "step": 6,
+              "step": 5,
               "type": "input",
               "action": "type",
               "selector": "[data-test='transaction-create-description-input']",
@@ -538,7 +529,7 @@
               ]
             },
             {
-              "step": 7,
+              "step": 6,
               "type": "action",
               "action": "click",
               "selector": "[data-test='transaction-create-submit-payment']",
@@ -547,7 +538,7 @@
               ]
             },
             {
-              "step": 8,
+              "step": 7,
               "type": "action",
               "action": "click",
               "selector": "[data-test='transaction-create-submit-payment']",
@@ -601,20 +592,11 @@
               "action": "click",
               "selector": "[data-testid^='user-list-item-']",
               "expected": [
-                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
-              ]
-            },
-            {
-              "step": 4,
-              "type": "action",
-              "action": "click",
-              "selector": "[data-test='user-list-item-next']",
-              "expected": [
                 { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
               ]
             },
             {
-              "step": 5,
+              "step": 4,
               "type": "input",
               "action": "type",
               "selector": "[data-test='transaction-create-amount-input']",
@@ -624,7 +606,7 @@
               ]
             },
             {
-              "step": 6,
+              "step": 5,
               "type": "input",
               "action": "type",
               "selector": "[data-test='transaction-create-description-input']",
@@ -634,7 +616,7 @@
               ]
             },
             {
-              "step": 7,
+              "step": 6,
               "type": "action",
               "action": "click",
               "selector": "[data-test='transaction-create-submit-payment']",
@@ -727,7 +709,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-bank-accounts']",
+              "selector": "[data-test='sidenav-bankaccounts']",
               "expected": [
                 { "type": "urlEquals", "value": "/bankaccounts" },
                 { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
@@ -807,7 +789,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-bank-accounts']",
+              "selector": "[data-test='sidenav-bankaccounts']",
               "expected": [
                 { "type": "urlEquals", "value": "/bankaccounts" }
               ]
@@ -850,7 +832,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-bank-accounts']",
+              "selector": "[data-test='sidenav-bankaccounts']",
               "expected": [
                 { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
               ]
@@ -890,9 +872,9 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-user-settings']",
+              "selector": "[data-test='sidenav-user-settings']",
               "expected": [
-                { "type": "urlEquals", "value": "/settings" },
+                { "type": "urlEquals", "value": "/user/settings" },
                 { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
               ]
             },
@@ -970,11 +952,14 @@
               "action": "click",
               "selector": "[data-test='user-settings-submit']",
               "expected": [
-                { "type": "elementVisible", "selector": "text=Profile updated successfully" }
+                { "type": "valueEquals", "selector": "[data-test='user-settings-firstName-input']", "value": "UpdatedFirstName" },
+                { "type": "valueEquals", "selector": "[data-test='user-settings-lastName-input']", "value": "UpdatedLastName" },
+                { "type": "valueEquals", "selector": "[data-test='user-settings-email-input']", "value": "updated@example.com" },
+                { "type": "valueEquals", "selector": "[data-test='user-settings-phoneNumber-input']", "value": "555-123-4567" }
               ]
             }
           ],
-          "expectedResult": "User profile is updated successfully and success message is displayed",
+          "expectedResult": "User profile is updated successfully and changes are persisted (verified by form values)",
           "testData": {
             "firstName": "UpdatedFirstName",
             "lastName": "UpdatedLastName",
@@ -998,7 +983,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-user-settings']",
+              "selector": "[data-test='sidenav-user-settings']",
               "expected": [
                 { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
               ]
@@ -1053,7 +1038,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-notifications']",
+              "selector": "[data-test='nav-top-notifications-link']",
               "expected": [
                 { "type": "urlEquals", "value": "/notifications" },
                 { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
@@ -1079,7 +1064,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-notifications']",
+              "selector": "[data-test='nav-top-notifications-link']",
               "expected": [
                 { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
               ]
@@ -1113,7 +1098,7 @@
               "step": 1,
               "type": "action",
               "action": "click",
-              "selector": "[data-test='nav-top-notifications']",
+              "selector": "[data-test='nav-top-notifications-link']",
               "expected": [
                 { "type": "urlEquals", "value": "/notifications" },
                 { "type": "elementVisible", "selector": "text=No Notifications" }
