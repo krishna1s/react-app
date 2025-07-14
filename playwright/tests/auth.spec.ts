@@ -105,7 +105,7 @@ test.describe("User Authentication", () => {
     await page.goto("/signin");
 
     // Try to login with invalid credentials
-    await getByTestId(page, "signin-name").fill("invaliduser");
+    await getByTestId(page, "signin-username").fill("invaliduser");
     await getByTestId(page, "signin-password").fill("wrongpassword");
     await getByTestId(page, "signin-submit").click();
 

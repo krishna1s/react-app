@@ -55,6 +55,9 @@ jobs:
         yarn playwright:test --project=chromium user-settings.spec.ts
       env:
         CI: true
+        # Enable screenshots and videos on failure for PR runs
+        PLAYWRIGHT_HTML_REPORT: playwright-report
+        PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
       continue-on-error: true  # Ensure job fails if this step fails
 
     - name: Upload test results
@@ -79,6 +82,55 @@ jobs:
       if: always()
       run: |
         exit 1
+
+    - name: Capture DOM snapshots on failure
+      if: failure() && github.event_name == 'pull_request'
+      run: |
+        # Create a directory for DOM snapshots
+        mkdir -p dom-snapshots
+        
+        # Find all test result directories that contain error contexts
+        find test-results -name "*.md" -path "*/error-context.md" | while read error_file; do
+          # Extract test name from path
+          test_dir=$(dirname "$error_file")
+          test_name=$(basename "$test_dir")
+          
+          # Copy error context and any related files
+          cp "$error_file" "dom-snapshots/${test_name}-error-context.md" || true
+          
+          # Look for trace files in the same directory
+          find "$test_dir" -name "trace.zip" -exec cp {} "dom-snapshots/${test_name}-trace.zip" \; || true
+          
+          # Look for screenshot files
+          find "$test_dir" -name "*.png" -exec cp {} "dom-snapshots/${test_name}-screenshot.png" \; || true
+          
+          # Look for video files
+          find "$test_dir" -name "*.webm" -exec cp {} "dom-snapshots/${test_name}-video.webm" \; || true
+        done
+        
+        # Create a summary of captured artifacts
+        echo "# DOM Snapshots and Debug Artifacts" > dom-snapshots/README.md
+        echo "" >> dom-snapshots/README.md
+        echo "This directory contains debugging artifacts from failed tests:" >> dom-snapshots/README.md
+        echo "" >> dom-snapshots/README.md
+        ls -la dom-snapshots/ | grep -v "^total" | tail -n +2 | while read line; do
+          file=$(echo "$line" | awk '{print $9}')
+          if [ "$file" != "README.md" ]; then
+            echo "- \`$file\`" >> dom-snapshots/README.md
+          fi
+        done
+        
+        echo "Captured $(find dom-snapshots -type f ! -name README.md | wc -l) debug artifacts"
+
+    - name: Upload DOM snapshots and debug artifacts
+      uses: actions/upload-artifact@v4
+      if: failure() && github.event_name == 'pull_request'
+      with:
+        name: dom-snapshots-and-debug-artifacts
+        path: |
+          dom-snapshots/
+          test-results/
+        retention-days: 7
 
         
   # Job to aggregate and comment on PR
@@ -173,6 +225,7 @@ jobs:
           - 🌐 Chromium (Desktop)
           
           **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
+          ${testJobResult === 'failure' ? '\n\n**🔍 Debug Artifacts Available:**\n- DOM snapshots from failed tests\n- Screenshots of failure states\n- Video recordings of test execution\n- Playwright traces for detailed debugging\n- Error context files with page state\n\nDownload the \`dom-snapshots-and-debug-artifacts\` artifact to investigate failures.' : ''}
           
           ${testJobResult === 'failure' ? '⚠️ **Action Required:** Please fix the failing tests before merging.' : '🎉 **Ready to merge!** All tests are passing.'}
           `;
