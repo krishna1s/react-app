@@ -50,7 +50,10 @@ test.describe("End-to-End User Journey", () => {
       await getByTestId(page, "bankaccount-accountNumber-input").fill("987654321");
 
       await getByTestId(page, "bankaccount-submit").click();
-      
+
+      // Wait for onboarding step to finish before clicking next
+      await page.waitForTimeout(500);
+
       // Click Next to finish onboarding (step 3)
       await getByTestId(page, "user-onboarding-next").click();
     } else {
@@ -108,11 +111,11 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "sidenav-user-settings").click();
 
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.clear();
+    await firstNameInput.fill("");
     await firstNameInput.fill("UpdatedName");
 
     await getByTestId(page, "user-settings-submit").click();
-    
+
     // Wait for the form submission to complete and verify the change persisted
     await page.waitForTimeout(1000);
     await expect(firstNameInput).toHaveValue("UpdatedName");
@@ -249,7 +252,7 @@ test.describe("End-to-End User Journey", () => {
     // Navigate to different pages and verify state persistence using sidebar navigation
     await getByTestId(page, "sidenav-bankaccounts").click();
     await expect(page).toHaveURL("/bankaccounts");
-    
+
     await getByTestId(page, "sidenav-home").click();
     await expect(page).toHaveURL("/");
 
