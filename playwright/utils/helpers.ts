@@ -101,30 +101,75 @@ export const login = async (
  * Logout helper function
  */
 export const logout = async (page: Page, isMobile = false): Promise<void> => {
-  // Close any modal dialogs that might be blocking interactions
-  const modals = page.locator('[role="dialog"], .MuiDialog-root');
-  const modalCount = await modals.count();
-  if (modalCount > 0) {
-    for (let i = 0; i < modalCount; i++) {
-      const modal = modals.nth(i);
-      if (await modal.isVisible()) {
-        // Try to find and click a close button
-        const closeButton = modal.locator('button').filter({ hasText: /close|skip|done|dismiss|×/i }).first();
-        if (await closeButton.isVisible()) {
-          await closeButton.click();
-          await modal.waitFor({ state: 'hidden' });
+  // Handle onboarding dialog if it's open
+  const onboardingDialog = getByTestId(page, "user-onboarding-dialog");
+  if (await onboardingDialog.isVisible()) {
+    try {
+      // Try to complete onboarding by clicking through all steps
+      let attempts = 0;
+      const maxAttempts = 5;
+      
+      while (attempts < maxAttempts && await onboardingDialog.isVisible()) {
+        const nextButton = getByTestId(page, "user-onboarding-next");
+        
+        if (await nextButton.isVisible()) {
+          await nextButton.click();
+          await page.waitForTimeout(1000);
         } else {
-          // Try pressing escape
-          await page.keyboard.press('Escape');
+          // No more next buttons, try to close the dialog by pressing escape or clicking outside
+          await page.keyboard.press("Escape");
           await page.waitForTimeout(500);
+        }
+        
+        attempts++;
+      }
+      
+      // Wait for dialog to close
+      if (await onboardingDialog.isVisible()) {
+        await onboardingDialog.waitFor({ state: "hidden", timeout: 5000 });
+      }
+    } catch (error) {
+      console.warn("Could not close onboarding dialog:", error);
+      // Try to force close with escape key
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(1000);
+    }
+  }
+
+  // Also handle any other modals
+  try {
+    const modals = page.locator('[role="dialog"], .MuiDialog-root');
+    const modalCount = await modals.count();
+    if (modalCount > 0) {
+      for (let i = 0; i < modalCount; i++) {
+        const modal = modals.nth(i);
+        if (await modal.isVisible()) {
+          // Try to find and click a close button
+          const closeButton = modal
+            .locator("button")
+            .filter({ hasText: /close|skip|done|dismiss|×/i })
+            .first();
+          if (await closeButton.isVisible()) {
+            await closeButton.click();
+            await modal.waitFor({ state: "hidden" });
+          } else {
+            // Try pressing escape
+            await page.keyboard.press("Escape");
+            await page.waitForTimeout(500);
+          }
         }
       }
     }
+  } catch (error) {
+    console.warn("Could not close modals:", error);
   }
 
   if (isMobile) {
     await getByTestId(page, "sidenav-toggle").click();
   }
+  
+  // Wait for the logout button to be clickable
+  await getByTestId(page, "sidenav-signout").waitFor({ state: "visible" });
   await getByTestId(page, "sidenav-signout").click();
   await page.waitForURL("/signin");
 };
@@ -171,6 +216,7 @@ export const createTestUser = (): Partial<User> => ({
   firstName: "Test",
   lastName: "User",
   balance: 1000,
+  avatar: "https://cypress-realworld-app-svgs.s3.amazonaws.com/avatar.svg",
 });
 
 /**
@@ -202,7 +248,45 @@ export const signUp = async (
   await getByTestId(page, "signup-password").fill(userData.password);
   await getByTestId(page, "signup-confirmPassword").fill(userData.confirmPassword);
 
-  await getByTestId(page, "signup-submit").click();
+  // Ensure all fields are filled and form is valid
+  const submitButton = getByTestId(page, "signup-submit");
+  await submitButton.waitFor({ state: "visible" });
+  
+  // Check if submit button is enabled
+  const isDisabled = await submitButton.isDisabled();
+  if (isDisabled) {
+    // Check for validation errors
+    const validationErrors = await page.locator('[id$="-helper-text"]').allTextContents();
+    console.error("Form validation errors:", validationErrors.filter(text => text.length > 0));
+    throw new Error("Signup form submit button is disabled due to validation errors");
+  }
+
+  // Wait for the signup request to complete with a more specific pattern
+  const signupPromise = page.waitForResponse("**/users");
+  await submitButton.click();
+  
+  try {
+    const response = await signupPromise;
+    if (response.status() !== 201) {
+      console.error(`Signup failed with status ${response.status()}`);
+      const responseText = await response.text();
+      console.error("Response body:", responseText);
+      throw new Error(`Signup failed with status ${response.status()}: ${responseText}`);
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
+    
+    // Check if there are any validation errors on the page
+    const validationErrors = await page.locator('[id$="-helper-text"]').allTextContents();
+    if (validationErrors.length > 0) {
+      console.error("Validation errors:", validationErrors);
+    }
+    
+    throw error;
+  }
+
+  // Wait for redirect to signin page with increased timeout
+  await page.waitForURL("/signin", { timeout: 15000 });
 };
 
 /**

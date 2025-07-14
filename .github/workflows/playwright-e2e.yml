@@ -1,16 +1,23 @@
 name: Playwright E2E Tests
 
 on:
-  pull_request:
-    branches: [ main, master, develop ]
   push:
-    branches: [ main, master, develop ]
-  workflow_dispatch:
+    branches-ignore:
+      - "renovate/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    outputs:
+      test_failed: ${{ steps.playwright-tests.outputs.test_failed }}
+      failed_count: ${{ steps.playwright-tests.outputs.failed_count }}
+      flaky_count: ${{ steps.playwright-tests.outputs.flaky_count }}
         
     steps:
     - name: Checkout code
@@ -39,9 +46,50 @@ jobs:
         yarn copy:mock:awsexportses5
 
     - name: Run Playwright tests
-      run: yarn playwright:test --project=chromium
+      id: playwright-tests
+      run: |
+        set +e  # Don't exit immediately on command failure so we can capture output
+        
+        # Run tests and capture both output and exit code
+        yarn playwright:test --project=chromium auth.spec.ts > test_output.log 2>&1
+        TEST_EXIT_CODE=$?
+        
+        # Display the test output
+        cat test_output.log
+        
+        # Check for any failures in the output
+        if grep -q "failed\|flaky" test_output.log || [ "$TEST_EXIT_CODE" -ne 0 ]; then
+          echo "Tests failed or were flaky!"
+          echo "test_failed=true" >> $GITHUB_OUTPUT
+          
+          # Count failures
+          FAILED_COUNT=$(grep -o "[0-9]\+ failed" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
+          FLAKY_COUNT=$(grep -o "[0-9]\+ flaky" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
+          
+          echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+          echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
+          
+          exit 1
+        else
+          echo "All tests passed!"
+          echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "failed_count=0" >> $GITHUB_OUTPUT
+          echo "flaky_count=0" >> $GITHUB_OUTPUT
+        fi
       env:
         CI: true
+      continue-on-error: false
+
+    - name: Check test results
+      if: always()
+      run: |
+        # Check if any tests failed by examining the exit code of the previous step
+        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
+          echo "❌ Playwright tests failed!"
+          exit 1
+        else
+          echo "✅ All Playwright tests passed!"
+        fi
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -76,9 +124,42 @@ jobs:
       with:
         path: artifacts
 
+    - name: Check test job status
+      id: test-status
+      run: |
+        # Check if the test job failed
+        if [ "${{ needs.test.result }}" = "failure" ]; then
+          echo "test_failed=true" >> $GITHUB_OUTPUT
+          echo "❌ Tests failed"
+          
+          # Try to get failure counts from test step outputs if available
+          FAILED_COUNT="${{ needs.test.outputs.failed_count || '0' }}"
+          FLAKY_COUNT="${{ needs.test.outputs.flaky_count || '0' }}"
+          
+          echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+          echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
+        else
+          echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "failed_count=0" >> $GITHUB_OUTPUT
+          echo "flaky_count=0" >> $GITHUB_OUTPUT
+          echo "✅ Tests passed"
+        fi
+
     - name: Create test summary
       run: |
         echo "# 🎭 Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Add status badge based on test results
+        if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
+          echo "## ❌ Test Status: FAILED" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Failed Tests:** ${{ steps.test-status.outputs.failed_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Flaky Tests:** ${{ steps.test-status.outputs.flaky_count }}" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "## ✅ Test Status: PASSED" >> $GITHUB_STEP_SUMMARY
+        fi
+        
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "## Test Coverage" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ Authentication flows" >> $GITHUB_STEP_SUMMARY
@@ -92,9 +173,9 @@ jobs:
         echo "- 🌐 Chromium (Desktop)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
-        # Check if any test failed
-        if find artifacts -name "*.xml" -exec grep -l "failures=\"[1-9]" {} \; | grep -q .; then
-          echo "❌ Some tests failed. Please check the artifacts for details." >> $GITHUB_STEP_SUMMARY
+        # Show final status based on job result
+        if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
+          echo "❌ Tests failed. Please check the artifacts for details." >> $GITHUB_STEP_SUMMARY
         else
           echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
         fi
@@ -104,22 +185,29 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         script: |
-          const fs = require('fs');
+          // Get test status from job result
+          const testJobResult = '${{ needs.test.result }}';
+          const failedCount = '${{ needs.test.outputs.failed_count || "0" }}';
+          const flakyCount = '${{ needs.test.outputs.flaky_count || "0" }}';
           
-          // Check for test failures
-          const { execSync } = require('child_process');
           let testStatus = '✅ All E2E tests passed!';
+          let statusIcon = '✅';
+          let statusDetails = '';
           
-          try {
-            execSync('find artifacts -name "*.xml" -exec grep -l "failures=\\"[1-9]" {} \\;', { stdio: 'pipe' });
+          if (testJobResult === 'failure') {
+            statusIcon = '❌';
             testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
-          } catch (error) {
-            // No failures found, tests passed
+            
+            if (failedCount !== '0' || flakyCount !== '0') {
+              statusDetails = `\n\n**Test Results:**\n- Failed: ${failedCount}\n- Flaky: ${flakyCount}`;
+            }
           }
           
           const comment = `## 🎭 Playwright E2E Test Results
           
-          ${testStatus}
+          ### ${statusIcon} Test Status: ${testJobResult === 'failure' ? 'FAILED' : 'PASSED'}
+          
+          ${testStatus}${statusDetails}
           
           **Test Coverage:**
           - ✅ Authentication flows (signup, signin, logout, remember user)
@@ -133,6 +221,8 @@ jobs:
           - 🌐 Chromium (Desktop)
           
           **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
+          
+          ${testJobResult === 'failure' ? '⚠️ **Action Required:** Please fix the failing tests before merging.' : '🎉 **Ready to merge!** All tests are passing.'}
           `;
           
           github.rest.issues.createComment({
