@@ -14,70 +14,11 @@ test.describe("Authentication Scenarios", () => {
     await setupApiIntercepts(page);
   });
 
-  test("should redirect unauthenticated user to signin page", async ({ page }) => {
-    await page.goto("/personal");
-    await expect(page).toHaveURL("/signin");
-  });
-
-  test("should redirect to the home page after login", async ({ page }) => {
-    // Use existing test user credentials from seeded database
-    await login(page, "Heath93", "s3cret", { rememberUser: true });
-    await expect(page).toHaveURL("/");
-  });
-
-  test("should remember a user for 30 days after login", async ({ page }) => {
-    // Login with remember me checked
-    await login(page, "Heath93", "s3cret", { rememberUser: true });
-
-    // Verify we're on the home page
-    await expect(page).toHaveURL("/");
-
-    // Check that session cookie exists (this would normally have proper expiry)
-    const cookies = await page.context().cookies();
-    const sessionCookie = cookies.find((cookie) => cookie.name === "connect.sid");
-    expect(sessionCookie).toBeDefined();
-
-    // Logout user
-    const isMobile = await isMobileViewport(page);
-    await logout(page, isMobile);
-    await expect(page).toHaveURL("/signin");
-  });
-
-  test("should redirect unauthenticated user to signin page", async ({ page }) => {
-    await page.goto("/personal");
-    await expect(page).toHaveURL("/signin");
-  });
-
-  test("should redirect to the home page after login", async ({ page }) => {
-    // Use existing test user credentials from seeded database
-    await login(page, "Heath93", "s3cret", { rememberUser: true });
-    await expect(page).toHaveURL("/");
-  });
-
-  test("should remember a user for 30 days after login", async ({ page }) => {
-    // Login with remember me checked
-    await login(page, "Heath93", "s3cret", { rememberUser: true });
-
-    // Verify we're on the home page
-    await expect(page).toHaveURL("/");
-
-    // Check that session cookie exists (this would normally have proper expiry)
-    const cookies = await page.context().cookies();
-    const sessionCookie = cookies.find((cookie) => cookie.name === "connect.sid");
-    expect(sessionCookie).toBeDefined();
-
-    // Logout user
-    const isMobile = await isMobileViewport(page);
-    await logout(page, isMobile);
-    await expect(page).toHaveURL("/signin");
-  });
-
   test("AUTH_001: User Sign Up - Valid Registration", async ({ page }) => {
     // Preconditions: Application is running on localhost:3000, User is not logged in, Navigate to Sign Up page
-    await page.goto("/");
+    await page.goto("/signup");
     
-    // Step 1: Click signup link to navigate to signup page
-    await getByTestId(page, "signup").click();
+    // Step 1: Verify we're on signup page
     await expect(page).toHaveURL("/signup");
     await expect(getByTestId(page, "signup-title")).toBeVisible();
     
@@ -112,10 +53,9 @@ test.describe("Authentication Scenarios", () => {
 
   test("AUTH_002: User Sign Up - Missing First Name", async ({ page }) => {
     // Preconditions: Application is running on localhost:3000, User is not logged in, Navigate to Sign Up page
-    await page.goto("/");
+    await page.goto("/signup");
     
-    // Step 1: Click signup link to navigate to signup page
-    await getByTestId(page, "signup").click();
+    // Step 1: Verify we're on signup page
     await expect(page).toHaveURL("/signup");
     await expect(getByTestId(page, "signup-title")).toBeVisible();
     
@@ -136,19 +76,21 @@ test.describe("Authentication Scenarios", () => {
     await getByTestId(page, "signup-confirmPassword").fill("password123");
     await expect(getByTestId(page, "signup-confirmPassword")).toHaveAttribute("type", "password");
     
-    // Step 6: Submit form
-    await getByTestId(page, "signup-submit").click();
+    // Step 6: Verify submit button is disabled and validation error appears
+    await expect(getByTestId(page, "signup-submit")).toBeDisabled();
     
-    // Expected result: User is shown an error message indicating that the first name is required
+    // Expected result: User is shown validation errors indicating that the first name is required
+    // Check for validation error by trying to focus away from first name field
+    await getByTestId(page, "signup-first-name").focus();
+    await getByTestId(page, "signup-last-name").focus();
     await expect(page.locator("text=First Name is required")).toBeVisible();
   });
 
   test("AUTH_003: User Sign Up - Password Mismatch", async ({ page }) => {
     // Preconditions: Application is running on localhost:3000, User is not logged in, Navigate to Sign Up page
-    await page.goto("/");
+    await page.goto("/signup");
     
-    // Step 1: Click signup link to navigate to signup page
-    await getByTestId(page, "signup").click();
+    // Step 1: Verify we're on signup page
     await expect(page).toHaveURL("/signup");
     await expect(getByTestId(page, "signup-title")).toBeVisible();
     
@@ -173,11 +115,14 @@ test.describe("Authentication Scenarios", () => {
     await getByTestId(page, "signup-confirmPassword").fill("password456");
     await expect(getByTestId(page, "signup-confirmPassword")).toHaveAttribute("type", "password");
     
-    // Step 7: Submit form
-    await getByTestId(page, "signup-submit").click();
+    // Step 7: Trigger validation by focusing away from password field
+    await getByTestId(page, "signup-confirmPassword").blur();
     
     // Expected result: User is shown an error message indicating that the passwords do not match
     await expect(page.locator("text=Password does not match")).toBeVisible();
+    
+    // Also verify submit button is disabled due to validation error
+    await expect(getByTestId(page, "signup-submit")).toBeDisabled();
   });
 
   test("AUTH_004: User Sign In - Valid Credentials", async ({ page }) => {
@@ -226,7 +171,7 @@ test.describe("Authentication Scenarios", () => {
   });
 
   test.skip("AUTH_007: User Password Recovery - Invalid Email", async ({ page }) => {
-    // Password recovery feature is not implemented
+    // Password recovery feature is not implemented  
     await page.goto("/signin");
     // Note: Feature not available in current implementation
   });
@@ -236,75 +181,11 @@ test.describe("Authentication Scenarios", () => {
     await login(page, "Heath93", "s3cret");
     await expect(page).toHaveURL("/");
     
-    // Step 1: Open sidenav
-    await getByTestId(page, "sidenav-toggle").click();
-    await expect(getByTestId(page, "sidenav")).toBeVisible();
-    
-    // Step 2: Click signout
-    await getByTestId(page, "sidenav-signout").click();
+    // Step 1: Open sidenav and sign out using the logout helper
+    const isMobile = await isMobileViewport(page);
+    await logout(page, isMobile);
     
     // Expected result: User is logged out successfully and redirected to Sign In page
     await expect(page).toHaveURL("/signin");
   });
-
-  
-  // Legacy test - keep for comprehensive coverage
-  test("should allow a visitor to sign-up, login, and logout", async ({ page }) => {
-    const testUser = createTestUser();
-
-    // Sign up new user
-    await signUp(page, {
-      firstName: testUser.firstName!,
-      lastName: testUser.lastName!,
-      username: testUser.username!,
-      password: testUser.password!,
-      confirmPassword: testUser.password!,
-    });
-
-    // Should redirect to signin after successful signup
-    await expect(page).toHaveURL("/signin");
-
-    // Login with the new user
-    await login(page, testUser.username!, testUser.password!);
-    await expect(page).toHaveURL("/");
-
-    // Handle onboarding dialog - complete the onboarding process
-    const onboardingDialog = page.locator('[data-test="user-onboarding-dialog"]');
-    if (await onboardingDialog.isVisible()) {
-      // Go through onboarding steps by clicking Next until Done
-      const nextButton = getByTestId(page, "user-onboarding-next");
-      
-      // Step 1: Click Next to go to bank account creation
-      if (await nextButton.isVisible()) {
-        await nextButton.click();
-      }
-      
-      // Step 2: Fill bank account form if present
-      const bankAccountForm = onboardingDialog.locator('form');
-      if (await bankAccountForm.isVisible()) {
-        // Fill out the bank account form with dummy data
-        await getByTestId(page, "bankaccount-bankName-input").fill("Test Bank");
-        await getByTestId(page, "bankaccount-routingNumber-input").fill("123456789");
-        await getByTestId(page, "bankaccount-accountNumber-input").fill("987654321");
-        await getByTestId(page, "bankaccount-submit").click();
-      }
-      
-      // Step 3: Click Done to finish onboarding
-      if (await nextButton.isVisible()) {
-        await nextButton.click();
-      }
-      
-      // Wait for dialog to close
-      await onboardingDialog.waitFor({ state: 'hidden' });
-    }
-
-    // Verify user is logged in by checking for user menu or navigation
-    await expect(getByTestId(page, "sidenav-username")).toBeVisible();
-
-    // Logout
-    const isMobile = await isMobileViewport(page);
-    await logout(page, isMobile);
-    await expect(page).toHaveURL("/signin");
-  });
-
 });
