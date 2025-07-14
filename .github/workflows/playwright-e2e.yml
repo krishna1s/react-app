@@ -207,8 +207,12 @@ jobs:
           echo "❌ Tests failed"
           
           # Get failure counts from test step outputs if available
-          FAILED_COUNT="${{ needs.test.outputs.failed_count || '0' }}"
-          FLAKY_COUNT="${{ needs.test.outputs.flaky_count || '0' }}"
+          FAILED_COUNT="${{ needs.test.outputs.failed_count }}"
+          FLAKY_COUNT="${{ needs.test.outputs.flaky_count }}"
+          
+          # Set default values if empty
+          FAILED_COUNT=${FAILED_COUNT:-"0"}
+          FLAKY_COUNT=${FLAKY_COUNT:-"0"}
           
           echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
           echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
@@ -259,8 +263,8 @@ jobs:
           // Get test status from job result
           const testJobResult = '${{ needs.test.result }}';
           const testFailed = '${{ needs.test.outputs.test_failed }}';
-          const failedCount = '${{ needs.test.outputs.failed_count || "0" }}';
-          const flakyCount = '${{ needs.test.outputs.flaky_count || "0" }}';
+          const failedCount = '${{ needs.test.outputs.failed_count }}' || '0';
+          const flakyCount = '${{ needs.test.outputs.flaky_count }}' || '0';
           
           let testStatus = '✅ All E2E tests passed!';
           let statusIcon = '✅';
