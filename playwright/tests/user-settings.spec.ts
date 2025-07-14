@@ -16,9 +16,11 @@ test.describe("User Settings", () => {
 
     if (isMobile) {
       await getByTestId(page, "sidenav-toggle").click();
+      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
     } else {
       // For desktop, use sidebar navigation as there's no topbar user settings link
+      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
     }
 
@@ -27,6 +29,7 @@ test.describe("User Settings", () => {
   });
 
   test("should update user profile information", async ({ page }) => {
+    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
     await getByTestId(page, "sidenav-user").click();
 
     // Update first name
@@ -68,6 +71,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate required fields", async ({ page }) => {
+    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
     await getByTestId(page, "sidenav-user").click();
 
     // Clear required fields
@@ -89,6 +93,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate email format", async ({ page }) => {
+    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
     await getByTestId(page, "sidenav-user").click();
 
     // Enter invalid email
@@ -101,6 +106,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate phone number format", async ({ page }) => {
+    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
     await getByTestId(page, "sidenav-user").click();
 
     // Enter invalid phone number
@@ -171,6 +177,7 @@ test.describe("User Settings", () => {
       await getByTestId(page, "sidenav-toggle").click();
 
       // Click settings from mobile menu
+      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
 
       await expect(page).toHaveURL("/user/settings");
