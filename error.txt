@@ -1,0 +1,807 @@
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> cd "c:\Users\jjayadevan\source\cypress-1407\react-app" && npx playwright test --reporter=line      
+
+Running 75 tests using 16 workers
+…sts\setup-verification.spec.ts:45:7 › Playwright Setup Verification › cross-browser compatibility check
+Running test in chromium
+…ht\tests\e2e-journey.spec.ts:204:7 › End-to-End User Journey › cross-browser functionality verification
+Running Chrome-specific tests
+  1) [chromium] › playwright\tests\bank-accounts.spec.ts:24:7 › Bank Accounts › should create a new bank account 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Test Bank')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Test Bank')
+
+
+      41 |
+      42 |     // Should show the new bank account
+    > 43 |     await expect(page.locator("text=Test Bank")).toBeVisible();
+         |                                                  ^
+      44 |   });
+      45 |
+      46 |   test("should validate bank account form fields", async ({ page }) => {
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\bank-accounts.spec.ts:43:50
+
+    Error Context: test-results\bank-accounts-Bank-Accounts-should-create-a-new-bank-account-chromium\error-context.md
+
+  2) [chromium] › playwright\tests\e2e-journey.spec.ts:231:7 › End-to-End User Journey › performance and loading behavior 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('[data-test="main-content"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-test="main-content"]')
+
+
+      236 |
+      237 |     // Wait for main content to load
+    > 238 |     await expect(getByTestId(page, "main-content")).toBeVisible();
+          |                                                     ^
+      239 |
+      240 |     const loadComplete = await page.evaluate(() => performance.now());
+      241 |     const loadTime = loadComplete - navigationStart;
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:238:53
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-4b404-rmance-and-loading-behavior-chromium\error-context.md
+
+  3) [chromium] › playwright\tests\e2e-journey.spec.ts:179:7 › End-to-End User Journey › accessibility navigation 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('nav[role="navigation"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('nav[role="navigation"]')
+
+
+      187 |     // Test screen reader compatibility by checking ARIA labels
+      188 |     const navigation = page.locator('nav[role="navigation"]');
+    > 189 |     await expect(navigation).toBeVisible();
+          |                              ^
+      190 |
+      191 |     // Check for proper heading structure
+      192 |     const headings = page.locator("h1, h2, h3, h4, h5, h6");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:189:30
+
+    Error Context: test-results\e2e-journey-End-to-End-User-Journey-accessibility-navigation-chromium\error-context.md
+
+  4) [chromium] › playwright\tests\e2e-journey.spec.ts:150:7 › End-to-End User Journey › error handling and recovery 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Network error')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Network error')
+
+
+      166 |
+      167 |     // Should show error message for network failure
+    > 168 |     await expect(page.locator("text=Network error")).toBeVisible();
+          |                                                      ^
+      169 |
+      170 |     // Recovery: Remove network error and retry
+      171 |     await page.unroute("**/users");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:168:54
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-ca6f6-error-handling-and-recovery-chromium\error-context.md
+
+  5) [chromium] › playwright\tests\e2e-journey.spec.ts:121:7 › End-to-End User Journey › user journey with mobile navigation 
+
+    Error: Timed out 5000ms waiting for expect(page).toHaveURL(expected)
+
+    Expected string: "http://localhost:3000/settings"
+    Received string: "http://localhost:3000/user/settings"
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        9 × unexpected value "http://localhost:3000/user/settings"
+
+
+      140 |     await getByTestId(page, "sidenav-toggle").click();
+      141 |     await getByTestId(page, "sidenav-user-settings").click();
+    > 142 |     await expect(page).toHaveURL("/settings");
+          |                        ^
+      143 |
+      144 |     // Logout via mobile menu
+      145 |     await getByTestId(page, "sidenav-toggle").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:142:24
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-26d2d-rney-with-mobile-navigation-chromium\error-context.md
+
+  6) [chromium] › playwright\tests\e2e-journey.spec.ts:17:7 › End-to-End User Journey › complete user journey: signup, login, add bank account, create transaction, logout 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-bank-accounts"]')
+
+
+      54 |     } else {
+      55 |       // Manually navigate to add bank account
+    > 56 |       await getByTestId(page, "nav-top-bank-accounts").click();
+         |                                                        ^
+      57 |       await getByTestId(page, "bankaccount-new").click();
+      58 |
+      59 |       await getByTestId(page, "bankaccount-bankName-input").fill("First National Bank");     
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:56:56 
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-449d7-t-create-transaction-logout-chromium\error-context.md
+
+  7) [chromium] › playwright\tests\notifications.spec.ts:11:7 › Notifications › should display notifications page 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      17 |       await getByTestId(page, "sidenav-notifications").click();
+      18 |     } else {
+    > 19 |       await getByTestId(page, "nav-top-notifications").click();
+         |                                                        ^
+      20 |     }
+      21 |
+      22 |     await expect(page).toHaveURL("/notifications");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:19:56
+
+    Error Context: test-results\notifications-Notification-dae47--display-notifications-page-chromium\error-context.md
+
+  8) [chromium] › playwright\tests\e2e-journey.spec.ts:256:7 › End-to-End User Journey › data persistence and state management
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-bank-accounts"]')
+
+
+      258 |
+      259 |     // Navigate to different pages and verify state persistence
+    > 260 |     await getByTestId(page, "nav-top-bank-accounts").click();
+          |                                                      ^
+      261 |     await getByTestId(page, "nav-top-home").click();
+      262 |
+      263 |     // Should maintain user session
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:260:54
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-04d50-stence-and-state-management-chromium\error-context.md
+
+  9) [chromium] › playwright\tests\notifications.spec.ts:57:7 › Notifications › should dismiss notification 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      56 |
+      57 |   test("should dismiss notification", async ({ page }) => {
+    > 58 |     await getByTestId(page, "nav-top-notifications").click();
+         |                                                      ^
+      59 |
+      60 |     // Wait for notifications to load
+      61 |     await expect(getByTestId(page, "notifications-list")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:58:54
+
+    Error Context: test-results\notifications-Notifications-should-dismiss-notification-chromium\error-context.md
+
+  10) [chromium] › playwright\tests\notifications.spec.ts:37:7 › Notifications › should mark notification as read 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      36 |
+      37 |   test("should mark notification as read", async ({ page }) => {
+    > 38 |     await getByTestId(page, "nav-top-notifications").click();
+         |                                                      ^
+      39 |
+      40 |     // Wait for notifications to load
+      41 |     await expect(getByTestId(page, "notifications-list")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:38:54
+
+    Error Context: test-results\notifications-Notifications-should-mark-notification-as-read-chromium\error-context.md
+
+  11) [chromium] › playwright\tests\notifications.spec.ts:78:7 › Notifications › should filter notifications by type 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      77 |
+      78 |   test("should filter notifications by type", async ({ page }) => {
+    > 79 |     await getByTestId(page, "nav-top-notifications").click();
+         |                                                      ^
+      80 |
+      81 |     // Check if notification filter options exist
+      82 |     const filterButtons = page.locator('[data-testid^="notification-filter-"]');
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:79:54
+
+    Error Context: test-results\notifications-Notification-b0910-ilter-notifications-by-type-chromium\error-context.md
+
+  12) [chromium] › playwright\tests\notifications.spec.ts:135:7 › Notifications › should navigate to related transaction from notification 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      134 |
+      135 |   test("should navigate to related transaction from notification", async ({ page }) => {    
+    > 136 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      137 |
+      138 |     // Wait for notifications to load
+      139 |     await expect(getByTestId(page, "notifications-list")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:136:54
+
+    Error Context: test-results\notifications-Notification-1f5ec-ansaction-from-notification-chromium\error-context.md
+
+  13) [chromium] › playwright\tests\notifications.spec.ts:119:7 › Notifications › should handle empty notifications state
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      127 |     });
+      128 |
+    > 129 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      130 |
+      131 |     // Should show empty state message
+      132 |     await expect(page.locator("text=No notifications")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:129:54
+
+    Error Context: test-results\notifications-Notification-3db2f-e-empty-notifications-state-chromium\error-context.md
+
+  14) [chromium] › playwright\tests\notifications.spec.ts:155:7 › Notifications › should mark all notifications as read 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      154 |
+      155 |   test("should mark all notifications as read", async ({ page }) => {
+    > 156 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      157 |
+      158 |     // Check if "Mark all as read" button exists
+      159 |     const markAllReadButton = getByTestId(page, "notifications-mark-all-read");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:156:54
+
+    Error Context: test-results\notifications-Notification-b216b-k-all-notifications-as-read-chromium\error-context.md
+
+  15) [chromium] › playwright\tests\notifications.spec.ts:172:7 › Notifications › should show notification details 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      171 |
+      172 |   test("should show notification details", async ({ page }) => {
+    > 173 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      174 |
+      175 |     // Wait for notifications to load
+      176 |     await expect(getByTestId(page, "notifications-list")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:173:54
+
+    Error Context: test-results\notifications-Notifications-should-show-notification-details-chromium\error-context.md
+
+  16) [chromium] › playwright\tests\notifications.spec.ts:190:7 › Notifications › should paginate through notifications 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      189 |
+      190 |   test("should paginate through notifications", async ({ page }) => {
+    > 191 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      192 |
+      193 |     // Wait for notifications to load
+      194 |     await expect(getByTestId(page, "notifications-list")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:191:54
+
+    Error Context: test-results\notifications-Notification-ac2b2-inate-through-notifications-chromium\error-context.md
+
+  17) [chromium] › playwright\tests\notifications.spec.ts:214:7 › Notifications › should show real-time notifications 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-notifications"]')
+
+
+      213 |
+      214 |   test("should show real-time notifications", async ({ page }) => {
+    > 215 |     await getByTestId(page, "nav-top-notifications").click();
+          |                                                      ^
+      216 |
+      217 |     // Count current notifications
+      218 |     const initialCount = await page.locator('[data-test^="notification-list-item-"]').count();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\notifications.spec.ts:215:54
+
+    Error Context: test-results\notifications-Notification-98688-how-real-time-notifications-chromium\error-context.md
+
+  18) [chromium] › playwright\tests\transactions.spec.ts:96:7 › Transactions › should filter transactions by date range 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="transaction-list-filter-date-range-start"]')
+
+
+      104 |     const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      105 |
+    > 106 |     await getByTestId(page, "transaction-list-filter-date-range-start").fill(
+          |                                                                         ^
+      107 |       lastWeek.toISOString().split("T")[0]
+      108 |     );
+      109 |     await getByTestId(page, "transaction-list-filter-date-range-end").fill(
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:106:73
+
+    Error Context: test-results\transactions-Transactions--ece04--transactions-by-date-range-chromium\error-context.md
+
+  19) [chromium] › playwright\tests\transactions.spec.ts:154:7 › Transactions › should like a transaction 
+
+    Error: Timed out 5000ms waiting for expect(locator).toHaveClass(expected)
+
+    Locator: locator('[data-test^="transaction-like-"]').first()
+    Expected pattern: /.*liked.*/
+    Received string:  "MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+    Call log:
+      - Expect "toHaveClass" with timeout 5000ms
+      - waiting for locator('[data-test^="transaction-like-"]').first()
+        9 × locator resolved to <div data-test="transaction-like-count-Ec6hHyL6SC2F" class="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root">0 </div>
+          - unexpected value "MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+
+
+      163 |
+      164 |     // Should show liked state
+    > 165 |     await expect(firstTransactionLike).toHaveClass(/.*liked.*/);
+          |                                        ^
+      166 |   });
+      167 |
+      168 |   test("should comment on a transaction", async ({ page }) => {
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:165:40
+
+    Error Context: test-results\transactions-Transactions-should-like-a-transaction-chromium\error-context.md
+
+  20) [chromium] › playwright\tests\transactions.spec.ts:135:7 › Transactions › should view transaction details 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('[data-test="transaction-detail"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-test="transaction-detail"]')
+
+
+      147 |
+      148 |     // Should show transaction details
+    > 149 |     await expect(getByTestId(page, "transaction-detail")).toBeVisible();
+          |                                                           ^
+      150 |     await expect(getByTestId(page, "transaction-amount")).toBeVisible();
+      151 |     await expect(getByTestId(page, "transaction-description")).toBeVisible();
+      152 |   });
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:149:59
+
+    Error Context: test-results\transactions-Transactions-should-view-transaction-details-chromium\error-context.md
+
+  21) [chromium] › playwright\tests\transactions.spec.ts:119:7 › Transactions › should filter transactions by amount range 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="transaction-list-filter-amount-range-min"]')
+
+
+      124 |
+      125 |     // Set amount range
+    > 126 |     await getByTestId(page, "transaction-list-filter-amount-range-min").fill("10");
+          |                                                                         ^
+      127 |     await getByTestId(page, "transaction-list-filter-amount-range-max").fill("100");        
+      128 |
+      129 |     await getByTestId(page, "transaction-list-filter-amount-range-apply").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:126:73
+
+    Error Context: test-results\transactions-Transactions--2443f-ransactions-by-amount-range-chromium\error-context.md
+
+  22) [chromium] › playwright\tests\transactions.spec.ts:29:7 › Transactions › should create a new transaction 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="user-list-item-next"]')
+
+
+      38 |     // Click on first search result
+      39 |     await page.locator('[data-test^="user-list-item-"]').first().click();
+    > 40 |     await getByTestId(page, "user-list-item-next").click();
+         |                                                    ^
+      41 |
+      42 |     // Step 2: Enter amount and description
+      43 |     await expect(page).toHaveURL(/\/transaction\/new$/);
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:40:52
+
+    Error Context: test-results\transactions-Transactions-should-create-a-new-transaction-chromium\error-context.md
+
+  23) [chromium] › playwright\tests\transactions.spec.ts:65:7 › Transactions › should request money from another user 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="user-list-item-next"]')
+
+
+      72 |
+      73 |     await page.locator('[data-test^="user-list-item-"]').first().click();
+    > 74 |     await getByTestId(page, "user-list-item-next").click();
+         |                                                    ^
+      75 |
+      76 |     // Step 2: Enter amount and description for request
+      77 |     await getByTestId(page, "transaction-create-amount-input").fill("30.00");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:74:52
+
+    Error Context: test-results\transactions-Transactions--cb0c5-est-money-from-another-user-chromium\error-context.md
+
+  24) [chromium] › playwright\tests\transactions.spec.ts:168:7 › Transactions › should comment on a transaction 
+
+    TimeoutError: locator.fill: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="transaction-comment-input"]')
+
+
+      174 |
+      175 |     // Add a comment
+    > 176 |     await getByTestId(page, "transaction-comment-input").fill("Great transaction!");        
+          |                                                          ^
+      177 |     await getByTestId(page, "transaction-comment-submit").click();
+      178 |
+      179 |     // Should show the comment
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:176:58
+
+    Error Context: test-results\transactions-Transactions-should-comment-on-a-transaction-chromium\error-context.md
+
+  25) [chromium] › playwright\tests\transactions.spec.ts:199:7 › Transactions › should validate transaction creation form 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="user-list-item-next"]')
+
+
+      201 |
+      202 |     // Step 1: Try to proceed without selecting a user
+    > 203 |     await getByTestId(page, "user-list-item-next").click();
+          |                                                    ^
+      204 |
+      205 |     // Should still be on step 1
+      206 |     await expect(getByTestId(page, "user-list-search-input")).toBeVisible();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:203:52
+
+    Error Context: test-results\transactions-Transactions--b8def-e-transaction-creation-form-chromium\error-context.md
+
+  26) [chromium] › playwright\tests\user-settings.spec.ts:26:7 › User Settings › should update user profile information 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      25 |
+      26 |   test("should update user profile information", async ({ page }) => {
+    > 27 |     await getByTestId(page, "nav-top-user-settings").click();
+         |                                                      ^
+      28 |
+      29 |     // Update first name
+      30 |     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:27:54
+
+    Error Context: test-results\user-settings-User-Setting-1bfef-te-user-profile-information-chromium\error-context.md
+
+  27) [chromium] › playwright\tests\user-settings.spec.ts:11:7 › User Settings › should display user settings page 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      17 |       await getByTestId(page, "sidenav-user-settings").click();
+      18 |     } else {
+    > 19 |       await getByTestId(page, "nav-top-user-settings").click();
+         |                                                        ^
+      20 |     }
+      21 |
+      22 |     await expect(page).toHaveURL("/settings");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:19:56
+
+    Error Context: test-results\user-settings-User-Setting-6167d--display-user-settings-page-chromium\error-context.md
+
+  28) [chromium] › playwright\tests\user-settings.spec.ts:62:7 › User Settings › should validate required fields 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      61 |
+      62 |   test("should validate required fields", async ({ page }) => {
+    > 63 |     await getByTestId(page, "nav-top-user-settings").click();
+         |                                                      ^
+      64 |
+      65 |     // Clear required fields
+      66 |     await getByTestId(page, "user-settings-firstName-input").clear();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:63:54
+
+    Error Context: test-results\user-settings-User-Settings-should-validate-required-fields-chromium\error-context.md
+
+  29) [chromium] › playwright\tests\user-settings.spec.ts:79:7 › User Settings › should validate email format 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      78 |
+      79 |   test("should validate email format", async ({ page }) => {
+    > 80 |     await getByTestId(page, "nav-top-user-settings").click();
+         |                                                      ^
+      81 |
+      82 |     // Enter invalid email
+      83 |     const emailInput = getByTestId(page, "user-settings-email-input");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:80:54
+
+    Error Context: test-results\user-settings-User-Settings-should-validate-email-format-chromium\error-context.md
+
+  30) [chromium] › playwright\tests\user-settings.spec.ts:93:7 › User Settings › should validate phone number format 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      92 |
+      93 |   test("should validate phone number format", async ({ page }) => {
+    > 94 |     await getByTestId(page, "nav-top-user-settings").click();
+         |                                                      ^
+      95 |
+      96 |     // Enter invalid phone number
+      97 |     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:94:54
+
+    Error Context: test-results\user-settings-User-Setting-a509a-alidate-phone-number-format-chromium\error-context.md
+
+  31) [chromium] › playwright\tests\user-settings.spec.ts:107:7 › User Settings › should change password 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      106 |
+      107 |   test("should change password", async ({ page }) => {
+    > 108 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      109 |
+      110 |     // Navigate to change password section
+      111 |     await getByTestId(page, "user-settings-change-password-tab").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:108:54
+
+    Error Context: test-results\user-settings-User-Settings-should-change-password-chromium\error-context.md
+
+  32) [chromium] › playwright\tests\user-settings.spec.ts:125:7 › User Settings › should validate password change form 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      124 |
+      125 |   test("should validate password change form", async ({ page }) => {
+    > 126 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      127 |     await getByTestId(page, "user-settings-change-password-tab").click();
+      128 |
+      129 |     // Try to submit without current password
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:126:54
+
+    Error Context: test-results\user-settings-User-Setting-e42f3-lidate-password-change-form-chromium\error-context.md
+
+  33) [chromium] › playwright\tests\user-settings.spec.ts:140:7 › User Settings › should validate password confirmation 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      139 |
+      140 |   test("should validate password confirmation", async ({ page }) => {
+    > 141 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      142 |     await getByTestId(page, "user-settings-change-password-tab").click();
+      143 |
+      144 |     // Enter mismatched passwords
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:141:54
+
+    Error Context: test-results\user-settings-User-Setting-25329-idate-password-confirmation-chromium\error-context.md
+
+  34) [chromium] › playwright\tests\user-settings.spec.ts:155:7 › User Settings › should update privacy settings 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      154 |
+      155 |   test("should update privacy settings", async ({ page }) => {
+    > 156 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      157 |
+      158 |     // Navigate to privacy settings tab
+      159 |     await getByTestId(page, "user-settings-privacy-tab").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:156:54
+
+    Error Context: test-results\user-settings-User-Settings-should-update-privacy-settings-chromium\error-context.md
+
+  35) [chromium] › playwright\tests\user-settings.spec.ts:175:7 › User Settings › should upload profile picture 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      174 |
+      175 |   test("should upload profile picture", async ({ page }) => {
+    > 176 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      177 |
+      178 |     // Check if profile picture upload exists
+      179 |     const profilePictureInput = getByTestId(page, "user-settings-profile-picture-input");   
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:176:54
+
+    Error Context: test-results\user-settings-User-Settings-should-upload-profile-picture-chromium\error-context.md
+
+  36) [chromium] › playwright\tests\user-settings.spec.ts:196:7 › User Settings › should cancel changes 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      195 |
+      196 |   test("should cancel changes", async ({ page }) => {
+    > 197 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      198 |
+      199 |     // Make some changes
+      200 |     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:197:54
+
+    Error Context: test-results\user-settings-User-Settings-should-cancel-changes-chromium\error-context.md
+
+  37) [chromium] › playwright\tests\user-settings.spec.ts:212:7 › User Settings › should delete user account 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      211 |
+      212 |   test("should delete user account", async ({ page }) => {
+    > 213 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      214 |
+      215 |     // Navigate to account deletion section
+      216 |     await getByTestId(page, "user-settings-danger-zone-tab").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:213:54
+
+    Error Context: test-results\user-settings-User-Settings-should-delete-user-account-chromium\error-context.md
+
+  38) [chromium] › playwright\tests\user-settings.spec.ts:234:7 › User Settings › should show user account information 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      233 |
+      234 |   test("should show user account information", async ({ page }) => {
+    > 235 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      236 |
+      237 |     // Should display current user information
+      238 |     await expect(getByTestId(page, "user-settings-username-display")).toBeVisible();        
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:235:54
+
+    Error Context: test-results\user-settings-User-Setting-54341-ow-user-account-information-chromium\error-context.md
+
+  39) [chromium] › playwright\tests\user-settings.spec.ts:243:7 › User Settings › should handle two-factor authentication setup 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      242 |
+      243 |   test("should handle two-factor authentication setup", async ({ page }) => {
+    > 244 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      245 |
+      246 |     // Navigate to security settings
+      247 |     await getByTestId(page, "user-settings-security-tab").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:244:54
+
+    Error Context: test-results\user-settings-User-Setting-afe0f-factor-authentication-setup-chromium\error-context.md
+
+  40) [chromium] › playwright\tests\user-settings.spec.ts:263:7 › User Settings › should export user data 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-user-settings"]')
+
+
+      262 |
+      263 |   test("should export user data", async ({ page }) => {
+    > 264 |     await getByTestId(page, "nav-top-user-settings").click();
+          |                                                      ^
+      265 |
+      266 |     // Navigate to data export section
+      267 |     await getByTestId(page, "user-settings-data-tab").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\user-settings.spec.ts:264:54
+
+    Error Context: test-results\user-settings-User-Settings-should-export-user-data-chromium\error-context.md
+
+  40 failed
+    [chromium] › playwright\tests\bank-accounts.spec.ts:24:7 › Bank Accounts › should create a new bank account
+    [chromium] › playwright\tests\e2e-journey.spec.ts:17:7 › End-to-End User Journey › complete user journey: signup, login, add bank account, create transaction, logout
+    [chromium] › playwright\tests\e2e-journey.spec.ts:121:7 › End-to-End User Journey › user journey with mobile navigation
+    [chromium] › playwright\tests\e2e-journey.spec.ts:150:7 › End-to-End User Journey › error handling and recovery
+    [chromium] › playwright\tests\e2e-journey.spec.ts:179:7 › End-to-End User Journey › accessibility navigation
+    [chromium] › playwright\tests\e2e-journey.spec.ts:231:7 › End-to-End User Journey › performance and loading behavior
+    [chromium] › playwright\tests\e2e-journey.spec.ts:256:7 › End-to-End User Journey › data persistence and state management
+    [chromium] › playwright\tests\notifications.spec.ts:11:7 › Notifications › should display notifications page
+    [chromium] › playwright\tests\notifications.spec.ts:37:7 › Notifications › should mark notification as read
+    [chromium] › playwright\tests\notifications.spec.ts:57:7 › Notifications › should dismiss notification
+    [chromium] › playwright\tests\notifications.spec.ts:78:7 › Notifications › should filter notifications by type
+    [chromium] › playwright\tests\notifications.spec.ts:119:7 › Notifications › should handle empty notifications state
+    [chromium] › playwright\tests\notifications.spec.ts:135:7 › Notifications › should navigate to related transaction from notification
+    [chromium] › playwright\tests\notifications.spec.ts:155:7 › Notifications › should mark all notifications as read
+    [chromium] › playwright\tests\notifications.spec.ts:172:7 › Notifications › should show notification details
+    [chromium] › playwright\tests\notifications.spec.ts:190:7 › Notifications › should paginate through notifications
+    [chromium] › playwright\tests\notifications.spec.ts:214:7 › Notifications › should show real-time notifications
+    [chromium] › playwright\tests\transactions.spec.ts:29:7 › Transactions › should create a new transaction
+    [chromium] › playwright\tests\transactions.spec.ts:65:7 › Transactions › should request money from another user
+    [chromium] › playwright\tests\transactions.spec.ts:96:7 › Transactions › should filter transactions by date range
+    [chromium] › playwright\tests\transactions.spec.ts:119:7 › Transactions › should filter transactions by amount range
+    [chromium] › playwright\tests\transactions.spec.ts:135:7 › Transactions › should view transaction details
+    [chromium] › playwright\tests\transactions.spec.ts:154:7 › Transactions › should like a transaction 
+    [chromium] › playwright\tests\transactions.spec.ts:168:7 › Transactions › should comment on a transaction
+    [chromium] › playwright\tests\transactions.spec.ts:199:7 › Transactions › should validate transaction creation form
+    [chromium] › playwright\tests\user-settings.spec.ts:11:7 › User Settings › should display user settings page
+    [chromium] › playwright\tests\user-settings.spec.ts:26:7 › User Settings › should update user profile information
+    [chromium] › playwright\tests\user-settings.spec.ts:62:7 › User Settings › should validate required fields
+    [chromium] › playwright\tests\user-settings.spec.ts:79:7 › User Settings › should validate email format
+    [chromium] › playwright\tests\user-settings.spec.ts:93:7 › User Settings › should validate phone number format
+    [chromium] › playwright\tests\user-settings.spec.ts:107:7 › User Settings › should change password  
+    [chromium] › playwright\tests\user-settings.spec.ts:125:7 › User Settings › should validate password change form
+    [chromium] › playwright\tests\user-settings.spec.ts:140:7 › User Settings › should validate password confirmation
+    [chromium] › playwright\tests\user-settings.spec.ts:155:7 › User Settings › should update privacy settings
+    [chromium] › playwright\tests\user-settings.spec.ts:175:7 › User Settings › should upload profile picture
+    [chromium] › playwright\tests\user-settings.spec.ts:196:7 › User Settings › should cancel changes   
+    [chromium] › playwright\tests\user-settings.spec.ts:212:7 › User Settings › should delete user account
+    [chromium] › playwright\tests\user-settings.spec.ts:234:7 › User Settings › should show user account information
+    [chromium] › playwright\tests\user-settings.spec.ts:243:7 › User Settings › should handle two-factor authentication setup
+    [chromium] › playwright\tests\user-settings.spec.ts:263:7 › User Settings › should export user data 
+  8 skipped
+  27 passed (59.7s)
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> 

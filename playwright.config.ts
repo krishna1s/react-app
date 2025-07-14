@@ -47,9 +47,7 @@ export default defineConfig({
       testMatch: /.*setup-verification\.spec\.ts/,
       use: { 
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          executablePath: "/usr/bin/chromium-browser",
-        },
+        // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
     },
 
@@ -58,9 +56,7 @@ export default defineConfig({
       testIgnore: /.*setup-verification\.spec\.ts/,
       use: { 
         ...devices["Desktop Chrome"],
-        launchOptions: {
-          executablePath: "/usr/bin/chromium-browser",
-        },
+        // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
       dependencies: ["setup"],
     },
