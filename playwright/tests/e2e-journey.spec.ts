@@ -78,6 +78,8 @@ test.describe("End-to-End User Journey", () => {
     // Select recipient
     await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
+    // Wait for user list item to appear before clicking
+    await expect(page.locator('[data-test^="user-list-item-"]').first()).toBeVisible();
     await page.locator('[data-test^="user-list-item-"]').first().click();
     // Clicking on user automatically advances to step 2 - no need for separate next button
 
