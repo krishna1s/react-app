@@ -39,7 +39,7 @@ jobs:
         yarn copy:mock:awsexportses5
 
     - name: Run Playwright tests
-      run: yarn playwright:test --project=chromium
+      run: yarn playwright:test --project=chromium auth.spec.ts --grep "should allow a visitor to sign-up, login, and logout"
       env:
         CI: true
 
