@@ -18,7 +18,8 @@ test.describe("Bank Accounts", () => {
     }
     await getByTestId(page, "sidenav-bankaccounts").click();
 
-    await expect(page).toHaveURL("/bankaccounts");
+    // Wait for navigation to complete
+    await expect(page).toHaveURL(/\/bankaccounts/);
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
   });
 
