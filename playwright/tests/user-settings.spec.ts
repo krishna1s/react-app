@@ -16,11 +16,9 @@ test.describe("User Settings", () => {
 
     if (isMobile) {
       await getByTestId(page, "sidenav-toggle").click();
-      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
     } else {
       // For desktop, use sidebar navigation as there's no topbar user settings link
-      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
     }
 
@@ -174,7 +172,6 @@ test.describe("User Settings", () => {
       await getByTestId(page, "sidenav-toggle").click();
 
       // Click settings from mobile menu
-      await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
       await getByTestId(page, "sidenav-user").click();
 
       await expect(page).toHaveURL("/user/settings");
