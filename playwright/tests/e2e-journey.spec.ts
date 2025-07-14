@@ -78,7 +78,7 @@ test.describe("End-to-End User Journey", () => {
 
     // Select recipient
     // Use the input element inside the TextField for user-list-search-input
-    await page.locator('input[data-test="user-list-search-input"]').fill("Devon");
+    await page.locator('input[data-test="user-list-search-input"]').first().fill("Devon");
     await page.waitForTimeout(1000);
     // Wait for user list item to appear before clicking
     await expect(page.locator('[data-test^="user-list-item-"]').first()).toBeVisible();
@@ -203,7 +203,7 @@ test.describe("End-to-End User Journey", () => {
 
     // Verify form elements work in all browsers
     // Use the input element inside the TextField for user-list-search-input
-    const searchInput = page.locator('input[data-test="user-list-search-input"]');
+    const searchInput = page.locator('input[data-test="user-list-search-input"]').first();
     await searchInput.fill("Devon");
     await expect(searchInput).toHaveValue("Devon");
 
