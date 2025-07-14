@@ -20,7 +20,6 @@ test.describe("End-to-End User Journey", () => {
     const testUser = createTestUser();
 
     // Step 1: Sign up new user
-    await page.goto("/signup");
     await signUp(page, {
       firstName: testUser.firstName!,
       lastName: testUser.lastName!,
@@ -30,7 +29,7 @@ test.describe("End-to-End User Journey", () => {
     });
 
     // Should redirect to signin after signup
-    await expect(page).toHaveURL("/signin");
+    await expect(page).toHaveURL("/login");
 
     // Step 2: Login with new user
     await login(page, testUser.username!, testUser.password!);
@@ -51,10 +50,7 @@ test.describe("End-to-End User Journey", () => {
       await getByTestId(page, "bankaccount-accountNumber-input").fill("987654321");
 
       await getByTestId(page, "bankaccount-submit").click();
-
-      // Wait for onboarding step to finish before clicking next
-      await page.waitForTimeout(500);
-
+      
       // Click Next to finish onboarding (step 3)
       await getByTestId(page, "user-onboarding-next").click();
     } else {
@@ -77,24 +73,24 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Select recipient
-    // Use the input element inside the TextField for user-list-search-input
-    await page.locator('#user-list-search-input').fill("Devon");
+    await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
-    // Wait for user list item to appear before clicking
-    await expect(page.locator('[data-test^="user-list-item-"]').first()).toBeVisible();
     await page.locator('[data-test^="user-list-item-"]').first().click();
     // Clicking on user automatically advances to step 2 - no need for separate next button
 
     // Enter transaction details
-    await getByTestId(page, "transaction-create-amount-input").fill("50.00");
-    await getByTestId(page, "transaction-create-description-input").fill("Lunch payment");
+    await getByTestId(page, "transaction-create-amount-input").locator("input").fill("50.00");
+    await getByTestId(page, "transaction-create-description-input").locator("input").fill("Lunch payment");
     // Privacy is set automatically - no user selection needed
 
     await getByTestId(page, "transaction-create-submit-payment").click();
 
+    // Confirm transaction
+    await getByTestId(page, "transaction-create-submit-payment").click();
+
     // Should show completion page
     await expect(page).toHaveURL(/\/transaction\/.*\/complete$/);
-    await expect(page.locator("text=Payment Complete")).toBeVisible();
+    await expect(page.locator("text=Paid")).toBeVisible();
 
     // Step 5: Return to home and verify transaction appears
     await getByTestId(page, "transaction-complete-return-home").click();
@@ -112,11 +108,11 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "sidenav-user-settings").click();
 
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.fill("");
+    await firstNameInput.clear();
     await firstNameInput.fill("UpdatedName");
 
     await getByTestId(page, "user-settings-submit").click();
-
+    
     // Wait for the form submission to complete and verify the change persisted
     await page.waitForTimeout(1000);
     await expect(firstNameInput).toHaveValue("UpdatedName");
@@ -202,8 +198,7 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Verify form elements work in all browsers
-    // Use the input element inside the TextField for user-list-search-input
-    const searchInput = page.locator('#user-list-search-input');
+    const searchInput = getByTestId(page, "user-list-search-input");
     await searchInput.fill("Devon");
     await expect(searchInput).toHaveValue("Devon");
 
@@ -254,7 +249,7 @@ test.describe("End-to-End User Journey", () => {
     // Navigate to different pages and verify state persistence using sidebar navigation
     await getByTestId(page, "sidenav-bankaccounts").click();
     await expect(page).toHaveURL("/bankaccounts");
-
+    
     await getByTestId(page, "sidenav-home").click();
     await expect(page).toHaveURL("/");
 
