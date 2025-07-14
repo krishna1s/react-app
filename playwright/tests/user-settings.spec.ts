@@ -6,7 +6,8 @@ test.describe("User Settings", () => {
     await setupApiIntercepts(page);
     // Login before each test
     await login(page, "Heath93", "s3cret", { waitForRedirect: false });
-    await page.goto("/");
+    // Go directly to user settings page to avoid waiting for "/" navigation
+    await page.goto("/user/settings");
   });
 
   test("should display user settings page", async ({ page }) => {
@@ -18,7 +19,6 @@ test.describe("User Settings", () => {
       await getByTestId(page, "sidenav-user-settings").click();
     } else {
       // For desktop, use sidebar navigation as there's no topbar user settings link
-
       await getByTestId(page, "sidenav-user-settings").click();
     }
 
