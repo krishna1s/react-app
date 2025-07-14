@@ -38,6 +38,17 @@ jobs:
         yarn copy:mock:awsexports
         yarn copy:mock:awsexportses5
 
+    - name: Start local server
+      run: |
+        set -e  # Exit immediately if any command fails
+        yarn run dev &
+        # Wait for the server to start
+        for i in {1..30}; do
+          if curl -s http://localhost:3000 > /dev/null; then
+            echo "Server is up and running"
+            break
+          fi
+
     - name: Run Playwright tests
       id: playwright-tests
       run: |
