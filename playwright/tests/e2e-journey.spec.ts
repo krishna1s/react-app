@@ -91,9 +91,6 @@ test.describe("End-to-End User Journey", () => {
 
     await getByTestId(page, "transaction-create-submit-payment").click();
 
-    // Confirm transaction
-    await getByTestId(page, "transaction-create-submit-payment").click();
-
     // Should show completion page
     await expect(page).toHaveURL(/\/transaction\/.*\/complete$/);
     await expect(page.locator("text=Paid")).toBeVisible();
