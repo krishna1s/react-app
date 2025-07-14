@@ -69,13 +69,7 @@ jobs:
     - name: Check test results
       if: always()
       run: |
-        # Check if any tests failed by examining the exit code of the previous step
-        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
-          echo "❌ Playwright tests failed!"
-          exit 1
-        else
-          echo "✅ All Playwright tests passed!"
-        fi
+        exit 1
 
         
   # Job to aggregate and comment on PR
