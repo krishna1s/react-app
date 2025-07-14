@@ -197,6 +197,7 @@ export const createUser = (userDetails: Partial<User>): User => {
   return user;
 };
 
+
 const saveUser = (user: User) => {
   db.get(USER_TABLE).push(user).write();
 };
