@@ -5,7 +5,7 @@ test.describe("Notifications", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
   });
 
   test("should display notifications page", async ({ page }) => {
@@ -42,7 +42,7 @@ test.describe("Notifications", () => {
 
     // Find first unread notification (if any)
     const unreadNotifications = page.locator(
-      '[data-testid^="notification-item-"][data-read="false"]'
+      '[data-test^="notification-list-item-"][data-read="false"]'
     );
 
     if ((await unreadNotifications.count()) > 0) {
@@ -61,16 +61,16 @@ test.describe("Notifications", () => {
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
 
     // Count notifications before dismissal
-    const notificationsBefore = await page.locator('[data-testid^="notification-item-"]').count();
+    const notificationsBefore = await page.locator('[data-test^="notification-list-item-"]').count();
 
     if (notificationsBefore > 0) {
       // Click dismiss button on first notification
-      const firstNotification = page.locator('[data-testid^="notification-item-"]').first();
-      await firstNotification.locator('[data-testid="notification-dismiss"]').click();
+      const firstNotification = page.locator('[data-test^="notification-list-item-"]').first();
+      await firstNotification.locator('[data-test="notification-mark-read"]').click();
 
       // Should have one less notification
       await page.waitForTimeout(1000);
-      const notificationsAfter = await page.locator('[data-testid^="notification-item-"]').count();
+      const notificationsAfter = await page.locator('[data-test^="notification-list-item-"]').count();
       expect(notificationsAfter).toBe(notificationsBefore - 1);
     }
   });
@@ -88,7 +88,7 @@ test.describe("Notifications", () => {
         await paymentFilter.click();
 
         // Should show only payment notifications
-        const visibleNotifications = page.locator('[data-testid^="notification-item-"]:visible');
+        const visibleNotifications = page.locator('[data-test^="notification-list-item-"]:visible');
         const notificationTypes = await visibleNotifications
           .locator('[data-testid="notification-type"]')
           .allTextContents();
@@ -104,7 +104,7 @@ test.describe("Notifications", () => {
         await likeFilter.click();
 
         // Should show only like notifications
-        const visibleNotifications = page.locator('[data-testid^="notification-item-"]:visible');
+        const visibleNotifications = page.locator('[data-test^="notification-list-item-"]:visible');
         const notificationTypes = await visibleNotifications
           .locator('[data-testid="notification-type"]')
           .allTextContents();
@@ -140,7 +140,7 @@ test.describe("Notifications", () => {
 
     // Find a transaction-related notification
     const transactionNotification = page
-      .locator('[data-testid^="notification-item-"][data-type="payment"]')
+      .locator('[data-test^="notification-list-item-"][data-type="payment"]')
       .first();
 
     if (await transactionNotification.isVisible()) {
@@ -163,7 +163,7 @@ test.describe("Notifications", () => {
 
       // All notifications should be marked as read
       const unreadNotifications = page.locator(
-        '[data-testid^="notification-item-"][data-read="false"]'
+        '[data-test^="notification-list-item-"][data-read="false"]'
       );
       await expect(unreadNotifications).toHaveCount(0);
     }
@@ -176,7 +176,7 @@ test.describe("Notifications", () => {
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
 
     // Click on first notification
-    const firstNotification = page.locator('[data-testid^="notification-item-"]').first();
+    const firstNotification = page.locator('[data-test^="notification-list-item-"]').first();
 
     if (await firstNotification.isVisible()) {
       await firstNotification.click();
@@ -198,14 +198,14 @@ test.describe("Notifications", () => {
 
     if (await nextPageButton.isVisible()) {
       // Count notifications on first page
-      const firstPageCount = await page.locator('[data-testid^="notification-item-"]').count();
+      const firstPageCount = await page.locator('[data-test^="notification-list-item-"]').count();
 
       // Go to next page
       await nextPageButton.click();
 
       // Should load more notifications
       await page.waitForTimeout(1000);
-      const totalNotifications = await page.locator('[data-testid^="notification-item-"]').count();
+      const totalNotifications = await page.locator('[data-test^="notification-list-item-"]').count();
 
       expect(totalNotifications).toBeGreaterThan(firstPageCount);
     }
@@ -215,7 +215,7 @@ test.describe("Notifications", () => {
     await getByTestId(page, "nav-top-notifications").click();
 
     // Count current notifications
-    const initialCount = await page.locator('[data-testid^="notification-item-"]').count();
+    const initialCount = await page.locator('[data-test^="notification-list-item-"]').count();
 
     // Simulate a new notification coming in (this would normally be via WebSocket or polling)
     await page.evaluate(() => {
@@ -236,7 +236,7 @@ test.describe("Notifications", () => {
     await page.waitForTimeout(2000);
 
     // Check if notification count increased (if real-time updates are implemented)
-    const newCount = await page.locator('[data-testid^="notification-item-"]').count();
+    const newCount = await page.locator('[data-test^="notification-list-item-"]').count();
 
     // This test may pass/fail based on whether real-time notifications are implemented
     // It's mainly to verify the test structure is correct
@@ -258,7 +258,7 @@ test.describe("Notifications", () => {
       await expect(getByTestId(page, "notifications-list")).toBeVisible();
 
       // Notification items should stack vertically on mobile
-      const notifications = page.locator('[data-testid^="notification-item-"]');
+      const notifications = page.locator('[data-test^="notification-list-item-"]');
       if ((await notifications.count()) > 1) {
         const firstNotificationBox = await notifications.first().boundingBox();
         const secondNotificationBox = await notifications.nth(1).boundingBox();

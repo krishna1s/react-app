@@ -73,7 +73,7 @@ test.describe("End-to-End User Journey", () => {
     // Select recipient
     await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
-    await page.locator('[data-testid^="user-list-item-"]').first().click();
+    await page.locator('[data-test^="user-list-item-"]').first().click();
     await getByTestId(page, "user-list-item-next").click();
 
     // Enter transaction details
@@ -123,7 +123,7 @@ test.describe("End-to-End User Journey", () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     // Login
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
 
     // Test mobile navigation
     await getByTestId(page, "sidenav-toggle").click();
@@ -177,7 +177,7 @@ test.describe("End-to-End User Journey", () => {
   });
 
   test("accessibility navigation", async ({ page }) => {
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
 
     // Test keyboard navigation
     await page.keyboard.press("Tab"); // Focus first interactive element
@@ -202,7 +202,7 @@ test.describe("End-to-End User Journey", () => {
   });
 
   test("cross-browser functionality verification", async ({ page, browserName }) => {
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
 
     // Test basic functionality across different browsers
     await expect(getByTestId(page, "transaction-list")).toBeVisible();
@@ -244,7 +244,7 @@ test.describe("End-to-End User Journey", () => {
     expect(loadTime).toBeLessThan(5000); // 5 seconds
 
     // Test lazy loading behavior
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
 
     // Scroll to trigger lazy loading if implemented
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -254,7 +254,7 @@ test.describe("End-to-End User Journey", () => {
   });
 
   test("data persistence and state management", async ({ page }) => {
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
 
     // Navigate to different pages and verify state persistence
     await getByTestId(page, "nav-top-bank-accounts").click();

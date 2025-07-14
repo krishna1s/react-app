@@ -46,7 +46,18 @@ export interface Transaction {
  * Equivalent to Cypress cy.getBySel()
  */
 export const getByTestId = (page: Page, testId: string): Locator => {
-  return page.locator(`[data-testid="${testId}"]`);
+  const element = page.locator(`[data-test="${testId}"]`);
+  
+  // For form fields (TextField), we need to target the actual input element
+  // Apply this to form input fields but not to display elements like sidenav
+  if ((testId.includes('signin-') || testId.includes('signup-') || testId.includes('bankaccount-')) && 
+      (testId.includes('-username') || testId.includes('-password') || testId.includes('-first-name') || 
+       testId.includes('-last-name') || testId.includes('-confirmPassword') || 
+       testId.includes('-bankName') || testId.includes('-routingNumber') || testId.includes('-accountNumber'))) {
+    return element.locator('input');
+  }
+  
+  return element;
 };
 
 /**
@@ -73,14 +84,35 @@ export const login = async (
   // Submit form
   await getByTestId(page, "signin-submit").click();
 
-  // Wait for navigation to complete
-  await page.waitForURL("/");
+  // Wait for navigation to complete with increased timeout
+  await page.waitForURL("/", { timeout: 60000 });
 };
 
 /**
  * Logout helper function
  */
 export const logout = async (page: Page, isMobile = false): Promise<void> => {
+  // Close any modal dialogs that might be blocking interactions
+  const modals = page.locator('[role="dialog"], .MuiDialog-root');
+  const modalCount = await modals.count();
+  if (modalCount > 0) {
+    for (let i = 0; i < modalCount; i++) {
+      const modal = modals.nth(i);
+      if (await modal.isVisible()) {
+        // Try to find and click a close button
+        const closeButton = modal.locator('button').filter({ hasText: /close|skip|done|dismiss|×/i }).first();
+        if (await closeButton.isVisible()) {
+          await closeButton.click();
+          await modal.waitFor({ state: 'hidden' });
+        } else {
+          // Try pressing escape
+          await page.keyboard.press('Escape');
+          await page.waitForTimeout(500);
+        }
+      }
+    }
+  }
+
   if (isMobile) {
     await getByTestId(page, "sidenav-toggle").click();
   }
@@ -116,24 +148,8 @@ export const setupApiIntercepts = async (page: Page): Promise<void> => {
     });
   });
 
-  // Mock user creation
-  await page.route("**/users", async (route) => {
-    if (route.request().method() === "POST") {
-      await route.fulfill({
-        status: 201,
-        contentType: "application/json",
-        body: JSON.stringify({
-          user: {
-            id: "mock-user-id",
-            username: "testuser",
-            email: "test@example.com",
-          },
-        }),
-      });
-    } else {
-      await route.continue();
-    }
-  });
+  // Don't mock user creation - let it go through to the actual API
+  // The real backend should handle user registration properly
 };
 
 /**

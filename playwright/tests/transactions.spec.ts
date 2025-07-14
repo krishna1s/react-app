@@ -11,7 +11,7 @@ test.describe("Transactions", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Katharina_Bernier", "s3cret");
+    await login(page, "Heath93", "s3cret");
   });
 
   test("should display transaction feeds on home page", async ({ page }) => {
@@ -36,7 +36,7 @@ test.describe("Transactions", () => {
     await page.waitForTimeout(1000); // Wait for search results
 
     // Click on first search result
-    await page.locator('[data-testid^="user-list-item-"]').first().click();
+    await page.locator('[data-test^="user-list-item-"]').first().click();
     await getByTestId(page, "user-list-item-next").click();
 
     // Step 2: Enter amount and description
@@ -70,7 +70,7 @@ test.describe("Transactions", () => {
     await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
 
-    await page.locator('[data-testid^="user-list-item-"]').first().click();
+    await page.locator('[data-test^="user-list-item-"]').first().click();
     await getByTestId(page, "user-list-item-next").click();
 
     // Step 2: Enter amount and description for request
@@ -139,7 +139,7 @@ test.describe("Transactions", () => {
     await expect(getByTestId(page, "transaction-list")).toBeVisible();
 
     // Click on first transaction
-    const firstTransaction = page.locator('[data-testid^="transaction-item-"]').first();
+    const firstTransaction = page.locator('[data-test^="transaction-item-"]').first();
     await firstTransaction.click();
 
     // Should navigate to transaction detail page
@@ -158,7 +158,7 @@ test.describe("Transactions", () => {
     await expect(getByTestId(page, "transaction-list")).toBeVisible();
 
     // Find and click like button on first transaction
-    const firstTransactionLike = page.locator('[data-testid^="transaction-like-"]').first();
+    const firstTransactionLike = page.locator('[data-test^="transaction-like-"]').first();
     await firstTransactionLike.click();
 
     // Should show liked state
@@ -169,7 +169,7 @@ test.describe("Transactions", () => {
     await expect(page).toHaveURL("/");
 
     // Click on first transaction to view details
-    const firstTransaction = page.locator('[data-testid^="transaction-item-"]').first();
+    const firstTransaction = page.locator('[data-test^="transaction-item-"]').first();
     await firstTransaction.click();
 
     // Add a comment
@@ -208,7 +208,7 @@ test.describe("Transactions", () => {
     // Select a user
     await getByTestId(page, "user-list-search-input").fill("Devon");
     await page.waitForTimeout(1000);
-    await page.locator('[data-testid^="user-list-item-"]').first().click();
+    await page.locator('[data-test^="user-list-item-"]').first().click();
     await getByTestId(page, "user-list-item-next").click();
 
     // Step 2: Try to submit without amount
