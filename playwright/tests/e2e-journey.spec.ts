@@ -93,7 +93,7 @@ test.describe("End-to-End User Journey", () => {
 
     // Should show completion page
     await expect(page).toHaveURL(/\/transaction\/.*\/complete$/);
-    await expect(page.locator("text=Paid")).toBeVisible();
+    await expect(page.locator("text=Payment Complete")).toBeVisible();
 
     // Step 5: Return to home and verify transaction appears
     await getByTestId(page, "transaction-complete-return-home").click();
