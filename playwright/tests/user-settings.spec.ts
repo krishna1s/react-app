@@ -16,12 +16,12 @@ test.describe("User Settings", () => {
 
     if (isMobile) {
       await getByTestId(page, "sidenav-toggle").click();
-      await expect(getByTestId(page, "sidenav-user")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-user").click();
+      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
+      await getByTestId(page, "sidenav-settings").click();
     } else {
       // For desktop, use sidebar navigation as there's no topbar user settings link
-      await expect(getByTestId(page, "sidenav-user")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-user").click();
+      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
+      await getByTestId(page, "sidenav-settings").click();
     }
 
     await expect(page).toHaveURL("/user/settings");
@@ -174,8 +174,8 @@ test.describe("User Settings", () => {
       await getByTestId(page, "sidenav-toggle").click();
 
       // Click settings from mobile menu
-      await expect(getByTestId(page, "sidenav-user")).toBeVisible({ timeout: 10000 });
-      await getByTestId(page, "sidenav-user").click();
+      await expect(getByTestId(page, "sidenav-settings")).toBeVisible({ timeout: 10000 });
+      await getByTestId(page, "sidenav-settings").click();
 
       await expect(page).toHaveURL("/user/settings");
 
