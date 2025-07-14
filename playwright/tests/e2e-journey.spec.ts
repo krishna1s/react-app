@@ -29,7 +29,7 @@ test.describe("End-to-End User Journey", () => {
     });
 
     // Should redirect to signin after signup
-    await expect(page).toHaveURL("/login");
+    await expect(page).toHaveURL("/signin");
 
     // Step 2: Login with new user
     await login(page, testUser.username!, testUser.password!);
