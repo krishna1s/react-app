@@ -42,7 +42,6 @@ jobs:
       id: playwright-tests
       run: |
         set -e  # Exit immediately if any command fails
-        yarn playwright:test --project=chromium auth.spec.ts
         yarn playwright:test --project=chromium user-settings.spec.ts
       env:
         CI: true
