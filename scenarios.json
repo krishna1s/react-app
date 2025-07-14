@@ -1,0 +1,722 @@
+{
+  "testSuites": {
+    "authentication": {
+      "description": "Authentication and user management test scenarios",
+      "scenarios": [
+        {
+          "id": "auth-001",
+          "title": "User Signin with Valid Credentials",
+          "description": "Test successful user authentication with valid username and password",
+          "testData": {
+            "username": "Heath93",
+            "password": "s3cret"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to signin page",
+              "selector": "getByTestId(page, 'signin')",
+              "expectedResult": "Signin form is visible"
+            },
+            {
+              "step": 2,
+              "action": "Fill username field",
+              "selector": "getByTestId(page, 'signin-username')",
+              "inputValue": "Heath93",
+              "expectedResult": "Username field contains 'Heath93'"
+            },
+            {
+              "step": 3,
+              "action": "Fill password field",
+              "selector": "getByTestId(page, 'signin-password')",
+              "inputValue": "s3cret",
+              "expectedResult": "Password field is filled"
+            },
+            {
+              "step": 4,
+              "action": "Click signin button",
+              "selector": "getByTestId(page, 'signin-submit')",
+              "expectedResult": "User is redirected to dashboard, URL contains '/'"
+            }
+          ],
+          "tags": ["authentication", "signin", "valid-credentials"]
+        },
+        {
+          "id": "auth-002",
+          "title": "User Signin with Invalid Credentials",
+          "description": "Test authentication failure with invalid credentials",
+          "testData": {
+            "username": "invaliduser",
+            "password": "wrongpassword"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to signin page",
+              "selector": "getByTestId(page, 'signin')",
+              "expectedResult": "Signin form is visible"
+            },
+            {
+              "step": 2,
+              "action": "Fill username with invalid value",
+              "selector": "getByTestId(page, 'signin-username')",
+              "inputValue": "invaliduser",
+              "expectedResult": "Username field contains 'invaliduser'"
+            },
+            {
+              "step": 3,
+              "action": "Fill password with invalid value",
+              "selector": "getByTestId(page, 'signin-password')",
+              "inputValue": "wrongpassword",
+              "expectedResult": "Password field is filled"
+            },
+            {
+              "step": 4,
+              "action": "Click signin button",
+              "selector": "getByTestId(page, 'signin-submit')",
+              "expectedResult": "Error message 'Username or password is invalid' is displayed"
+            }
+          ],
+          "tags": ["authentication", "signin", "invalid-credentials", "error-handling"]
+        },
+        {
+          "id": "auth-003",
+          "title": "User Signup with Valid Information",
+          "description": "Test user registration with valid information",
+          "testData": {
+            "firstName": "Test",
+            "lastName": "User",
+            "username": "testuser123",
+            "password": "password123",
+            "confirmPassword": "password123"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to signup page",
+              "selector": "getByTestId(page, 'signup')",
+              "expectedResult": "Signup form is visible"
+            },
+            {
+              "step": 2,
+              "action": "Fill first name",
+              "selector": "getByTestId(page, 'signup-firstName')",
+              "inputValue": "Test",
+              "expectedResult": "First name field contains 'Test'"
+            },
+            {
+              "step": 3,
+              "action": "Fill last name",
+              "selector": "getByTestId(page, 'signup-lastName')",
+              "inputValue": "User",
+              "expectedResult": "Last name field contains 'User'"
+            },
+            {
+              "step": 4,
+              "action": "Fill username",
+              "selector": "getByTestId(page, 'signup-username')",
+              "inputValue": "testuser123",
+              "expectedResult": "Username field contains 'testuser123'"
+            },
+            {
+              "step": 5,
+              "action": "Fill password",
+              "selector": "getByTestId(page, 'signup-password')",
+              "inputValue": "password123",
+              "expectedResult": "Password field is filled"
+            },
+            {
+              "step": 6,
+              "action": "Fill confirm password",
+              "selector": "getByTestId(page, 'signup-confirmPassword')",
+              "inputValue": "password123",
+              "expectedResult": "Confirm password field is filled"
+            },
+            {
+              "step": 7,
+              "action": "Submit signup form",
+              "selector": "getByTestId(page, 'signup-submit')",
+              "expectedResult": "User is registered and redirected to signin page"
+            }
+          ],
+          "tags": ["authentication", "signup", "registration", "valid-data"]
+        },
+        {
+          "id": "auth-004",
+          "title": "Password Validation",
+          "description": "Test password field validation requirements",
+          "testData": {
+            "shortPassword": "123",
+            "validPassword": "password123"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to signup page",
+              "selector": "getByTestId(page, 'signup')",
+              "expectedResult": "Signup form is visible"
+            },
+            {
+              "step": 2,
+              "action": "Fill password with short value",
+              "selector": "getByTestId(page, 'signup-password')",
+              "inputValue": "123",
+              "expectedResult": "Password field contains short value"
+            },
+            {
+              "step": 3,
+              "action": "Blur password field to trigger validation",
+              "selector": "getByTestId(page, 'signup-password')",
+              "action_type": "blur",
+              "expectedResult": "Password validation error message appears"
+            }
+          ],
+          "tags": ["authentication", "validation", "password", "form-validation"]
+        },
+        {
+          "id": "auth-005",
+          "title": "User Logout",
+          "description": "Test user logout functionality",
+          "prerequisites": "User must be logged in",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Click user menu",
+              "selector": "getByTestId(page, 'user-menu')",
+              "expectedResult": "User menu dropdown is visible"
+            },
+            {
+              "step": 2,
+              "action": "Click logout option",
+              "selector": "getByTestId(page, 'sidenav-signout')",
+              "expectedResult": "User is logged out and redirected to signin page"
+            }
+          ],
+          "tags": ["authentication", "logout", "session-management"]
+        }
+      ]
+    },
+    "bankAccounts": {
+      "description": "Bank account management test scenarios",
+      "prerequisites": "User must be authenticated",
+      "scenarios": [
+        {
+          "id": "bank-001",
+          "title": "Display Bank Accounts Page",
+          "description": "Test navigation to bank accounts page and verify page elements",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts via sidebar",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page loads with URL '/bankaccounts'"
+            },
+            {
+              "step": 2,
+              "action": "Verify bank accounts list is visible",
+              "selector": "getByTestId(page, 'bankaccount-list')",
+              "expectedResult": "Bank accounts list container is displayed"
+            }
+          ],
+          "tags": ["bankAccounts", "navigation", "ui-verification"]
+        },
+        {
+          "id": "bank-002",
+          "title": "Create New Bank Account",
+          "description": "Test creating a new bank account with valid information",
+          "testData": {
+            "bankName": "Test Bank",
+            "routingNumber": "123456789",
+            "accountNumber": "987654321"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page is loaded"
+            },
+            {
+              "step": 2,
+              "action": "Click create new bank account button",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Bank account creation form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Fill bank name field",
+              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
+              "inputValue": "Test Bank",
+              "expectedResult": "Bank name field contains 'Test Bank'"
+            },
+            {
+              "step": 4,
+              "action": "Fill routing number field",
+              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
+              "inputValue": "123456789",
+              "expectedResult": "Routing number field contains '123456789'"
+            },
+            {
+              "step": 5,
+              "action": "Fill account number field",
+              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
+              "inputValue": "987654321",
+              "expectedResult": "Account number field contains '987654321'"
+            },
+            {
+              "step": 6,
+              "action": "Submit bank account form",
+              "selector": "getByTestId(page, 'bankaccount-submit')",
+              "expectedResult": "Bank account is created and user is redirected to bank accounts list"
+            },
+            {
+              "step": 7,
+              "action": "Verify new bank account appears in list",
+              "selector": "page.locator('text=Test Bank')",
+              "expectedResult": "New bank account 'Test Bank' is visible in the list"
+            }
+          ],
+          "tags": ["bankAccounts", "create", "form-submission", "crud"]
+        },
+        {
+          "id": "bank-003",
+          "title": "Bank Account Form Validation",
+          "description": "Test form field validation for required fields",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page is loaded"
+            },
+            {
+              "step": 2,
+              "action": "Click create new bank account",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Bank account form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Submit empty form",
+              "selector": "getByTestId(page, 'bankaccount-submit')",
+              "expectedResult": "Form validation errors appear for required fields"
+            },
+            {
+              "step": 4,
+              "action": "Verify bank name field is required",
+              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
+              "expectedResult": "Bank name field shows required validation"
+            },
+            {
+              "step": 5,
+              "action": "Verify routing number field is required",
+              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
+              "expectedResult": "Routing number field shows required validation"
+            },
+            {
+              "step": 6,
+              "action": "Verify account number field is required",
+              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
+              "expectedResult": "Account number field shows required validation"
+            }
+          ],
+          "tags": ["bankAccounts", "validation", "form-validation", "required-fields"]
+        },
+        {
+          "id": "bank-004",
+          "title": "Routing Number Format Validation",
+          "description": "Test routing number format validation (must be 9 digits)",
+          "testData": {
+            "bankName": "Test Bank",
+            "invalidRoutingNumber": "123",
+            "validAccountNumber": "987654321"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank account creation form",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank account form is accessible"
+            },
+            {
+              "step": 2,
+              "action": "Click new bank account",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Bank account creation form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Fill form with invalid routing number",
+              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
+              "inputValue": "123",
+              "expectedResult": "Short routing number is entered"
+            },
+            {
+              "step": 4,
+              "action": "Fill other required fields",
+              "selector": "multiple",
+              "expectedResult": "Form is partially completed with valid data"
+            },
+            {
+              "step": 5,
+              "action": "Submit form",
+              "selector": "getByTestId(page, 'bankaccount-submit')",
+              "expectedResult": "Routing number validation error 'Routing number must be 9 digits' is displayed"
+            }
+          ],
+          "tags": ["bankAccounts", "validation", "routing-number", "format-validation"]
+        },
+        {
+          "id": "bank-005",
+          "title": "Account Number Format Validation",
+          "description": "Test account number format validation (minimum 8 digits)",
+          "testData": {
+            "bankName": "Test Bank",
+            "validRoutingNumber": "123456789",
+            "invalidAccountNumber": "123"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank account creation form",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank account form is accessible"
+            },
+            {
+              "step": 2,
+              "action": "Click new bank account",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Bank account creation form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Fill form with invalid account number",
+              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
+              "inputValue": "123",
+              "expectedResult": "Short account number is entered"
+            },
+            {
+              "step": 4,
+              "action": "Fill other required fields",
+              "selector": "multiple",
+              "expectedResult": "Form is partially completed with valid data"
+            },
+            {
+              "step": 5,
+              "action": "Submit form",
+              "selector": "getByTestId(page, 'bankaccount-submit')",
+              "expectedResult": "Account number validation error 'Account number must be at least 8 digits' is displayed"
+            }
+          ],
+          "tags": ["bankAccounts", "validation", "account-number", "format-validation"]
+        },
+        {
+          "id": "bank-006",
+          "title": "Edit Existing Bank Account",
+          "description": "Test editing an existing bank account",
+          "prerequisites": "At least one bank account must exist",
+          "testData": {
+            "updatedBankName": "Updated Bank Name"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts list is displayed"
+            },
+            {
+              "step": 2,
+              "action": "Click edit on first bank account",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first().locator('[data-test=\"bankaccount-edit\"]')",
+              "expectedResult": "Bank account edit form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Update bank name",
+              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
+              "inputValue": "Updated Bank Name",
+              "expectedResult": "Bank name field contains updated value"
+            },
+            {
+              "step": 4,
+              "action": "Submit changes",
+              "selector": "getByTestId(page, 'bankaccount-submit')",
+              "expectedResult": "Changes are saved and user returns to bank accounts list"
+            },
+            {
+              "step": 5,
+              "action": "Verify updated bank name appears",
+              "selector": "page.locator('text=Updated Bank Name')",
+              "expectedResult": "Updated bank name is visible in the list"
+            }
+          ],
+          "tags": ["bankAccounts", "edit", "update", "crud"]
+        },
+        {
+          "id": "bank-007",
+          "title": "Delete Bank Account",
+          "description": "Test deleting a bank account with confirmation",
+          "prerequisites": "At least one bank account must exist",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts list is displayed"
+            },
+            {
+              "step": 2,
+              "action": "Count existing accounts",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]')",
+              "expectedResult": "Number of accounts is recorded"
+            },
+            {
+              "step": 3,
+              "action": "Click delete on first account",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first().locator('[data-test=\"bankaccount-delete\"]')",
+              "expectedResult": "Delete confirmation dialog appears"
+            },
+            {
+              "step": 4,
+              "action": "Confirm deletion",
+              "selector": "getByTestId(page, 'confirmation-dialog-confirm')",
+              "expectedResult": "Account is deleted"
+            },
+            {
+              "step": 5,
+              "action": "Verify account count decreased",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]')",
+              "expectedResult": "Account count is reduced by one"
+            }
+          ],
+          "tags": ["bankAccounts", "delete", "confirmation", "crud"]
+        },
+        {
+          "id": "bank-008",
+          "title": "Bank Account Details View",
+          "description": "Test viewing detailed information of a bank account",
+          "prerequisites": "At least one bank account must exist",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts list is displayed"
+            },
+            {
+              "step": 2,
+              "action": "Click on first bank account",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first()",
+              "expectedResult": "Bank account details view is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Verify bank account details are visible",
+              "selector": "getByTestId(page, 'bankaccount-detail')",
+              "expectedResult": "Bank account detail container is visible"
+            },
+            {
+              "step": 4,
+              "action": "Verify bank name is displayed",
+              "selector": "getByTestId(page, 'bankaccount-bank-name')",
+              "expectedResult": "Bank name is visible"
+            },
+            {
+              "step": 5,
+              "action": "Verify account number is displayed",
+              "selector": "getByTestId(page, 'bankaccount-account-number')",
+              "expectedResult": "Account number is visible"
+            },
+            {
+              "step": 6,
+              "action": "Verify routing number is displayed",
+              "selector": "getByTestId(page, 'bankaccount-routing-number')",
+              "expectedResult": "Routing number is visible"
+            }
+          ],
+          "tags": ["bankAccounts", "details", "view", "information-display"]
+        },
+        {
+          "id": "bank-009",
+          "title": "Sensitive Information Masking",
+          "description": "Test that sensitive account information is properly masked",
+          "prerequisites": "At least one bank account must exist",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts list is displayed"
+            },
+            {
+              "step": 2,
+              "action": "Verify account numbers are masked",
+              "selector": "page.locator('[data-test^=\"bankaccount-account-number-\"]')",
+              "expectedResult": "Account numbers display in masked format (****1234)"
+            }
+          ],
+          "tags": ["bankAccounts", "security", "data-masking", "privacy"]
+        },
+        {
+          "id": "bank-010",
+          "title": "Cancel Bank Account Creation",
+          "description": "Test canceling bank account creation form",
+          "testData": {
+            "bankName": "Test Bank"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page is loaded"
+            },
+            {
+              "step": 2,
+              "action": "Click create new bank account",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Bank account form is displayed"
+            },
+            {
+              "step": 3,
+              "action": "Fill partial form data",
+              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
+              "inputValue": "Test Bank",
+              "expectedResult": "Partial form data is entered"
+            },
+            {
+              "step": 4,
+              "action": "Click cancel button",
+              "selector": "getByTestId(page, 'bankaccount-cancel')",
+              "expectedResult": "Form is canceled and user returns to bank accounts list"
+            },
+            {
+              "step": 5,
+              "action": "Verify no bank account was created",
+              "selector": "page.locator('text=Test Bank')",
+              "expectedResult": "Test Bank account does not appear in the list"
+            }
+          ],
+          "tags": ["bankAccounts", "cancel", "form-navigation", "user-flow"]
+        },
+        {
+          "id": "bank-011",
+          "title": "Empty Bank Accounts State",
+          "description": "Test display when no bank accounts exist",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Mock empty bank accounts response",
+              "selector": "API mock",
+              "expectedResult": "API returns empty bank accounts list"
+            },
+            {
+              "step": 2,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page is loaded"
+            },
+            {
+              "step": 3,
+              "action": "Verify empty state message",
+              "selector": "page.locator('text=No bank accounts found')",
+              "expectedResult": "Empty state message is displayed"
+            },
+            {
+              "step": 4,
+              "action": "Verify create button is available",
+              "selector": "getByTestId(page, 'bankaccount-new')",
+              "expectedResult": "Create new bank account button is visible"
+            }
+          ],
+          "tags": ["bankAccounts", "empty-state", "ui-states", "edge-cases"]
+        },
+        {
+          "id": "bank-012",
+          "title": "Bank Account Search Functionality",
+          "description": "Test searching/filtering bank accounts",
+          "prerequisites": "Multiple bank accounts with different names must exist",
+          "testData": {
+            "searchTerm": "Chase"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "action": "Navigate to bank accounts page",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts list is displayed"
+            },
+            {
+              "step": 2,
+              "action": "Use search functionality",
+              "selector": "getByTestId(page, 'bankaccount-search')",
+              "inputValue": "Chase",
+              "expectedResult": "Search filters results to show only Chase accounts"
+            },
+            {
+              "step": 3,
+              "action": "Verify filtered results",
+              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]:visible')",
+              "expectedResult": "Only accounts containing 'Chase' are visible"
+            }
+          ],
+          "tags": ["bankAccounts", "search", "filtering", "user-experience"]
+        },
+        {
+          "id": "bank-013",
+          "title": "Mobile Responsive Layout",
+          "description": "Test bank accounts page on mobile devices",
+          "deviceType": "mobile",
+          "steps": [
+            {
+              "step": 1,
+              "action": "Open mobile navigation",
+              "selector": "getByTestId(page, 'sidenav-toggle')",
+              "expectedResult": "Mobile navigation menu is opened"
+            },
+            {
+              "step": 2,
+              "action": "Click bank accounts from mobile menu",
+              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
+              "expectedResult": "Bank accounts page loads"
+            },
+            {
+              "step": 3,
+              "action": "Verify mobile layout adaptation",
+              "selector": "getByTestId(page, 'bankaccount-list')",
+              "expectedResult": "Bank accounts list adapts to mobile layout"
+            }
+          ],
+          "tags": ["bankAccounts", "mobile", "responsive", "ui-adaptation"]
+        }
+      ]
+    }
+  },
+  "testConfiguration": {
+    "browsers": ["chromium", "firefox", "webkit"],
+    "baseURL": "http://localhost:3000",
+    "timeout": 30000,
+    "retries": 2,
+    "testCredentials": {
+      "validUser": {
+        "username": "Heath93",
+        "password": "s3cret"
+      },
+      "invalidUser": {
+        "username": "invaliduser",
+        "password": "wrongpassword"
+      }
+    }
+  },
+  "tags": {
+    "authentication": "User authentication and session management tests",
+    "bankAccounts": "Bank account management functionality tests",
+    "validation": "Form and data validation tests",
+    "crud": "Create, Read, Update, Delete operations tests",
+    "ui-verification": "User interface element verification tests",
+    "error-handling": "Error scenarios and validation tests",
+    "mobile": "Mobile device responsive design tests",
+    "security": "Security and privacy related tests"
+  }
+}
