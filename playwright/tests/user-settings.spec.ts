@@ -29,8 +29,8 @@ test.describe("User Settings", () => {
   });
 
   test("should update user profile information", async ({ page }) => {
-    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
-    await getByTestId(page, "sidenav-user").click();
+    // Always ensure we are on the settings page
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Update first name
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
@@ -71,8 +71,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate required fields", async ({ page }) => {
-    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
-    await getByTestId(page, "sidenav-user").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Clear required fields
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
@@ -93,8 +92,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate email format", async ({ page }) => {
-    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
-    await getByTestId(page, "sidenav-user").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Enter invalid email
     const emailInput = getByTestId(page, "user-settings-email-input");
@@ -106,8 +104,7 @@ test.describe("User Settings", () => {
   });
 
   test("should validate phone number format", async ({ page }) => {
-    await getByTestId(page, "sidenav-user").waitFor({ state: "visible" });
-    await getByTestId(page, "sidenav-user").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Enter invalid phone number
     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
