@@ -142,8 +142,8 @@ test.describe("User Authentication", () => {
     await page.goto("/signup");
 
     // Fill form with mismatched passwords
-    await getByTestId(page, "signup-firstName").fill(testUser.firstName!);
-    await getByTestId(page, "signup-lastName").fill(testUser.lastName!);
+    await getByTestId(page, "signup-first-name").fill(testUser.firstName!);
+    await getByTestId(page, "signup-last-name").fill(testUser.lastName!);
     await getByTestId(page, "signup-username").fill(testUser.username!);
     await getByTestId(page, "signup-password").fill(testUser.password!);
     
