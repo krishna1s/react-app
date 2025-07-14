@@ -11,6 +11,10 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    outputs:
+      test_failed: ${{ steps.playwright-tests.outputs.test_failed }}
+      failed_count: ${{ steps.playwright-tests.outputs.failed_count }}
+      flaky_count: ${{ steps.playwright-tests.outputs.flaky_count }}
         
     steps:
     - name: Checkout code
@@ -41,11 +45,37 @@ jobs:
     - name: Run Playwright tests
       id: playwright-tests
       run: |
-        set -e  # Exit immediately if any command fails
-        yarn playwright:test --project=chromium auth.spec.ts
+        set +e  # Don't exit immediately on command failure so we can capture output
+        
+        # Run tests and capture both output and exit code
+        yarn playwright:test --project=chromium auth.spec.ts > test_output.log 2>&1
+        TEST_EXIT_CODE=$?
+        
+        # Display the test output
+        cat test_output.log
+        
+        # Check for any failures in the output
+        if grep -q "failed\|flaky" test_output.log || [ "$TEST_EXIT_CODE" -ne 0 ]; then
+          echo "Tests failed or were flaky!"
+          echo "test_failed=true" >> $GITHUB_OUTPUT
+          
+          # Count failures
+          FAILED_COUNT=$(grep -o "[0-9]\+ failed" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
+          FLAKY_COUNT=$(grep -o "[0-9]\+ flaky" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
+          
+          echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+          echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
+          
+          exit 1
+        else
+          echo "All tests passed!"
+          echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "failed_count=0" >> $GITHUB_OUTPUT
+          echo "flaky_count=0" >> $GITHUB_OUTPUT
+        fi
       env:
         CI: true
-      continue-on-error: false  # Ensure job fails if this step fails
+      continue-on-error: false
 
     - name: Check test results
       if: always()
@@ -98,8 +128,17 @@ jobs:
         if [ "${{ needs.test.result }}" = "failure" ]; then
           echo "test_failed=true" >> $GITHUB_OUTPUT
           echo "❌ Tests failed"
+          
+          # Try to get failure counts from test step outputs if available
+          FAILED_COUNT="${{ needs.test.outputs.failed_count || '0' }}"
+          FLAKY_COUNT="${{ needs.test.outputs.flaky_count || '0' }}"
+          
+          echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
+          echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
         else
           echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "failed_count=0" >> $GITHUB_OUTPUT
+          echo "flaky_count=0" >> $GITHUB_OUTPUT
           echo "✅ Tests passed"
         fi
 
@@ -111,6 +150,9 @@ jobs:
         # Add status badge based on test results
         if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
           echo "## ❌ Test Status: FAILED" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Failed Tests:** ${{ steps.test-status.outputs.failed_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Flaky Tests:** ${{ steps.test-status.outputs.flaky_count }}" >> $GITHUB_STEP_SUMMARY
         else
           echo "## ✅ Test Status: PASSED" >> $GITHUB_STEP_SUMMARY
         fi
@@ -142,19 +184,27 @@ jobs:
         script: |
           // Get test status from job result
           const testJobResult = '${{ needs.test.result }}';
+          const failedCount = '${{ needs.test.outputs.failed_count || "0" }}';
+          const flakyCount = '${{ needs.test.outputs.flaky_count || "0" }}';
+          
           let testStatus = '✅ All E2E tests passed!';
           let statusIcon = '✅';
+          let statusDetails = '';
           
           if (testJobResult === 'failure') {
-            testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
             statusIcon = '❌';
+            testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
+            
+            if (failedCount !== '0' || flakyCount !== '0') {
+              statusDetails = `\n\n**Test Results:**\n- Failed: ${failedCount}\n- Flaky: ${flakyCount}`;
+            }
           }
           
           const comment = `## 🎭 Playwright E2E Test Results
           
           ### ${statusIcon} Test Status: ${testJobResult === 'failure' ? 'FAILED' : 'PASSED'}
           
-          ${testStatus}
+          ${testStatus}${statusDetails}
           
           **Test Coverage:**
           - ✅ Authentication flows (signup, signin, logout, remember user)
