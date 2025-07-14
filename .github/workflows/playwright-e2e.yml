@@ -39,9 +39,24 @@ jobs:
         yarn copy:mock:awsexportses5
 
     - name: Run Playwright tests
-      run: yarn playwright:test --project=chromium auth.spec.ts --grep "should allow a visitor to sign-up, login, and logout"
+      id: playwright-tests
+      run: |
+        set -e  # Exit immediately if any command fails
+        yarn playwright:test --project=chromium auth.spec.ts --grep "should allow a visitor to sign-up, login, and logout"
       env:
         CI: true
+      continue-on-error: false  # Ensure job fails if this step fails
+
+    - name: Check test results
+      if: always()
+      run: |
+        # Check if any tests failed by examining the exit code of the previous step
+        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
+          echo "❌ Playwright tests failed!"
+          exit 1
+        else
+          echo "✅ All Playwright tests passed!"
+        fi
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -76,9 +91,30 @@ jobs:
       with:
         path: artifacts
 
+    - name: Check test job status
+      id: test-status
+      run: |
+        # Check if the test job failed
+        if [ "${{ needs.test.result }}" = "failure" ]; then
+          echo "test_failed=true" >> $GITHUB_OUTPUT
+          echo "❌ Tests failed"
+        else
+          echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "✅ Tests passed"
+        fi
+
     - name: Create test summary
       run: |
         echo "# 🎭 Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Add status badge based on test results
+        if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
+          echo "## ❌ Test Status: FAILED" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "## ✅ Test Status: PASSED" >> $GITHUB_STEP_SUMMARY
+        fi
+        
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "## Test Coverage" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ Authentication flows" >> $GITHUB_STEP_SUMMARY
@@ -92,9 +128,9 @@ jobs:
         echo "- 🌐 Chromium (Desktop)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         
-        # Check if any test failed
-        if find artifacts -name "*.xml" -exec grep -l "failures=\"[1-9]" {} \; | grep -q .; then
-          echo "❌ Some tests failed. Please check the artifacts for details." >> $GITHUB_STEP_SUMMARY
+        # Show final status based on job result
+        if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
+          echo "❌ Tests failed. Please check the artifacts for details." >> $GITHUB_STEP_SUMMARY
         else
           echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
         fi
@@ -104,20 +140,19 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         script: |
-          const fs = require('fs');
-          
-          // Check for test failures
-          const { execSync } = require('child_process');
+          // Get test status from job result
+          const testJobResult = '${{ needs.test.result }}';
           let testStatus = '✅ All E2E tests passed!';
+          let statusIcon = '✅';
           
-          try {
-            execSync('find artifacts -name "*.xml" -exec grep -l "failures=\\"[1-9]" {} \\;', { stdio: 'pipe' });
+          if (testJobResult === 'failure') {
             testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
-          } catch (error) {
-            // No failures found, tests passed
+            statusIcon = '❌';
           }
           
           const comment = `## 🎭 Playwright E2E Test Results
+          
+          ### ${statusIcon} Test Status: ${testJobResult === 'failure' ? 'FAILED' : 'PASSED'}
           
           ${testStatus}
           
@@ -133,6 +168,8 @@ jobs:
           - 🌐 Chromium (Desktop)
           
           **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
+          
+          ${testJobResult === 'failure' ? '⚠️ **Action Required:** Please fix the failing tests before merging.' : '🎉 **Ready to merge!** All tests are passing.'}
           `;
           
           github.rest.issues.createComment({
