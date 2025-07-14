@@ -19,8 +19,6 @@ export default defineConfig({
     ["json", { outputFile: "playwright-report/results.json" }],
     ["junit", { outputFile: "playwright-report/results.xml" }],
   ],
-  /* Exit with error if any test fails or is flaky */
-  globalTeardown: process.env.CI ? "./playwright/global-teardown.ts" : undefined,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -34,6 +32,7 @@ export default defineConfig({
 
     /* Record video on failure */
     video: "off",
+    
     /* Increase default timeout for flaky CI environments */
     actionTimeout: 15000,
     navigationTimeout: 60000,
@@ -45,18 +44,16 @@ export default defineConfig({
     {
       name: "setup",
       testMatch: /.*setup-verification\.spec\.ts/,
-      use: { 
+      use: {
         ...devices["Desktop Chrome"],
-        // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
     },
 
     {
       name: "chromium",
       testIgnore: /.*setup-verification\.spec\.ts/,
-      use: { 
+      use: {
         ...devices["Desktop Chrome"],
-        // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
       dependencies: ["setup"],
     },

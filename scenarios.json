@@ -494,7 +494,7 @@
               "type": "input",
               "action": "type",
               "selector": "[data-test='user-list-search-input']",
-              "value": "Devon",
+              "value": "Dina20",
               "expected": [
                 { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
               ]
@@ -534,7 +534,7 @@
               "action": "click",
               "selector": "[data-test='transaction-create-submit-payment']",
               "expected": [
-                { "type": "elementVisible", "selector": "text=Pay Devon" }
+                { "type": "elementVisible", "selector": "text=Pay Darrel" }
               ]
             },
             {
@@ -551,7 +551,7 @@
           "expectedResult": "Transfer is completed successfully and user is redirected to completion page",
           "testData": {
             "amount": "100",
-            "recipient": "Devon",
+            "recipient": "Dina20",
             "description": "Test payment"
           }
         },
@@ -581,7 +581,7 @@
               "type": "input",
               "action": "type",
               "selector": "[data-test='user-list-search-input']",
-              "value": "Devon",
+              "value": "Dina20",
               "expected": [
                 { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
               ]
@@ -628,7 +628,7 @@
           "expectedResult": "User is shown an error message indicating invalid amount format",
           "testData": {
             "amount": "invalid",
-            "recipient": "Devon",
+            "recipient": "Dina20",
             "description": "Test payment"
           }
         },

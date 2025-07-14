@@ -17,6 +17,7 @@ test.describe("User Settings", () => {
       await getByTestId(page, "sidenav-user-settings").click();
     } else {
       // For desktop, use sidebar navigation as there's no topbar user settings link
+
       await getByTestId(page, "sidenav-user-settings").click();
     }
 
@@ -55,10 +56,14 @@ test.describe("User Settings", () => {
     await page.waitForTimeout(1000); // Wait for form submission
 
     // Verify changes persisted
+
     await expect(firstNameInput).toHaveValue("UpdatedFirstName");
     await expect(lastNameInput).toHaveValue("UpdatedLastName");
     await expect(emailInput).toHaveValue("updated@example.com");
     await expect(phoneInput).toHaveValue("555-123-4567");
+    
+    // Verify user display name updated in the sidebar
+    await expect(page.locator("text=UpdatedFirstName")).toBeVisible();
   });
 
   test("should validate required fields", async ({ page }) => {
@@ -76,6 +81,7 @@ test.describe("User Settings", () => {
     await expect(page.locator("text=Enter a first name")).toBeVisible();
     await expect(page.locator("text=Enter a last name")).toBeVisible(); 
     await expect(page.locator("text=Enter an email address")).toBeVisible();
+
   });
 
   test("should validate email format", async ({ page }) => {
@@ -150,6 +156,7 @@ test.describe("User Settings", () => {
   test.skip("should export user data", async ({ page }) => {
     // Data export functionality is not implemented in the current user settings form
     await getByTestId(page, "sidenav-user-settings").click();
+
   });
 
   test("should handle mobile responsive layout for settings", async ({ page }) => {
