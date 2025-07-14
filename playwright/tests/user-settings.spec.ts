@@ -5,7 +5,7 @@ test.describe("User Settings", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Heath93", "s3cret", { waitForRedirect: false });
+    await login(page, "Heath93", "s3cret", { waitForRedirect: true });
     // Go directly to user settings page to avoid waiting for "/" navigation
     await page.goto("/user/settings");
   });
