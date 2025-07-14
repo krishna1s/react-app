@@ -1,722 +1,1129 @@
 {
-  "testSuites": {
-    "authentication": {
-      "description": "Authentication and user management test scenarios",
+  "application": {
+    "name": "Cypress Real World App",
+    "description": "A payment application demonstrating real-world usage of Cypress testing methods",
+    "version": "1.0.0",
+    "baseUrl": "http://localhost:3000",
+    "personas": [
+      {
+        "role": "default",
+        "username": "Heath93",
+        "password": "s3cret"
+      }
+    ]
+  },
+  "testSuites": [
+    {
+      "id": "Authentication",
+      "title": "Authentication Scenarios",
       "scenarios": [
         {
-          "id": "auth-001",
-          "title": "User Signin with Valid Credentials",
-          "description": "Test successful user authentication with valid username and password",
-          "testData": {
-            "username": "Heath93",
-            "password": "s3cret"
-          },
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to signin page",
-              "selector": "getByTestId(page, 'signin')",
-              "expectedResult": "Signin form is visible"
-            },
-            {
-              "step": 2,
-              "action": "Fill username field",
-              "selector": "getByTestId(page, 'signin-username')",
-              "inputValue": "Heath93",
-              "expectedResult": "Username field contains 'Heath93'"
-            },
-            {
-              "step": 3,
-              "action": "Fill password field",
-              "selector": "getByTestId(page, 'signin-password')",
-              "inputValue": "s3cret",
-              "expectedResult": "Password field is filled"
-            },
-            {
-              "step": 4,
-              "action": "Click signin button",
-              "selector": "getByTestId(page, 'signin-submit')",
-              "expectedResult": "User is redirected to dashboard, URL contains '/'"
-            }
+          "id": "AUTH_001",
+          "title": "User Sign Up - Valid Registration",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["registration", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
           ],
-          "tags": ["authentication", "signin", "valid-credentials"]
-        },
-        {
-          "id": "auth-002",
-          "title": "User Signin with Invalid Credentials",
-          "description": "Test authentication failure with invalid credentials",
-          "testData": {
-            "username": "invaliduser",
-            "password": "wrongpassword"
-          },
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to signin page",
-              "selector": "getByTestId(page, 'signin')",
-              "expectedResult": "Signin form is visible"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
             },
             {
               "step": 2,
-              "action": "Fill username with invalid value",
-              "selector": "getByTestId(page, 'signin-username')",
-              "inputValue": "invaliduser",
-              "expectedResult": "Username field contains 'invaliduser'"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-first-name']",
+              "value": "John",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-first-name']", "value": "John" }
+              ]
             },
             {
               "step": 3,
-              "action": "Fill password with invalid value",
-              "selector": "getByTestId(page, 'signin-password')",
-              "inputValue": "wrongpassword",
-              "expectedResult": "Password field is filled"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
             },
             {
               "step": 4,
-              "action": "Click signin button",
-              "selector": "getByTestId(page, 'signin-submit')",
-              "expectedResult": "Error message 'Username or password is invalid' is displayed"
-            }
-          ],
-          "tags": ["authentication", "signin", "invalid-credentials", "error-handling"]
-        },
-        {
-          "id": "auth-003",
-          "title": "User Signup with Valid Information",
-          "description": "Test user registration with valid information",
-          "testData": {
-            "firstName": "Test",
-            "lastName": "User",
-            "username": "testuser123",
-            "password": "password123",
-            "confirmPassword": "password123"
-          },
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to signup page",
-              "selector": "getByTestId(page, 'signup')",
-              "expectedResult": "Signup form is visible"
-            },
-            {
-              "step": 2,
-              "action": "Fill first name",
-              "selector": "getByTestId(page, 'signup-firstName')",
-              "inputValue": "Test",
-              "expectedResult": "First name field contains 'Test'"
-            },
-            {
-              "step": 3,
-              "action": "Fill last name",
-              "selector": "getByTestId(page, 'signup-lastName')",
-              "inputValue": "User",
-              "expectedResult": "Last name field contains 'User'"
-            },
-            {
-              "step": 4,
-              "action": "Fill username",
-              "selector": "getByTestId(page, 'signup-username')",
-              "inputValue": "testuser123",
-              "expectedResult": "Username field contains 'testuser123'"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
             },
             {
               "step": 5,
-              "action": "Fill password",
-              "selector": "getByTestId(page, 'signup-password')",
-              "inputValue": "password123",
-              "expectedResult": "Password field is filled"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
             },
             {
               "step": 6,
-              "action": "Fill confirm password",
-              "selector": "getByTestId(page, 'signup-confirmPassword')",
-              "inputValue": "password123",
-              "expectedResult": "Confirm password field is filled"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
             },
             {
               "step": 7,
-              "action": "Submit signup form",
-              "selector": "getByTestId(page, 'signup-submit')",
-              "expectedResult": "User is registered and redirected to signin page"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signin" }
+              ]
             }
           ],
-          "tags": ["authentication", "signup", "registration", "valid-data"]
+          "expectedResult": "User account is created successfully and redirected to Sign In page",
+          "testData": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123"
+          }
         },
         {
-          "id": "auth-004",
-          "title": "Password Validation",
-          "description": "Test password field validation requirements",
-          "testData": {
-            "shortPassword": "123",
-            "validPassword": "password123"
-          },
+          "id": "AUTH_002",
+          "title": "User Sign Up - Missing First Name",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["registration", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to signup page",
-              "selector": "getByTestId(page, 'signup')",
-              "expectedResult": "Signup form is visible"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
             },
             {
               "step": 2,
-              "action": "Fill password with short value",
-              "selector": "getByTestId(page, 'signup-password')",
-              "inputValue": "123",
-              "expectedResult": "Password field contains short value"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
             },
             {
               "step": 3,
-              "action": "Blur password field to trigger validation",
-              "selector": "getByTestId(page, 'signup-password')",
-              "action_type": "blur",
-              "expectedResult": "Password validation error message appears"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=First Name is required" }
+              ]
             }
           ],
-          "tags": ["authentication", "validation", "password", "form-validation"]
+          "expectedResult": "User is shown an error message indicating that the first name is required",
+          "testData": {
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123"
+          }
         },
         {
-          "id": "auth-005",
-          "title": "User Logout",
-          "description": "Test user logout functionality",
-          "prerequisites": "User must be logged in",
+          "id": "AUTH_003",
+          "title": "User Sign Up - Password Mismatch",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["registration", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is not logged in",
+            "Navigate to Sign Up page"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Click user menu",
-              "selector": "getByTestId(page, 'user-menu')",
-              "expectedResult": "User menu dropdown is visible"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signup" },
+                { "type": "elementVisible", "selector": "[data-test='signup-title']" }
+              ]
             },
             {
               "step": 2,
-              "action": "Click logout option",
-              "selector": "getByTestId(page, 'sidenav-signout')",
-              "expectedResult": "User is logged out and redirected to signin page"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-first-name']",
+              "value": "John",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-first-name']", "value": "John" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-last-name']",
+              "value": "Doe",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-last-name']", "value": "Doe" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-username']",
+              "value": "johndoe123",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signup-username']", "value": "johndoe123" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-password']",
+              "value": "password123",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-password']" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signup-confirmPassword']",
+              "value": "password456",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signup-confirmPassword']" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signup-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Password does not match" }
+              ]
             }
           ],
-          "tags": ["authentication", "logout", "session-management"]
+          "expectedResult": "User is shown an error message indicating that the passwords do not match",
+          "testData": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "username": "johndoe123",
+            "password": "password123",
+            "confirmPassword": "password456"
+          }
+        },
+        {
+          "id": "AUTH_004",
+          "title": "User Sign In - Valid Credentials",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["login", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User has an account",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-username']",
+              "value": "Heath93",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signin-username']", "value": "Heath93" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-password']",
+              "value": "s3cret",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signin-password']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signin-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/" },
+                { "type": "elementVisible", "selector": "[data-test='sidenav-username']" }
+              ]
+            }
+          ],
+          "expectedResult": "User is logged in successfully and redirected to the dashboard",
+          "testData": {
+            "username": "Heath93",
+            "password": "s3cret"
+          }
+        },
+        {
+          "id": "AUTH_005",
+          "title": "User Sign In - Invalid Credentials",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["login", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-username']",
+              "value": "wronguser",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='signin-username']", "value": "wronguser" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='signin-password']",
+              "value": "wrongpass",
+              "expected": [
+                { "type": "valueMasked", "selector": "[data-test='signin-password']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='signin-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='signin-error']" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating invalid credentials",
+          "testData": {
+            "username": "wronguser",
+            "password": "wrongpass"
+          }
+        },
+        {
+          "id": "AUTH_006",
+          "title": "User Password Recovery - Valid Email",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["password-recovery", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Password recovery feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Password recovery feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        },
+        {
+          "id": "AUTH_007",
+          "title": "User Password Recovery - Invalid Email",
+          "category": "Authentication",
+          "priority": "Medium",
+          "tags": ["password-recovery", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is on the Sign In page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Password recovery feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Password recovery feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        },
+        {
+          "id": "AUTH_008",
+          "title": "User Sign Out",
+          "category": "Authentication",
+          "priority": "High",
+          "tags": ["logout", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User is on the dashboard"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='sidenav-toggle']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='sidenav']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='sidenav-signout']",
+              "expected": [
+                { "type": "urlEquals", "value": "/signin" }
+              ]
+            }
+          ],
+          "expectedResult": "User is logged out successfully and redirected to Sign In page",
+          "testData": {}
         }
       ]
     },
-    "bankAccounts": {
-      "description": "Bank account management test scenarios",
-      "prerequisites": "User must be authenticated",
+    {
+      "id": "Transactions",
+      "title": "Transaction Scenarios",
       "scenarios": [
         {
-          "id": "bank-001",
-          "title": "Display Bank Accounts Page",
-          "description": "Test navigation to bank accounts page and verify page elements",
+          "id": "TRANS_001",
+          "title": "User Initiates a Transfer - Valid Details",
+          "category": "Transactions",
+          "priority": "High",
+          "tags": ["transfer", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has sufficient balance",
+            "Navigate to Transfer page"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank accounts via sidebar",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page loads with URL '/bankaccounts'"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-new-transaction']",
+              "expected": [
+                { "type": "urlEquals", "value": "/transaction/new" }
+              ]
             },
             {
               "step": 2,
-              "action": "Verify bank accounts list is visible",
-              "selector": "getByTestId(page, 'bankaccount-list')",
-              "expectedResult": "Bank accounts list container is displayed"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-list-search-input']",
+              "value": "Devon",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-testid^='user-list-item-']",
+              "expected": [
+                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-list-item-next']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-amount-input']",
+              "value": "100",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-amount-input']", "value": "100" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-description-input']",
+              "value": "Test payment",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-description-input']", "value": "Test payment" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Pay Devon" }
+              ]
+            },
+            {
+              "step": 8,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "urlMatches", "value": "/transaction/.*/complete" },
+                { "type": "elementVisible", "selector": "text=Paid" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "navigation", "ui-verification"]
+          "expectedResult": "Transfer is completed successfully and user is redirected to completion page",
+          "testData": {
+            "amount": "100",
+            "recipient": "Devon",
+            "description": "Test payment"
+          }
         },
         {
-          "id": "bank-002",
-          "title": "Create New Bank Account",
-          "description": "Test creating a new bank account with valid information",
+          "id": "TRANS_002",
+          "title": "User Initiates a Transfer - Invalid Amount",
+          "category": "Transactions",
+          "priority": "High",
+          "tags": ["transfer", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Transfer page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-new-transaction']",
+              "expected": [
+                { "type": "urlEquals", "value": "/transaction/new" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-list-search-input']",
+              "value": "Devon",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-testid^='user-list-item-']",
+              "expected": [
+                { "type": "elementSelected", "selector": "[data-testid^='user-list-item-']" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-list-item-next']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-create-amount-input']" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-amount-input']",
+              "value": "invalid",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-amount-input']", "value": "invalid" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='transaction-create-description-input']",
+              "value": "Test payment",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='transaction-create-description-input']", "value": "Test payment" }
+              ]
+            },
+            {
+              "step": 7,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='transaction-create-submit-payment']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Please enter a valid amount" }
+              ]
+            }
+          ],
+          "expectedResult": "User is shown an error message indicating invalid amount format",
+          "testData": {
+            "amount": "invalid",
+            "recipient": "Devon",
+            "description": "Test payment"
+          }
+        },
+        {
+          "id": "TRANS_003",
+          "title": "User Views Transaction History",
+          "category": "Transactions",
+          "priority": "Medium",
+          "tags": ["transaction-history", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Transaction History page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-personal-tab']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='transaction-list']" },
+                { "type": "urlEquals", "value": "/personal" }
+              ]
+            }
+          ],
+          "expectedResult": "Transaction history is displayed",
+          "testData": {}
+        },
+        {
+          "id": "TRANS_004",
+          "title": "User Downloads Transaction Report",
+          "category": "Transactions",
+          "priority": "Medium",
+          "tags": ["transaction-report", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has transaction history",
+            "Navigate to Transaction History page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "note",
+              "action": "skip",
+              "selector": "n/a",
+              "value": "Transaction report download feature is not implemented",
+              "expected": [
+                { "type": "note", "value": "Feature not available in current implementation" }
+              ]
+            }
+          ],
+          "expectedResult": "Transaction report download feature is not currently implemented",
+          "testData": {
+            "note": "Feature not implemented"
+          }
+        }
+      ]
+    },
+    {
+      "id": "BankAccounts",
+      "title": "Bank Account Scenarios",
+      "scenarios": [
+        {
+          "id": "BANK_001",
+          "title": "User Creates a New Bank Account - Valid Details",
+          "category": "BankAccounts",
+          "priority": "High",
+          "tags": ["bank-account", "positive", "smoke"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Bank Accounts page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" },
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-new']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts/new" },
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-form']" }
+              ]
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-bankName-input']",
+              "value": "Test Bank",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-bankName-input']", "value": "Test Bank" }
+              ]
+            },
+            {
+              "step": 4,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-routingNumber-input']",
+              "value": "123456789",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-routingNumber-input']", "value": "123456789" }
+              ]
+            },
+            {
+              "step": 5,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='bankaccount-accountNumber-input']",
+              "value": "987654321",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='bankaccount-accountNumber-input']", "value": "987654321" }
+              ]
+            },
+            {
+              "step": 6,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-submit']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" },
+                { "type": "elementVisible", "selector": "text=Test Bank" }
+              ]
+            }
+          ],
+          "expectedResult": "Bank account is created successfully and user is redirected to bank accounts list",
           "testData": {
             "bankName": "Test Bank",
             "routingNumber": "123456789",
             "accountNumber": "987654321"
-          },
+          }
+        },
+        {
+          "id": "BANK_002",
+          "title": "User Creates Bank Account - Validation Errors",
+          "category": "BankAccounts",
+          "priority": "Medium",
+          "tags": ["bank-account", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to Bank Account creation page"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page is loaded"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts" }
+              ]
             },
             {
               "step": 2,
-              "action": "Click create new bank account button",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Bank account creation form is displayed"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-new']",
+              "expected": [
+                { "type": "urlEquals", "value": "/bankaccounts/new" }
+              ]
             },
             {
               "step": 3,
-              "action": "Fill bank name field",
-              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
-              "inputValue": "Test Bank",
-              "expectedResult": "Bank name field contains 'Test Bank'"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Enter a bank name" }
+              ]
+            }
+          ],
+          "expectedResult": "Validation errors are shown for required fields",
+          "testData": {}
+        },
+        {
+          "id": "BANK_003",
+          "title": "User Deletes a Bank Account",
+          "category": "BankAccounts",
+          "priority": "Medium",
+          "tags": ["bank-account", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has existing bank accounts"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-bank-accounts']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='bankaccount-list']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='bankaccount-delete']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=(Deleted)" }
+              ]
+            }
+          ],
+          "expectedResult": "Bank account is soft deleted and marked as deleted",
+          "testData": {}
+        }
+      ]
+    },
+    {
+      "id": "UserSettings",
+      "title": "User Settings Scenarios",
+      "scenarios": [
+        {
+          "id": "SETTINGS_001",
+          "title": "User Updates Profile Information - Valid Details",
+          "category": "UserSettings",
+          "priority": "High",
+          "tags": ["user-settings", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to User Settings page"
+          ],
+          "steps": [
+            {
+              "step": 1,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-user-settings']",
+              "expected": [
+                { "type": "urlEquals", "value": "/settings" },
+                { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
+              ]
+            },
+            {
+              "step": 2,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "expected": []
+            },
+            {
+              "step": 3,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "value": "UpdatedFirstName",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-firstName-input']", "value": "UpdatedFirstName" }
+              ]
             },
             {
               "step": 4,
-              "action": "Fill routing number field",
-              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
-              "inputValue": "123456789",
-              "expectedResult": "Routing number field contains '123456789'"
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-lastName-input']",
+              "expected": []
             },
             {
               "step": 5,
-              "action": "Fill account number field",
-              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
-              "inputValue": "987654321",
-              "expectedResult": "Account number field contains '987654321'"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-lastName-input']",
+              "value": "UpdatedLastName",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-lastName-input']", "value": "UpdatedLastName" }
+              ]
             },
             {
               "step": 6,
-              "action": "Submit bank account form",
-              "selector": "getByTestId(page, 'bankaccount-submit')",
-              "expectedResult": "Bank account is created and user is redirected to bank accounts list"
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-email-input']",
+              "expected": []
             },
             {
               "step": 7,
-              "action": "Verify new bank account appears in list",
-              "selector": "page.locator('text=Test Bank')",
-              "expectedResult": "New bank account 'Test Bank' is visible in the list"
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-email-input']",
+              "value": "updated@example.com",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-email-input']", "value": "updated@example.com" }
+              ]
+            },
+            {
+              "step": 8,
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-phoneNumber-input']",
+              "expected": []
+            },
+            {
+              "step": 9,
+              "type": "input",
+              "action": "type",
+              "selector": "[data-test='user-settings-phoneNumber-input']",
+              "value": "555-123-4567",
+              "expected": [
+                { "type": "valueEquals", "selector": "[data-test='user-settings-phoneNumber-input']", "value": "555-123-4567" }
+              ]
+            },
+            {
+              "step": 10,
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-settings-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Profile updated successfully" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "create", "form-submission", "crud"]
-        },
-        {
-          "id": "bank-003",
-          "title": "Bank Account Form Validation",
-          "description": "Test form field validation for required fields",
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page is loaded"
-            },
-            {
-              "step": 2,
-              "action": "Click create new bank account",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Bank account form is displayed"
-            },
-            {
-              "step": 3,
-              "action": "Submit empty form",
-              "selector": "getByTestId(page, 'bankaccount-submit')",
-              "expectedResult": "Form validation errors appear for required fields"
-            },
-            {
-              "step": 4,
-              "action": "Verify bank name field is required",
-              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
-              "expectedResult": "Bank name field shows required validation"
-            },
-            {
-              "step": 5,
-              "action": "Verify routing number field is required",
-              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
-              "expectedResult": "Routing number field shows required validation"
-            },
-            {
-              "step": 6,
-              "action": "Verify account number field is required",
-              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
-              "expectedResult": "Account number field shows required validation"
-            }
-          ],
-          "tags": ["bankAccounts", "validation", "form-validation", "required-fields"]
-        },
-        {
-          "id": "bank-004",
-          "title": "Routing Number Format Validation",
-          "description": "Test routing number format validation (must be 9 digits)",
+          "expectedResult": "User profile is updated successfully and success message is displayed",
           "testData": {
-            "bankName": "Test Bank",
-            "invalidRoutingNumber": "123",
-            "validAccountNumber": "987654321"
-          },
+            "firstName": "UpdatedFirstName",
+            "lastName": "UpdatedLastName",
+            "email": "updated@example.com",
+            "phoneNumber": "555-123-4567"
+          }
+        },
+        {
+          "id": "SETTINGS_002",
+          "title": "User Settings - Validation Errors",
+          "category": "UserSettings",
+          "priority": "Medium",
+          "tags": ["user-settings", "negative"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "Navigate to User Settings page"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank account creation form",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank account form is accessible"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-user-settings']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='user-settings-form']" }
+              ]
             },
             {
               "step": 2,
-              "action": "Click new bank account",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Bank account creation form is displayed"
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-firstName-input']",
+              "expected": []
             },
             {
               "step": 3,
-              "action": "Fill form with invalid routing number",
-              "selector": "getByTestId(page, 'bankaccount-routingNumber-input')",
-              "inputValue": "123",
-              "expectedResult": "Short routing number is entered"
+              "type": "input",
+              "action": "clear",
+              "selector": "[data-test='user-settings-email-input']",
+              "expected": []
             },
             {
               "step": 4,
-              "action": "Fill other required fields",
-              "selector": "multiple",
-              "expectedResult": "Form is partially completed with valid data"
-            },
-            {
-              "step": 5,
-              "action": "Submit form",
-              "selector": "getByTestId(page, 'bankaccount-submit')",
-              "expectedResult": "Routing number validation error 'Routing number must be 9 digits' is displayed"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='user-settings-submit']",
+              "expected": [
+                { "type": "elementVisible", "selector": "text=Enter a first name" },
+                { "type": "elementVisible", "selector": "text=Enter an email address" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "validation", "routing-number", "format-validation"]
-        },
+          "expectedResult": "Validation errors are shown for required fields",
+          "testData": {}
+        }
+      ]
+    },
+    {
+      "id": "Notifications",
+      "title": "Notification Scenarios",
+      "scenarios": [
         {
-          "id": "bank-005",
-          "title": "Account Number Format Validation",
-          "description": "Test account number format validation (minimum 8 digits)",
-          "testData": {
-            "bankName": "Test Bank",
-            "validRoutingNumber": "123456789",
-            "invalidAccountNumber": "123"
-          },
+          "id": "NOTIF_001",
+          "title": "User Views Notifications",
+          "category": "Notifications",
+          "priority": "Medium",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has notifications"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank account creation form",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank account form is accessible"
-            },
-            {
-              "step": 2,
-              "action": "Click new bank account",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Bank account creation form is displayed"
-            },
-            {
-              "step": 3,
-              "action": "Fill form with invalid account number",
-              "selector": "getByTestId(page, 'bankaccount-accountNumber-input')",
-              "inputValue": "123",
-              "expectedResult": "Short account number is entered"
-            },
-            {
-              "step": 4,
-              "action": "Fill other required fields",
-              "selector": "multiple",
-              "expectedResult": "Form is partially completed with valid data"
-            },
-            {
-              "step": 5,
-              "action": "Submit form",
-              "selector": "getByTestId(page, 'bankaccount-submit')",
-              "expectedResult": "Account number validation error 'Account number must be at least 8 digits' is displayed"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "urlEquals", "value": "/notifications" },
+                { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "validation", "account-number", "format-validation"]
+          "expectedResult": "Notifications list is displayed",
+          "testData": {}
         },
         {
-          "id": "bank-006",
-          "title": "Edit Existing Bank Account",
-          "description": "Test editing an existing bank account",
-          "prerequisites": "At least one bank account must exist",
-          "testData": {
-            "updatedBankName": "Updated Bank Name"
-          },
+          "id": "NOTIF_002",
+          "title": "User Marks Notification as Read",
+          "category": "Notifications",
+          "priority": "Medium",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has unread notifications"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts list is displayed"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "elementVisible", "selector": "[data-test='notifications-list']" }
+              ]
             },
             {
               "step": 2,
-              "action": "Click edit on first bank account",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first().locator('[data-test=\"bankaccount-edit\"]')",
-              "expectedResult": "Bank account edit form is displayed"
-            },
-            {
-              "step": 3,
-              "action": "Update bank name",
-              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
-              "inputValue": "Updated Bank Name",
-              "expectedResult": "Bank name field contains updated value"
-            },
-            {
-              "step": 4,
-              "action": "Submit changes",
-              "selector": "getByTestId(page, 'bankaccount-submit')",
-              "expectedResult": "Changes are saved and user returns to bank accounts list"
-            },
-            {
-              "step": 5,
-              "action": "Verify updated bank name appears",
-              "selector": "page.locator('text=Updated Bank Name')",
-              "expectedResult": "Updated bank name is visible in the list"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test^='notification-mark-read-']",
+              "expected": [
+                { "type": "elementNotVisible", "selector": "[data-test^='notification-mark-read-']" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "edit", "update", "crud"]
+          "expectedResult": "Notification is marked as read and dismissed from the list",
+          "testData": {}
         },
         {
-          "id": "bank-007",
-          "title": "Delete Bank Account",
-          "description": "Test deleting a bank account with confirmation",
-          "prerequisites": "At least one bank account must exist",
+          "id": "NOTIF_003",
+          "title": "User Views Empty Notifications State",
+          "category": "Notifications",
+          "priority": "Low",
+          "tags": ["notifications", "positive"],
+          "preconditions": [
+            "Application is running on localhost:3000",
+            "User is logged in",
+            "User has no notifications"
+          ],
           "steps": [
             {
               "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts list is displayed"
-            },
-            {
-              "step": 2,
-              "action": "Count existing accounts",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]')",
-              "expectedResult": "Number of accounts is recorded"
-            },
-            {
-              "step": 3,
-              "action": "Click delete on first account",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first().locator('[data-test=\"bankaccount-delete\"]')",
-              "expectedResult": "Delete confirmation dialog appears"
-            },
-            {
-              "step": 4,
-              "action": "Confirm deletion",
-              "selector": "getByTestId(page, 'confirmation-dialog-confirm')",
-              "expectedResult": "Account is deleted"
-            },
-            {
-              "step": 5,
-              "action": "Verify account count decreased",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]')",
-              "expectedResult": "Account count is reduced by one"
+              "type": "action",
+              "action": "click",
+              "selector": "[data-test='nav-top-notifications']",
+              "expected": [
+                { "type": "urlEquals", "value": "/notifications" },
+                { "type": "elementVisible", "selector": "text=No Notifications" }
+              ]
             }
           ],
-          "tags": ["bankAccounts", "delete", "confirmation", "crud"]
-        },
-        {
-          "id": "bank-008",
-          "title": "Bank Account Details View",
-          "description": "Test viewing detailed information of a bank account",
-          "prerequisites": "At least one bank account must exist",
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts list is displayed"
-            },
-            {
-              "step": 2,
-              "action": "Click on first bank account",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]').first()",
-              "expectedResult": "Bank account details view is displayed"
-            },
-            {
-              "step": 3,
-              "action": "Verify bank account details are visible",
-              "selector": "getByTestId(page, 'bankaccount-detail')",
-              "expectedResult": "Bank account detail container is visible"
-            },
-            {
-              "step": 4,
-              "action": "Verify bank name is displayed",
-              "selector": "getByTestId(page, 'bankaccount-bank-name')",
-              "expectedResult": "Bank name is visible"
-            },
-            {
-              "step": 5,
-              "action": "Verify account number is displayed",
-              "selector": "getByTestId(page, 'bankaccount-account-number')",
-              "expectedResult": "Account number is visible"
-            },
-            {
-              "step": 6,
-              "action": "Verify routing number is displayed",
-              "selector": "getByTestId(page, 'bankaccount-routing-number')",
-              "expectedResult": "Routing number is visible"
-            }
-          ],
-          "tags": ["bankAccounts", "details", "view", "information-display"]
-        },
-        {
-          "id": "bank-009",
-          "title": "Sensitive Information Masking",
-          "description": "Test that sensitive account information is properly masked",
-          "prerequisites": "At least one bank account must exist",
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts list is displayed"
-            },
-            {
-              "step": 2,
-              "action": "Verify account numbers are masked",
-              "selector": "page.locator('[data-test^=\"bankaccount-account-number-\"]')",
-              "expectedResult": "Account numbers display in masked format (****1234)"
-            }
-          ],
-          "tags": ["bankAccounts", "security", "data-masking", "privacy"]
-        },
-        {
-          "id": "bank-010",
-          "title": "Cancel Bank Account Creation",
-          "description": "Test canceling bank account creation form",
-          "testData": {
-            "bankName": "Test Bank"
-          },
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page is loaded"
-            },
-            {
-              "step": 2,
-              "action": "Click create new bank account",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Bank account form is displayed"
-            },
-            {
-              "step": 3,
-              "action": "Fill partial form data",
-              "selector": "getByTestId(page, 'bankaccount-bankName-input')",
-              "inputValue": "Test Bank",
-              "expectedResult": "Partial form data is entered"
-            },
-            {
-              "step": 4,
-              "action": "Click cancel button",
-              "selector": "getByTestId(page, 'bankaccount-cancel')",
-              "expectedResult": "Form is canceled and user returns to bank accounts list"
-            },
-            {
-              "step": 5,
-              "action": "Verify no bank account was created",
-              "selector": "page.locator('text=Test Bank')",
-              "expectedResult": "Test Bank account does not appear in the list"
-            }
-          ],
-          "tags": ["bankAccounts", "cancel", "form-navigation", "user-flow"]
-        },
-        {
-          "id": "bank-011",
-          "title": "Empty Bank Accounts State",
-          "description": "Test display when no bank accounts exist",
-          "steps": [
-            {
-              "step": 1,
-              "action": "Mock empty bank accounts response",
-              "selector": "API mock",
-              "expectedResult": "API returns empty bank accounts list"
-            },
-            {
-              "step": 2,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page is loaded"
-            },
-            {
-              "step": 3,
-              "action": "Verify empty state message",
-              "selector": "page.locator('text=No bank accounts found')",
-              "expectedResult": "Empty state message is displayed"
-            },
-            {
-              "step": 4,
-              "action": "Verify create button is available",
-              "selector": "getByTestId(page, 'bankaccount-new')",
-              "expectedResult": "Create new bank account button is visible"
-            }
-          ],
-          "tags": ["bankAccounts", "empty-state", "ui-states", "edge-cases"]
-        },
-        {
-          "id": "bank-012",
-          "title": "Bank Account Search Functionality",
-          "description": "Test searching/filtering bank accounts",
-          "prerequisites": "Multiple bank accounts with different names must exist",
-          "testData": {
-            "searchTerm": "Chase"
-          },
-          "steps": [
-            {
-              "step": 1,
-              "action": "Navigate to bank accounts page",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts list is displayed"
-            },
-            {
-              "step": 2,
-              "action": "Use search functionality",
-              "selector": "getByTestId(page, 'bankaccount-search')",
-              "inputValue": "Chase",
-              "expectedResult": "Search filters results to show only Chase accounts"
-            },
-            {
-              "step": 3,
-              "action": "Verify filtered results",
-              "selector": "page.locator('[data-test^=\"bankaccount-list-item-\"]:visible')",
-              "expectedResult": "Only accounts containing 'Chase' are visible"
-            }
-          ],
-          "tags": ["bankAccounts", "search", "filtering", "user-experience"]
-        },
-        {
-          "id": "bank-013",
-          "title": "Mobile Responsive Layout",
-          "description": "Test bank accounts page on mobile devices",
-          "deviceType": "mobile",
-          "steps": [
-            {
-              "step": 1,
-              "action": "Open mobile navigation",
-              "selector": "getByTestId(page, 'sidenav-toggle')",
-              "expectedResult": "Mobile navigation menu is opened"
-            },
-            {
-              "step": 2,
-              "action": "Click bank accounts from mobile menu",
-              "selector": "getByTestId(page, 'sidenav-bankaccounts')",
-              "expectedResult": "Bank accounts page loads"
-            },
-            {
-              "step": 3,
-              "action": "Verify mobile layout adaptation",
-              "selector": "getByTestId(page, 'bankaccount-list')",
-              "expectedResult": "Bank accounts list adapts to mobile layout"
-            }
-          ],
-          "tags": ["bankAccounts", "mobile", "responsive", "ui-adaptation"]
+          "expectedResult": "Empty notifications state is displayed with appropriate message",
+          "testData": {}
         }
       ]
     }
-  },
-  "testConfiguration": {
-    "browsers": ["chromium", "firefox", "webkit"],
-    "baseURL": "http://localhost:3000",
-    "timeout": 30000,
-    "retries": 2,
-    "testCredentials": {
-      "validUser": {
-        "username": "Heath93",
-        "password": "s3cret"
-      },
-      "invalidUser": {
-        "username": "invaliduser",
-        "password": "wrongpassword"
-      }
-    }
-  },
-  "tags": {
-    "authentication": "User authentication and session management tests",
-    "bankAccounts": "Bank account management functionality tests",
-    "validation": "Form and data validation tests",
-    "crud": "Create, Read, Update, Delete operations tests",
-    "ui-verification": "User interface element verification tests",
-    "error-handling": "Error scenarios and validation tests",
-    "mobile": "Mobile device responsive design tests",
-    "security": "Security and privacy related tests"
-  }
+  ]
 }
