@@ -79,8 +79,8 @@ test.describe("End-to-End User Journey", () => {
     // Clicking on user automatically advances to step 2 - no need for separate next button
 
     // Enter transaction details
-    await getByTestId(page, "transaction-create-amount-input").locator("input").fill("50.00");
-    await getByTestId(page, "transaction-create-description-input").locator("input").fill("Lunch payment");
+    await getByTestId(page, "transaction-create-amount-input").fill("50.00");
+    await getByTestId(page, "transaction-create-description-input").fill("Lunch payment");
     // Privacy is set automatically - no user selection needed
 
     await getByTestId(page, "transaction-create-submit-payment").click();
@@ -108,7 +108,7 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "sidenav-user-settings").click();
 
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.clear();
+    await firstNameInput.fill(""); // Clear by filling empty string
     await firstNameInput.fill("UpdatedName");
 
     await getByTestId(page, "user-settings-submit").click();
