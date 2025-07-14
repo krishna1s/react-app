@@ -11,7 +11,7 @@
       "phoneNumber": "398-225-9900",
       "avatar": "https://avatars.dicebear.com/api/human/uBmeaz5pX.svg",
       "defaultPrivacyLevel": "public",
-      "balance": 90953,
+      "balance": 60953,
       "createdAt": "2023-03-09T22:26:40.101Z",
       "modifiedAt": "2024-03-07T10:07:57.580Z"
     },
@@ -41,7 +41,7 @@
       "phoneNumber": "887-309-1593",
       "avatar": "https://avatars.dicebear.com/api/human/_XblMqbuoP.svg",
       "defaultPrivacyLevel": "contacts",
-      "balance": 218880,
+      "balance": 248880,
       "createdAt": "2023-05-21T05:01:54.594Z",
       "modifiedAt": "2024-03-07T14:11:52.161Z"
     },
@@ -266,7 +266,7 @@
       "bankName": "Waters, King and O'Reilly Bank",
       "accountNumber": "7774132232",
       "routingNumber": "996645387",
-      "isDeleted": false,
+      "isDeleted": true,
       "createdAt": "2023-03-28T21:55:07.857Z",
       "modifiedAt": "2024-03-07T20:50:34.541Z"
     },
@@ -324,6 +324,83 @@
       "isDeleted": false,
       "createdAt": "2025-07-14T18:42:27.687Z",
       "modifiedAt": "2025-07-14T18:42:27.687Z"
+    },
+    {
+      "id": "GB9yXuqfa",
+      "uuid": "af87252e-8f7f-4a40-b02b-5765d725b64a",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": true,
+      "createdAt": "2025-07-14T19:09:11.516Z",
+      "modifiedAt": "2025-07-14T19:09:11.517Z"
+    },
+    {
+      "id": "pGhDq2zx6",
+      "uuid": "5da5b80a-5f9d-43d4-ae66-c724c1d9f739",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": true,
+      "createdAt": "2025-07-14T19:09:28.536Z",
+      "modifiedAt": "2025-07-14T19:09:28.536Z"
+    },
+    {
+      "id": "TwVTrDYCy",
+      "uuid": "a7b7954a-58b5-4487-9145-7515fb84b90d",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": true,
+      "createdAt": "2025-07-14T19:09:32.469Z",
+      "modifiedAt": "2025-07-14T19:09:32.469Z"
+    },
+    {
+      "id": "HYJIz-Zw2",
+      "uuid": "e9930376-5a07-45cf-9a1c-b7a127c06a53",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": true,
+      "createdAt": "2025-07-14T19:09:36.248Z",
+      "modifiedAt": "2025-07-14T19:09:36.248Z"
+    },
+    {
+      "id": "CqbtB1rjT",
+      "uuid": "f1c55600-df7c-4450-a54e-035ddd39c668",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank 1752520266315",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": true,
+      "createdAt": "2025-07-14T19:11:06.567Z",
+      "modifiedAt": "2025-07-14T19:11:06.567Z"
+    },
+    {
+      "id": "H84BaatFZ",
+      "uuid": "42922251-18e8-4872-a2a2-671df8de4930",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank 1752520344981",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": false,
+      "createdAt": "2025-07-14T19:12:25.227Z",
+      "modifiedAt": "2025-07-14T19:12:25.227Z"
+    },
+    {
+      "id": "5McXPJnRF",
+      "uuid": "28cb9d97-fe0a-4f3a-932a-b0a6a741b365",
+      "userId": "uBmeaz5pX",
+      "bankName": "Test Bank 1752520403287",
+      "accountNumber": "987654321",
+      "routingNumber": "123456789",
+      "isDeleted": false,
+      "createdAt": "2025-07-14T19:13:23.544Z",
+      "modifiedAt": "2025-07-14T19:13:23.544Z"
     }
   ],
   "transactions": [
@@ -9998,6 +10075,42 @@
       "status": "complete",
       "createdAt": "2025-07-14T19:02:08.311Z",
       "modifiedAt": "2025-07-14T19:02:08.311Z"
+    },
+    {
+      "id": "NSPxZrHAn",
+      "uuid": "c959237f-0684-4b23-abe5-e3517917d536",
+      "amount": 10000,
+      "description": "Test payment",
+      "receiverId": "_XblMqbuoP",
+      "senderId": "uBmeaz5pX",
+      "privacyLevel": "public",
+      "status": "complete",
+      "createdAt": "2025-07-14T19:03:29.103Z",
+      "modifiedAt": "2025-07-14T19:03:29.103Z"
+    },
+    {
+      "id": "AY__faMGW",
+      "uuid": "205da120-c303-4d4a-b8b9-55bc2d88ed77",
+      "amount": 10000,
+      "description": "Test payment",
+      "receiverId": "_XblMqbuoP",
+      "senderId": "uBmeaz5pX",
+      "privacyLevel": "public",
+      "status": "complete",
+      "createdAt": "2025-07-14T19:03:49.351Z",
+      "modifiedAt": "2025-07-14T19:03:49.351Z"
+    },
+    {
+      "id": "Zuovz5Br3",
+      "uuid": "c15658ba-0757-4cd3-971e-ebc6a60862bc",
+      "amount": 10000,
+      "description": "Test payment",
+      "receiverId": "_XblMqbuoP",
+      "senderId": "uBmeaz5pX",
+      "privacyLevel": "public",
+      "status": "complete",
+      "createdAt": "2025-07-14T19:04:09.595Z",
+      "modifiedAt": "2025-07-14T19:04:09.595Z"
     }
   ],
   "likes": [
@@ -10634,6 +10747,36 @@
       "isRead": false,
       "createdAt": "2025-07-14T19:02:08.327Z",
       "modifiedAt": "2025-07-14T19:02:08.327Z"
+    },
+    {
+      "id": "7Gg-GyVpin",
+      "uuid": "995d42b4-dad5-4b03-8958-0a896da8f268",
+      "userId": "_XblMqbuoP",
+      "transactionId": "NSPxZrHAn",
+      "status": "received",
+      "isRead": false,
+      "createdAt": "2025-07-14T19:03:29.116Z",
+      "modifiedAt": "2025-07-14T19:03:29.116Z"
+    },
+    {
+      "id": "Nko4UUKUrc",
+      "uuid": "00b25cfd-201f-4d23-a562-9dbb970c0506",
+      "userId": "_XblMqbuoP",
+      "transactionId": "AY__faMGW",
+      "status": "received",
+      "isRead": false,
+      "createdAt": "2025-07-14T19:03:49.366Z",
+      "modifiedAt": "2025-07-14T19:03:49.366Z"
+    },
+    {
+      "id": "hnBEBH1ry3",
+      "uuid": "42dc088b-727e-4075-b1c5-91c82805d99b",
+      "userId": "_XblMqbuoP",
+      "transactionId": "Zuovz5Br3",
+      "status": "received",
+      "isRead": false,
+      "createdAt": "2025-07-14T19:04:09.608Z",
+      "modifiedAt": "2025-07-14T19:04:09.608Z"
     }
   ],
   "banktransfers": [
