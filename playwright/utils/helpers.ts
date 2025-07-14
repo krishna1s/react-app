@@ -50,12 +50,20 @@ export const getByTestId = (page: Page, testId: string): Locator => {
   
   // For form fields (TextField), we need to target the actual input element
   // Apply this to form input fields but not to display elements like sidenav
-  if ((testId.includes('signin-') || testId.includes('signup-') || testId.includes('bankaccount-') || testId.includes('transaction-create-') || testId.includes('user-settings-')) && 
+  // Note: user-settings fields are already direct input elements and don't need .locator('input')
+  if ((testId.includes('signin-') || testId.includes('signup-') || testId.includes('bankaccount-')) && 
       (testId.includes('-username') || testId.includes('-password') || testId.includes('-first-name') || 
        testId.includes('-last-name') || testId.includes('-confirmPassword') || 
-       testId.includes('-bankName') || testId.includes('-routingNumber') || testId.includes('-accountNumber') ||
-       testId.includes('-amount-input') || testId.includes('-description-input') || testId.includes('-email-input') || testId.includes('-phoneNumber-input'))) {
+       testId.includes('-bankName') || testId.includes('-routingNumber') || testId.includes('-accountNumber'))) {
     return element.locator('input');
+  }
+  
+  // Transaction create fields and user settings fields are already input elements
+  if ((testId.includes('transaction-create-') || testId.includes('user-settings-')) && 
+      (testId.includes('-amount-input') || testId.includes('-description-input') || 
+       testId.includes('-email-input') || testId.includes('-phoneNumber-input') || 
+       testId.includes('-firstName-input') || testId.includes('-lastName-input'))) {
+    return element; // These are already input elements
   }
   
   return element;
