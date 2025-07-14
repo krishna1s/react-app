@@ -20,6 +20,7 @@ test.describe("End-to-End User Journey", () => {
     const testUser = createTestUser();
 
     // Step 1: Sign up new user
+    await page.goto("/signup");
     await signUp(page, {
       firstName: testUser.firstName!,
       lastName: testUser.lastName!,
