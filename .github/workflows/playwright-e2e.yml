@@ -1,14 +1,11 @@
 name: Playwright E2E Tests
 
 on:
+  pull_request:
+    branches: [ main, master, develop ]
   push:
-    branches-ignore:
-      - "renovate/**"
-
-permissions:
-  contents: read
-  pull-requests: write
-  checks: write
+    branches: [ main, master, develop ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -45,6 +42,16 @@ jobs:
         yarn copy:mock:awsexports
         yarn copy:mock:awsexportses5
 
+    # - name: Start local server
+    #   run: |
+    #     yarn run dev &
+    #     # Wait for the server to start
+    #     for i in {1..30}; do
+    #       if curl -s http://localhost:3000 > /dev/null; then
+    #         echo "Server is up and running"
+    #         break
+    #       fi
+      
     - name: Run Playwright tests
       id: playwright-tests
       run: |
@@ -61,35 +68,28 @@ jobs:
         if grep -q "failed\|flaky" test_output.log || [ "$TEST_EXIT_CODE" -ne 0 ]; then
           echo "Tests failed or were flaky!"
           echo "test_failed=true" >> $GITHUB_OUTPUT
+          echo "TEST_FAILED=true" >> $GITHUB_ENV
           
-          # Count failures
+          # Count failures and flaky tests
           FAILED_COUNT=$(grep -o "[0-9]\+ failed" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
           FLAKY_COUNT=$(grep -o "[0-9]\+ flaky" test_output.log | head -1 | grep -o "[0-9]\+" || echo "0")
           
           echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
           echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
           
-          exit 1
+          echo "Found $FAILED_COUNT failed tests and $FLAKY_COUNT flaky tests"
         else
           echo "All tests passed!"
           echo "test_failed=false" >> $GITHUB_OUTPUT
+          echo "TEST_FAILED=false" >> $GITHUB_ENV
           echo "failed_count=0" >> $GITHUB_OUTPUT
           echo "flaky_count=0" >> $GITHUB_OUTPUT
         fi
       env:
         CI: true
-      continue-on-error: false
-
-    - name: Check test results
-      if: always()
-      run: |
-        # Check if any tests failed by examining the exit code of the previous step
-        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
-          echo "❌ Playwright tests failed!"
-          exit 1
-        else
-          echo "✅ All Playwright tests passed!"
-        fi
+        # Enable screenshots and videos on failure for PR runs
+        PLAYWRIGHT_HTML_REPORT: playwright-report
+        PLAYWRIGHT_TEST_BASE_URL: http://localhost:3000
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -108,6 +108,80 @@ jobs:
         name: playwright-html-report-chromium
         path: playwright-report/
         retention-days: 30
+    
+    - name: Check test results
+      if: always()
+      run: |
+        # Check if the playwright tests failed based on the environment variable set in the test step
+        if [ "$TEST_FAILED" = "true" ]; then
+          echo "❌ Playwright tests failed!"
+          echo "FINAL_TEST_STATUS=failure" >> $GITHUB_ENV
+        else
+          echo "✅ All Playwright tests passed!"
+          echo "FINAL_TEST_STATUS=success" >> $GITHUB_ENV
+        fi
+
+    - name: Capture DOM snapshots on failure
+      if: always() && env.TEST_FAILED == 'true' && github.event_name == 'pull_request'
+      run: |
+        # Create a directory for DOM snapshots
+        mkdir -p dom-snapshots
+        
+        # Find all test result directories that contain error contexts
+        find test-results -name "*.md" -path "*/error-context.md" | while read error_file; do
+          # Extract test name from path
+          test_dir=$(dirname "$error_file")
+          test_name=$(basename "$test_dir")
+          
+          # Copy error context and any related files
+          cp "$error_file" "dom-snapshots/${test_name}-error-context.md" || true
+          
+          # Look for trace files in the same directory
+          find "$test_dir" -name "trace.zip" -exec cp {} "dom-snapshots/${test_name}-trace.zip" \; || true
+          
+          # Look for screenshot files
+          find "$test_dir" -name "*.png" -exec cp {} "dom-snapshots/${test_name}-screenshot.png" \; || true
+          
+          # Look for video files
+          find "$test_dir" -name "*.webm" -exec cp {} "dom-snapshots/${test_name}-video.webm" \; || true
+        done
+        
+        # Create a summary of captured artifacts
+        echo "# DOM Snapshots and Debug Artifacts" > dom-snapshots/README.md
+        echo "" >> dom-snapshots/README.md
+        echo "This directory contains debugging artifacts from failed tests:" >> dom-snapshots/README.md
+        echo "" >> dom-snapshots/README.md
+        ls -la dom-snapshots/ | grep -v "^total" | tail -n +2 | while read line; do
+          file=$(echo "$line" | awk '{print $9}')
+          if [ "$file" != "README.md" ]; then
+            echo "- \`$file\`" >> dom-snapshots/README.md
+          fi
+        done
+        
+        echo "Captured $(find dom-snapshots -type f ! -name README.md | wc -l) debug artifacts"
+
+    - name: Upload DOM snapshots and debug artifacts
+      uses: actions/upload-artifact@v4
+      if: always() && env.TEST_FAILED == 'true' && github.event_name == 'pull_request'
+      with:
+        name: dom-snapshots-and-debug-artifacts
+        path: |
+          dom-snapshots/
+          test-results/
+        retention-days: 7
+
+    - name: Final test result check
+      if: always()
+      run: |
+        # Exit with failure code if tests failed, but only after all artifacts are uploaded
+        if [ "$TEST_FAILED" = "true" ]; then
+          echo "❌ Exiting with failure code due to test failures"
+          exit 1
+        else
+          echo "✅ All tests passed - exiting successfully"
+          exit 0
+        fi
+
         
   # Job to aggregate and comment on PR
   report:
@@ -127,14 +201,18 @@ jobs:
     - name: Check test job status
       id: test-status
       run: |
-        # Check if the test job failed
-        if [ "${{ needs.test.result }}" = "failure" ]; then
+        # Check if the test job failed and get failure counts
+        if [ "${{ needs.test.result }}" = "failure" ] || [ "${{ needs.test.outputs.test_failed }}" = "true" ]; then
           echo "test_failed=true" >> $GITHUB_OUTPUT
           echo "❌ Tests failed"
           
-          # Try to get failure counts from test step outputs if available
-          FAILED_COUNT="${{ needs.test.outputs.failed_count || '0' }}"
-          FLAKY_COUNT="${{ needs.test.outputs.flaky_count || '0' }}"
+          # Get failure counts from test step outputs if available
+          FAILED_COUNT="${{ needs.test.outputs.failed_count }}"
+          FLAKY_COUNT="${{ needs.test.outputs.flaky_count }}"
+          
+          # Set default values if empty
+          FAILED_COUNT=${FAILED_COUNT:-"0"}
+          FLAKY_COUNT=${FLAKY_COUNT:-"0"}
           
           echo "failed_count=$FAILED_COUNT" >> $GITHUB_OUTPUT
           echo "flaky_count=$FLAKY_COUNT" >> $GITHUB_OUTPUT
@@ -153,9 +231,6 @@ jobs:
         # Add status badge based on test results
         if [ "${{ steps.test-status.outputs.test_failed }}" = "true" ]; then
           echo "## ❌ Test Status: FAILED" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Failed Tests:** ${{ steps.test-status.outputs.failed_count }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Flaky Tests:** ${{ steps.test-status.outputs.flaky_count }}" >> $GITHUB_STEP_SUMMARY
         else
           echo "## ✅ Test Status: PASSED" >> $GITHUB_STEP_SUMMARY
         fi
@@ -187,16 +262,17 @@ jobs:
         script: |
           // Get test status from job result
           const testJobResult = '${{ needs.test.result }}';
-          const failedCount = '${{ needs.test.outputs.failed_count || "0" }}';
-          const flakyCount = '${{ needs.test.outputs.flaky_count || "0" }}';
+          const testFailed = '${{ needs.test.outputs.test_failed }}';
+          const failedCount = '${{ needs.test.outputs.failed_count }}' || '0';
+          const flakyCount = '${{ needs.test.outputs.flaky_count }}' || '0';
           
           let testStatus = '✅ All E2E tests passed!';
           let statusIcon = '✅';
           let statusDetails = '';
           
-          if (testJobResult === 'failure') {
-            statusIcon = '❌';
+          if (testJobResult === 'failure' || testFailed === 'true') {
             testStatus = '❌ Some E2E tests failed. Please check the details in the workflow.';
+            statusIcon = '❌';
             
             if (failedCount !== '0' || flakyCount !== '0') {
               statusDetails = `\n\n**Test Results:**\n- Failed: ${failedCount}\n- Flaky: ${flakyCount}`;
@@ -205,7 +281,7 @@ jobs:
           
           const comment = `## 🎭 Playwright E2E Test Results
           
-          ### ${statusIcon} Test Status: ${testJobResult === 'failure' ? 'FAILED' : 'PASSED'}
+          ### ${statusIcon} Test Status: ${(testJobResult === 'failure' || testFailed === 'true') ? 'FAILED' : 'PASSED'}
           
           ${testStatus}${statusDetails}
           
@@ -221,8 +297,9 @@ jobs:
           - 🌐 Chromium (Desktop)
           
           **Reports:** Check the workflow artifacts for detailed HTML reports and screenshots.
+          ${(testJobResult === 'failure' || testFailed === 'true') ? '\n\n**🔍 Debug Artifacts Available:**\n- DOM snapshots from failed tests\n- Screenshots of failure states\n- Video recordings of test execution\n- Playwright traces for detailed debugging\n- Error context files with page state\n\nDownload the \`dom-snapshots-and-debug-artifacts\` artifact to investigate failures.' : ''}
           
-          ${testJobResult === 'failure' ? '⚠️ **Action Required:** Please fix the failing tests before merging.' : '🎉 **Ready to merge!** All tests are passing.'}
+          ${(testJobResult === 'failure' || testFailed === 'true') ? '⚠️ **Action Required:** Please fix the failing tests before merging.' : '🎉 **Ready to merge!** All tests are passing.'}
           `;
           
           github.rest.issues.createComment({

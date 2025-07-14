@@ -73,14 +73,14 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Select recipient
-    await getByTestId(page, "user-list-search-input").fill("Devon");
+    await page.locator('#user-list-search-input').fill("Devon");
     await page.waitForTimeout(1000);
     await page.locator('[data-test^="user-list-item-"]').first().click();
     // Clicking on user automatically advances to step 2 - no need for separate next button
 
     // Enter transaction details
-    await getByTestId(page, "transaction-create-amount-input").locator("input").fill("50.00");
-    await getByTestId(page, "transaction-create-description-input").locator("input").fill("Lunch payment");
+    await getByTestId(page, "transaction-create-amount-input").fill("50.00");
+    await getByTestId(page, "transaction-create-description-input").fill("Lunch payment");
     // Privacy is set automatically - no user selection needed
 
     await getByTestId(page, "transaction-create-submit-payment").click();
@@ -108,7 +108,7 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "sidenav-user-settings").click();
 
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.clear();
+    await firstNameInput.fill(""); // Clear by filling empty string
     await firstNameInput.fill("UpdatedName");
 
     await getByTestId(page, "user-settings-submit").click();
@@ -198,9 +198,8 @@ test.describe("End-to-End User Journey", () => {
     await getByTestId(page, "nav-top-new-transaction").click();
 
     // Verify form elements work in all browsers
-    const searchInput = getByTestId(page, "user-list-search-input");
-    await searchInput.fill("Devon");
-    await expect(searchInput).toHaveValue("Devon");
+    await page.locator('#user-list-search-input').fill("Devon");
+    await expect(page.locator('#user-list-search-input')).toHaveValue("Devon");
 
     // Test that CSS animations/transitions work
     if (browserName === "webkit") {

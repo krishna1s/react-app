@@ -19,21 +19,19 @@ export default defineConfig({
     ["json", { outputFile: "playwright-report/results.json" }],
     ["junit", { outputFile: "playwright-report/results.xml" }],
   ],
-  /* Exit with error if any test fails or is flaky */
-  globalTeardown: process.env.CI ? "./playwright/global-teardown.ts" : undefined,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: "http://localhost:3000",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "off",
+    trace: process.env.CI ? "retain-on-failure" : "off",
 
-    /* Take screenshot on failure */
-    screenshot: "off",
+    /* Take screenshot on failure - enhanced for PR runs */
+    screenshot: process.env.CI ? "only-on-failure" : "off",
 
-    /* Record video on failure */
-    video: "off",
+    /* Record video on failure - enhanced for PR runs */
+    video: process.env.CI ? "retain-on-failure" : "off",
     /* Increase default timeout for flaky CI environments */
     actionTimeout: 15000,
     navigationTimeout: 60000,
@@ -47,6 +45,9 @@ export default defineConfig({
       testMatch: /.*setup-verification\.spec\.ts/,
       use: { 
         ...devices["Desktop Chrome"],
+        launchOptions: {
+          executablePath: "/usr/bin/chromium-browser",
+        },
         // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
     },
@@ -56,6 +57,9 @@ export default defineConfig({
       testIgnore: /.*setup-verification\.spec\.ts/,
       use: { 
         ...devices["Desktop Chrome"],
+        launchOptions: {
+          executablePath: "/usr/bin/chromium-browser",
+        },
         // Remove hardcoded executablePath - let Playwright use its installed browsers
       },
       dependencies: ["setup"],

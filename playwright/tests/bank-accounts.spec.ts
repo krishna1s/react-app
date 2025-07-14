@@ -5,6 +5,7 @@ test.describe("Bank Accounts", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await login(page, "Heath93", "s3cret");
   });
 
@@ -17,7 +18,8 @@ test.describe("Bank Accounts", () => {
     }
     await getByTestId(page, "sidenav-bankaccounts").click();
 
-    await expect(page).toHaveURL("/bankaccounts");
+    // Wait for navigation to complete
+    await expect(page).toHaveURL(/\/bankaccounts/);
     await expect(getByTestId(page, "bankaccount-list")).toBeVisible();
   });
 
@@ -51,9 +53,9 @@ test.describe("Bank Accounts", () => {
     await getByTestId(page, "bankaccount-submit").click();
 
     // Should show validation errors
-    await expect(getByTestId(page, "bankaccount-bankName-input")).toHaveAttribute("required");
-    await expect(getByTestId(page, "bankaccount-routingNumber-input")).toHaveAttribute("required");
-    await expect(getByTestId(page, "bankaccount-accountNumber-input")).toHaveAttribute("required");
+    await expect(getByTestId(page, "bankaccount-bankName-input")).toHaveAttribute("aria-invalid", "true");
+    await expect(getByTestId(page, "bankaccount-routingNumber-input")).toHaveAttribute("aria-invalid", "true");
+    await expect(getByTestId(page, "bankaccount-accountNumber-input")).toHaveAttribute("aria-invalid", "true");
   });
 
   test("should validate routing number format", async ({ page }) => {

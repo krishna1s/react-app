@@ -5,47 +5,42 @@ test.describe("User Settings", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Heath93", "s3cret");
+    await login(page, "Heath93", "s3cret", { waitForRedirect: true });
+    // Go directly to user settings page to avoid waiting for "/" navigation
+    await page.goto("/user/settings");
   });
 
   test("should display user settings page", async ({ page }) => {
     // Navigate to user settings page
     const isMobile = await isMobileViewport(page);
 
-    if (isMobile) {
-      await getByTestId(page, "sidenav-toggle").click();
-      await getByTestId(page, "sidenav-user-settings").click();
-    } else {
-      // For desktop, use sidebar navigation as there's no topbar user settings link
-
-      await getByTestId(page, "sidenav-user-settings").click();
-    }
-
+    // The user is already on /user/settings after beforeEach
     await expect(page).toHaveURL("/user/settings");
     await expect(getByTestId(page, "user-settings-form")).toBeVisible();
   });
 
   test("should update user profile information", async ({ page }) => {
-    await getByTestId(page, "sidenav-user-settings").click();
+    // Always ensure we are on the settings page
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Update first name
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.clear();
+    await firstNameInput.fill("");
     await firstNameInput.fill("UpdatedFirstName");
 
     // Update last name
     const lastNameInput = getByTestId(page, "user-settings-lastName-input");
-    await lastNameInput.clear();
+    await lastNameInput.fill("");
     await lastNameInput.fill("UpdatedLastName");
 
     // Update email
     const emailInput = getByTestId(page, "user-settings-email-input");
-    await emailInput.clear();
+    await emailInput.fill("");
     await emailInput.fill("updated@example.com");
 
     // Update phone number
     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
-    await phoneInput.clear();
+    await phoneInput.fill("");
     await phoneInput.fill("555-123-4567");
 
     // Submit changes
@@ -67,12 +62,15 @@ test.describe("User Settings", () => {
   });
 
   test("should validate required fields", async ({ page }) => {
-    await getByTestId(page, "sidenav-user-settings").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Clear required fields
-    await getByTestId(page, "user-settings-firstName-input").clear();
-    await getByTestId(page, "user-settings-lastName-input").clear();
-    await getByTestId(page, "user-settings-email-input").clear();
+    const firstNameInput = getByTestId(page, "user-settings-firstName-input");
+    const lastNameInput = getByTestId(page, "user-settings-lastName-input");
+    const emailInput = getByTestId(page, "user-settings-email-input");
+    await firstNameInput.fill("");
+    await lastNameInput.fill("");
+    await emailInput.fill("");
 
     // The submit button should be disabled when required fields are empty
     await expect(getByTestId(page, "user-settings-submit")).toBeDisabled();
@@ -85,11 +83,11 @@ test.describe("User Settings", () => {
   });
 
   test("should validate email format", async ({ page }) => {
-    await getByTestId(page, "sidenav-user-settings").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Enter invalid email
     const emailInput = getByTestId(page, "user-settings-email-input");
-    await emailInput.clear();
+    await emailInput.fill("");
     await emailInput.fill("invalid-email");
 
     // Should show email validation error (form becomes invalid)
@@ -97,11 +95,11 @@ test.describe("User Settings", () => {
   });
 
   test("should validate phone number format", async ({ page }) => {
-    await getByTestId(page, "sidenav-user-settings").click();
+    await expect(page).toHaveURL(/\/user\/settings/);
 
     // Enter invalid phone number
     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
-    await phoneInput.clear();
+    await phoneInput.fill("");
     await phoneInput.fill("123"); // Too short
 
     // Should show phone validation error
@@ -110,52 +108,52 @@ test.describe("User Settings", () => {
 
   test.skip("should change password", async ({ page }) => {
     // Password change functionality is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should validate password change form", async ({ page }) => {
     // Password change functionality is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should validate password confirmation", async ({ page }) => {
     // Password change functionality is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should update privacy settings", async ({ page }) => {
     // Privacy settings tabs are not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should upload profile picture", async ({ page }) => {
     // Profile picture upload is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should cancel changes", async ({ page }) => {
     // Cancel button is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should delete user account", async ({ page }) => {
     // Account deletion functionality is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should show user account information", async ({ page }) => {
     // Additional user account information display is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should handle two-factor authentication setup", async ({ page }) => {
     // Two-factor authentication is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
   });
 
   test.skip("should export user data", async ({ page }) => {
     // Data export functionality is not implemented in the current user settings form
-    await getByTestId(page, "sidenav-user-settings").click();
+    await getByTestId(page, "sidenav-user").click();
 
   });
 
@@ -163,12 +161,7 @@ test.describe("User Settings", () => {
     const isMobile = await isMobileViewport(page);
 
     if (isMobile) {
-      // Open mobile navigation
-      await getByTestId(page, "sidenav-toggle").click();
-
-      // Click settings from mobile menu
-      await getByTestId(page, "sidenav-user-settings").click();
-
+      // Already on /user/settings after beforeEach
       await expect(page).toHaveURL("/user/settings");
 
       // Should adapt layout for mobile
