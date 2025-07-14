@@ -19,8 +19,6 @@ export default defineConfig({
     ["json", { outputFile: "playwright-report/results.json" }],
     ["junit", { outputFile: "playwright-report/results.xml" }],
   ],
-  /* Exit with error if any test fails or is flaky */
-  globalTeardown: process.env.CI,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

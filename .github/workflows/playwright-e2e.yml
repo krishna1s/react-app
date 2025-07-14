@@ -48,16 +48,16 @@ jobs:
         CI: true
       continue-on-error: false  # Ensure job fails if this step fails
 
-    - name: Check test results
-      if: always()
-      run: |
-        # Check if any tests failed by examining the exit code of the previous step
-        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
-          echo "❌ Playwright tests failed!"
-          exit 1
-        else
-          echo "✅ All Playwright tests passed!"
-        fi
+    # - name: Check test results
+    #   if: always()
+    #   run: |
+    #     # Check if any tests failed by examining the exit code of the previous step
+    #     if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
+    #       echo "❌ Playwright tests failed!"
+    #       exit 1
+    #     else
+    #       echo "✅ All Playwright tests passed!"
+    #     fi
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
