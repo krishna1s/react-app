@@ -5,7 +5,8 @@ test.describe("User Settings", () => {
   test.beforeEach(async ({ page }) => {
     await setupApiIntercepts(page);
     // Login before each test
-    await login(page, "Heath93", "s3cret");
+    await login(page, "Heath93", "s3cret", { waitForRedirect: false });
+    await page.goto("/");
   });
 
   test("should display user settings page", async ({ page }) => {
@@ -30,22 +31,22 @@ test.describe("User Settings", () => {
 
     // Update first name
     const firstNameInput = getByTestId(page, "user-settings-firstName-input");
-    await firstNameInput.clear();
+    await firstNameInput.fill("");
     await firstNameInput.fill("UpdatedFirstName");
 
     // Update last name
     const lastNameInput = getByTestId(page, "user-settings-lastName-input");
-    await lastNameInput.clear();
+    await lastNameInput.fill("");
     await lastNameInput.fill("UpdatedLastName");
 
     // Update email
     const emailInput = getByTestId(page, "user-settings-email-input");
-    await emailInput.clear();
+    await emailInput.fill("");
     await emailInput.fill("updated@example.com");
 
     // Update phone number
     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
-    await phoneInput.clear();
+    await phoneInput.fill("");
     await phoneInput.fill("555-123-4567");
 
     // Submit changes
@@ -70,9 +71,12 @@ test.describe("User Settings", () => {
     await getByTestId(page, "sidenav-user-settings").click();
 
     // Clear required fields
-    await getByTestId(page, "user-settings-firstName-input").clear();
-    await getByTestId(page, "user-settings-lastName-input").clear();
-    await getByTestId(page, "user-settings-email-input").clear();
+    const firstNameInput = getByTestId(page, "user-settings-firstName-input");
+    const lastNameInput = getByTestId(page, "user-settings-lastName-input");
+    const emailInput = getByTestId(page, "user-settings-email-input");
+    await firstNameInput.fill("");
+    await lastNameInput.fill("");
+    await emailInput.fill("");
 
     // The submit button should be disabled when required fields are empty
     await expect(getByTestId(page, "user-settings-submit")).toBeDisabled();
@@ -89,7 +93,7 @@ test.describe("User Settings", () => {
 
     // Enter invalid email
     const emailInput = getByTestId(page, "user-settings-email-input");
-    await emailInput.clear();
+    await emailInput.fill("");
     await emailInput.fill("invalid-email");
 
     // Should show email validation error (form becomes invalid)
@@ -101,7 +105,7 @@ test.describe("User Settings", () => {
 
     // Enter invalid phone number
     const phoneInput = getByTestId(page, "user-settings-phoneNumber-input");
-    await phoneInput.clear();
+    await phoneInput.fill("");
     await phoneInput.fill("123"); // Too short
 
     // Should show phone validation error
