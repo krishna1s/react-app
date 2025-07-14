@@ -44,21 +44,9 @@ jobs:
         set -e  # Exit immediately if any command fails
         yarn playwright:test --project=chromium auth.spec.ts
         yarn playwright:test --project=chromium bank-accounts.spec.ts
-        exit 1
       env:
         CI: true
-      continue-on-error: false  # Ensure job fails if this step fails
-
-    # - name: Check test results
-    #   if: always()
-    #   run: |
-    #     # Check if any tests failed by examining the exit code of the previous step
-    #     if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
-    #       echo "❌ Playwright tests failed!"
-    #       exit 1
-    #     else
-    #       echo "✅ All Playwright tests passed!"
-    #     fi
+      continue-on-error: true  # Ensure job fails if this step fails
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -77,6 +65,18 @@ jobs:
         name: playwright-html-report-chromium
         path: playwright-report/
         retention-days: 30
+    
+     - name: Check test results
+      if: always()
+      run: |
+        # Check if any tests failed by examining the exit code of the previous step
+        if [ "${{ steps.playwright-tests.outcome }}" = "failure" ]; then
+          echo "❌ Playwright tests failed!"
+          exit 1
+        else
+          echo "✅ All Playwright tests passed!"
+        fi
+
         
   # Job to aggregate and comment on PR
   report:
