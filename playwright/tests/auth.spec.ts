@@ -141,14 +141,26 @@ test.describe("User Authentication", () => {
 
     await page.goto("/signup");
 
-    // Fill form with mismatched passwords
-    await getByTestId(page, "signup-firstName").fill(testUser.firstName!);
-    await getByTestId(page, "signup-lastName").fill(testUser.lastName!);
-    await getByTestId(page, "signup-username").fill(testUser.username!);
-    await getByTestId(page, "signup-password").fill(testUser.password!);
-    
+    // Wait for first name field to be visible before filling
+    const firstNameField = getByTestId(page, "signup-firstName-input");
+    await firstNameField.waitFor({ state: "visible" });
+    await firstNameField.fill(testUser.firstName!);
+
+    const lastNameField = getByTestId(page, "signup-lastName-input");
+    await lastNameField.waitFor({ state: "visible" });
+    await lastNameField.fill(testUser.lastName!);
+
+    const usernameField = getByTestId(page, "signup-username-input");
+    await usernameField.waitFor({ state: "visible" });
+    await usernameField.fill(testUser.username!);
+
+    const passwordField = getByTestId(page, "signup-password-input");
+    await passwordField.waitFor({ state: "visible" });
+    await passwordField.fill(testUser.password!);
+
     // Fill confirm password with different value and blur to trigger validation
-    const confirmPasswordField = getByTestId(page, "signup-confirmPassword");
+    const confirmPasswordField = getByTestId(page, "signup-confirmPassword-input");
+    await confirmPasswordField.waitFor({ state: "visible" });
     await confirmPasswordField.fill("differentpassword");
     await confirmPasswordField.blur();
 
