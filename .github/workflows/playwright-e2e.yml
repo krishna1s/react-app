@@ -43,6 +43,7 @@ jobs:
       run: |
         set -e  # Exit immediately if any command fails
         yarn playwright:test --project=chromium auth.spec.ts --grep "should allow a visitor to sign-up, login, and logout"
+        yarn playwright:test --project=chromium bank-accounts.spec.ts --grep "bank accounts"
       env:
         CI: true
       continue-on-error: false  # Ensure job fails if this step fails
