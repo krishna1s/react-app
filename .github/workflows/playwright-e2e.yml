@@ -43,6 +43,7 @@ jobs:
       run: |
         set -e  # Exit immediately if any command fails
         yarn playwright:test --project=chromium auth.spec.ts
+        yarn playwright:test --project=chromium bank-accounts.spec.ts
         exit 1
       env:
         CI: true
