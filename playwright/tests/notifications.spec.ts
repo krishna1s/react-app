@@ -16,7 +16,7 @@ test.describe("Notifications", () => {
       await getByTestId(page, "sidenav-toggle").click();
       await getByTestId(page, "sidenav-notifications").click();
     } else {
-      await getByTestId(page, "nav-top-notifications-count").click();
+      await getByTestId(page, "nav-top-notifications-link").click();
     }
 
     await expect(page).toHaveURL("/notifications");
@@ -35,7 +35,8 @@ test.describe("Notifications", () => {
   });
 
   test("should mark notification as read", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Wait for notifications to load
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
@@ -55,7 +56,8 @@ test.describe("Notifications", () => {
   });
 
   test("should dismiss notification", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Wait for notifications to load
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
@@ -76,7 +78,8 @@ test.describe("Notifications", () => {
   });
 
   test("should filter notifications by type", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Check if notification filter options exist
     const filterButtons = page.locator('[data-testid^="notification-filter-"]');
@@ -126,14 +129,16 @@ test.describe("Notifications", () => {
       });
     });
 
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Should show empty state message
     await expect(page.locator("text=No notifications")).toBeVisible();
   });
 
   test("should navigate to related transaction from notification", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Wait for notifications to load
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
@@ -153,7 +158,8 @@ test.describe("Notifications", () => {
   });
 
   test("should mark all notifications as read", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Check if "Mark all as read" button exists
     const markAllReadButton = getByTestId(page, "notifications-mark-all-read");
@@ -170,7 +176,8 @@ test.describe("Notifications", () => {
   });
 
   test("should show notification details", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Wait for notifications to load
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
@@ -188,7 +195,8 @@ test.describe("Notifications", () => {
   });
 
   test("should paginate through notifications", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Wait for notifications to load
     await expect(getByTestId(page, "notifications-list")).toBeVisible();
@@ -212,7 +220,8 @@ test.describe("Notifications", () => {
   });
 
   test("should show real-time notifications", async ({ page }) => {
-    await getByTestId(page, "nav-top-notifications-count").click();
+    await getByTestId(page, "nav-top-notifications-link").click();
+
 
     // Count current notifications
     const initialCount = await page.locator('[data-test^="notification-list-item-"]').count();

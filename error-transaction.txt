@@ -1,0 +1,156 @@
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> npx playwright test playwright/tests/transactions.spec.ts --reporter=line  
+
+Running 15 tests using 11 workers
+[setup] › playwright\tests\setup-verification.spec.ts:45:7 › Playwright Setup Verification › cross-browser compatibility check
+Running test in chromium
+  1) [chromium] › playwright\tests\transactions.spec.ts:129:7 › Transactions › should view transaction details 
+
+    Error: expect.toBeVisible: Error: strict mode violation: locator('[data-test*="transaction"]') resolved to 13 elements:
+        1) <a tabindex="0" href="/transaction/new" data-test="nav-top-new-transaction" class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit NavBar-newTransactionButton css-1xjobie-MuiButtonBase-root-MuiButton-root">…</a> aka locator('[data-test="nav-top-new-transaction"]')
+        2) <h2 data-test="transaction-detail-header" class="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom css-mpyo7s-MuiTypography-root">Transaction Detail</h2> aka locator('[data-test="transaction-detail-header"]')
+        3) <div data-test="transaction-item-Ec6hHyL6SC2F" class="MuiGrid-root MuiGrid-container css-9cyib4-MuiGrid-root">…</div> aka locator('[data-test="transaction-item-Ec6hHyL6SC2F"]')
+        4) <div data-test="transaction-receiver-avatar" class="MuiAvatar-root MuiAvatar-circular TransactionDetail-avatarLarge MuiAvatarGroup-avatar css-qy4c83-MuiAvatar-root">…</div> aka locator('[data-test="transaction-receiver-avatar"]')
+        5) <div data-test="transaction-sender-avatar" class="MuiAvatar-root MuiAvatar-circular TransactionDetail-avatarLarge MuiAvatarGroup-avatar css-qy4c83-MuiAvatar-root">…</div> aka locator('[data-test="transaction-sender-avatar"]')
+        6) <span data-test="transaction-sender-Ec6hHyL6SC2F" class="MuiTypography-root MuiTypography-body1 TransactionTitle-titleName css-15pp3g5-MuiTypography-root">Darrel Ortiz</span> aka locator('[data-test="transaction-sender-Ec6hHyL6SC2F"]')
+        7) <span data-test="transaction-action-Ec6hHyL6SC2F" class="MuiTypography-root MuiTypography-body1 TransactionTitle-titleAction css-15pp3g5-MuiTypography-root"> paid </span> aka locator('[data-test="transaction-action-Ec6hHyL6SC2F"]')
+        8) <span data-test="transaction-receiver-Ec6hHyL6SC2F" class="MuiTypography-root MuiTypography-body1 TransactionTitle-titleName css-15pp3g5-MuiTypography-root">Lia Rosenbaum</span> aka locator('[data-test="transaction-receiver-Ec6hHyL6SC2F"]')
+        9) <p data-test="transaction-description" class="MuiTypography-root MuiTypography-body2 MuiTypography-gutterBottom css-k5128g-MuiTypography-root">Payment: _XblMqbuoP to WHjJ4qR2R2</p> aka locator('[data-test="transaction-description"]')
+        10) <span data-test="transaction-amount-Ec6hHyL6SC2F" class="MuiTypography-root MuiTypography-body1 TransactionAmount-amountNegative css-1tlfly5-MuiTypography-root">-$307.99</span> aka locator('[data-test="transaction-amount-Ec6hHyL6SC2F"]')
+        ...
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-test*="transaction"]')
+
+
+      141 |
+      142 |     // Should show transaction details - use more general selectors
+    > 143 |     await expect(page.locator('[data-test*="transaction"]')).toBeVisible();
+          |                                                              ^
+      144 |     await expect(page.locator('text=/\\$[0-9]+/')).toBeVisible(); // Match any amount like $25.50
+      145 |   });
+      146 |
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:143:62
+
+    Error Context: test-results\transactions-Transactions-should-view-transaction-details-chromium\error-context.md
+
+  2) [chromium] › playwright\tests\transactions.spec.ts:172:7 › Transactions › should comment on a transaction 
+
+    Error: expect.toBeVisible: Error: strict mode violation: locator('text=Great transaction!') resolved to 4 elements:
+        1) <span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-13s1204-MuiTypography-root">Great transaction!</span> aka locator('[data-test="comment-list-item-TLsTZujGk"]').getByText('Great transaction!')
+        2) <span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-13s1204-MuiTypography-root">Great transaction!</span> aka locator('[data-test="comment-list-item-_72W3yU3S"]').getByText('Great transaction!')
+        3) <span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-13s1204-MuiTypography-root">Great transaction!</span> aka locator('[data-test="comment-list-item-BXNw_omUq"]').getByText('Great transaction!')
+        4) <span class="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-13s1204-MuiTypography-root">Great transaction!</span> aka locator('[data-test="comment-list-item-cBcmBb95X"]').getByText('Great transaction!')
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Great transaction!')
+
+
+      187 |
+      188 |       // Should show the comment in the comments list
+    > 189 |       await expect(page.locator("text=Great transaction!")).toBeVisible();
+          |                                                             ^
+      190 |     } else {
+      191 |       // Fallback: try to find any comment input
+      192 |       await page.locator('input[placeholder="Write a comment..."]').fill("Great transaction!");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:189:61
+
+    Error Context: test-results\transactions-Transactions-should-comment-on-a-transaction-chromium\error-context.md
+
+  3) [chromium] › playwright\tests\transactions.spec.ts:94:7 › Transactions › should filter transactions by date range 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('[data-test="transaction-list-filter-date-range"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-test="transaction-list-filter-date-range"]')
+
+
+       99 |
+      100 |     // Wait for calendar to appear
+    > 101 |     await expect(page.locator('[data-test="transaction-list-filter-date-range"]')).toBeVisible();
+          |                                                                                    ^
+      102 |
+      103 |     // Close the filter for now (calendar interaction is complex)
+      104 |     await page.keyboard.press("Escape");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:101:84
+
+    Error Context: test-results\transactions-Transactions--ece04--transactions-by-date-range-chromium\error-context.md
+
+  4) [chromium] › playwright\tests\transactions.spec.ts:29:7 › Transactions › should create a new transaction 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Pay Devon')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Pay Devon')
+
+
+      50 |
+      51 |     // Step 3: Confirm transaction
+    > 52 |     await expect(page.locator("text=Pay Devon")).toBeVisible();
+         |                                                  ^
+      53 |     await expect(page.locator("text=$25.50")).toBeVisible();
+      54 |     await expect(page.locator("text=Test payment")).toBeVisible();
+      55 |
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:52:50
+
+    Error Context: test-results\transactions-Transactions-should-create-a-new-transaction-chromium\error-context.md
+
+  5) [chromium] › playwright\tests\transactions.spec.ts:63:7 › Transactions › should request money from another user 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Request from Devon')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Request from Devon')
+
+
+      82 |
+      83 |     // Step 3: Confirm request
+    > 84 |     await expect(page.locator("text=Request from Devon")).toBeVisible();
+         |                                                           ^
+      85 |     await expect(page.locator("text=$30.00")).toBeVisible();
+      86 |
+      87 |     await getByTestId(page, "transaction-create-submit-request").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:84:59
+
+    Error Context: test-results\transactions-Transactions--cb0c5-est-money-from-another-user-chromium\error-context.md
+
+  6) [chromium] › playwright\tests\transactions.spec.ts:147:7 › Transactions › should like a transaction 
+
+    TimeoutError: locator.textContent: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="transaction-like-count-Ec6hHyL6SC2F"]')
+
+
+      161 |     // Get the current like count before clicking
+      162 |     const likeCountElement = page.locator(`[data-test="transaction-like-count-${extractedId}"]`);
+    > 163 |     const initialLikeCount = await likeCountElement.textContent();
+          |                                                     ^
+      164 |
+      165 |     await firstTransactionLike.click();
+      166 |
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\transactions.spec.ts:163:53
+
+    Error Context: test-results\transactions-Transactions-should-like-a-transaction-chromium\error-context.md
+
+  6 failed                                                                                                                                                    
+    [chromium] › playwright\tests\transactions.spec.ts:29:7 › Transactions › should create a new transaction 
+    [chromium] › playwright\tests\transactions.spec.ts:63:7 › Transactions › should request money from another user
+    [chromium] › playwright\tests\transactions.spec.ts:94:7 › Transactions › should filter transactions by date range
+    [chromium] › playwright\tests\transactions.spec.ts:129:7 › Transactions › should view transaction details
+    [chromium] › playwright\tests\transactions.spec.ts:147:7 › Transactions › should like a transaction
+    [chromium] › playwright\tests\transactions.spec.ts:172:7 › Transactions › should comment on a transaction
+  9 passed (21.1s)
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> 

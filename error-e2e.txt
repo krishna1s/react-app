@@ -1,0 +1,120 @@
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> npx playwright test playwright/tests/e2e-journey.spec.ts --reporter=line
+
+Running 11 tests using 7 workers
+…sts\setup-verification.spec.ts:45:7 › Playwright Setup Verification › cross-browser compatibility check
+Running test in chromium
+…ht\tests\e2e-journey.spec.ts:207:7 › End-to-End User Journey › cross-browser functionality verification
+Running Chrome-specific tests
+  1) [chromium] › playwright\tests\e2e-journey.spec.ts:234:7 › End-to-End User Journey › performance and loading behavior 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('[data-test="main-content"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('[data-test="main-content"]')
+
+
+      239 |
+      240 |     // Wait for main content to load
+    > 241 |     await expect(getByTestId(page, "main-content")).toBeVisible();
+          |                                                     ^
+      242 |
+      243 |     const loadComplete = await page.evaluate(() => performance.now());
+      244 |     const loadTime = loadComplete - navigationStart;
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:241:53
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-4b404-rmance-and-loading-behavior-chromium\error-context.md
+
+  2) [chromium] › playwright\tests\e2e-journey.spec.ts:153:7 › End-to-End User Journey › error handling and recovery 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('text=Network error')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('text=Network error')
+
+
+      169 |
+      170 |     // Should show error message for network failure
+    > 171 |     await expect(page.locator("text=Network error")).toBeVisible();
+          |                                                      ^
+      172 |
+      173 |     // Recovery: Remove network error and retry
+      174 |     await page.unroute("**/users");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:171:54
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-ca6f6-error-handling-and-recovery-chromium\error-context.md
+
+  3) [chromium] › playwright\tests\e2e-journey.spec.ts:182:7 › End-to-End User Journey › accessibility navigation 
+
+    Error: Timed out 5000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('nav[role="navigation"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('nav[role="navigation"]')
+
+
+      190 |     // Test screen reader compatibility by checking ARIA labels
+      191 |     const navigation = page.locator('nav[role="navigation"]');
+    > 192 |     await expect(navigation).toBeVisible();
+          |                              ^
+      193 |
+      194 |     // Check for proper heading structure
+      195 |     const headings = page.locator("h1, h2, h3, h4, h5, h6");
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:192:30
+
+    Error Context: test-results\e2e-journey-End-to-End-User-Journey-accessibility-navigation-chromium\error-context.md
+
+  4) [chromium] › playwright\tests\e2e-journey.spec.ts:259:7 › End-to-End User Journey › data persistence and state management 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="nav-top-bank-accounts"]')
+
+
+      261 |
+      262 |     // Navigate to different pages and verify state persistence
+    > 263 |     await getByTestId(page, "nav-top-bank-accounts").click();
+          |                                                      ^
+      264 |     await getByTestId(page, "nav-top-home").click();
+      265 |
+      266 |     // Should maintain user session
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:263:54
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-04d50-stence-and-state-management-chromium\error-context.md
+
+  5) [chromium] › playwright\tests\e2e-journey.spec.ts:17:7 › End-to-End User Journey › complete user journey: signup, login, add bank account, create transaction, logout 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('[data-test="user-onboarding-finish"]')
+
+
+      51 |
+      52 |       await getByTestId(page, "bankaccount-submit").click();
+    > 53 |       await getByTestId(page, "user-onboarding-finish").click();
+         |                                                         ^
+      54 |     } else {
+      55 |       // Manually navigate to add bank account
+      56 |       await getByTestId(page, "nav-top-bank-accounts").click();
+        at C:\Users\jjayadevan\source\cypress-1407\react-app\playwright\tests\e2e-journey.spec.ts:53:57 
+
+    Error Context: test-results\e2e-journey-End-to-End-Use-449d7-t-create-transaction-logout-chromium\error-context.md
+
+  5 failed                                                                                              
+    [chromium] › playwright\tests\e2e-journey.spec.ts:17:7 › End-to-End User Journey › complete user journey: signup, login, add bank account, create transaction, logout
+    [chromium] › playwright\tests\e2e-journey.spec.ts:153:7 › End-to-End User Journey › error handling and recovery
+    [chromium] › playwright\tests\e2e-journey.spec.ts:182:7 › End-to-End User Journey › accessibility navigation
+    [chromium] › playwright\tests\e2e-journey.spec.ts:234:7 › End-to-End User Journey › performance and loading behavior
+    [chromium] › playwright\tests\e2e-journey.spec.ts:259:7 › End-to-End User Journey › data persistence and state management
+  6 passed (21.0s)
+(base) PS C:\Users\jjayadevan\source\cypress-1407\react-app> 
